@@ -11,7 +11,8 @@ class ProveedorService {
       );
       return result.recordset;
     } catch (error) {
-      throw error;
+      console.error('ProveedorService.getAllProveedores error:', error.message);
+      throw new Error(`Error fetching proveedores: ${error.message}`);
     }
   }
 
@@ -29,28 +30,46 @@ class ProveedorService {
         );
       return result.recordset[0];
     } catch (error) {
-      throw error;
+      console.error('ProveedorService.getProveedorById error:', error.message);
+      throw new Error(`Error fetching proveedor ${id}: ${error.message}`);
     }
   }
 
   async createProveedor(proveedor) {
     try {
+      console.log('Creating proveedor with data:', proveedor);
+      
+      if (!proveedor.Nombre || !proveedor.TipoProveedorID) {
+        throw new Error('Missing required fields: Nombre, TipoProveedorID');
+      }
+
       const pool = await poolPromise;
+      console.log('Pool obtained, executing INSERT query...');
+      
       const result = await pool
         .request()
-        .input('Nombre', sql.NVarChar, proveedor.Nombre)
-        .input('RFC', sql.NVarChar, proveedor.RFC || null)
+        .input('Nombre', sql.NVarChar(120), proveedor.Nombre)
+        .input('RFC', sql.NVarChar(13), proveedor.RFC || null)
         .input('TipoProveedorID', sql.Int, proveedor.TipoProveedorID)
-        .input('Telefono', sql.NVarChar, proveedor.Telefono || null)
-        .input('Correo', sql.NVarChar, proveedor.Correo || null)
+        .input('Telefono', sql.NVarChar(30), proveedor.Telefono || null)
+        .input('Correo', sql.NVarChar(120), proveedor.Correo || null)
         .query(
           `INSERT INTO Proveedor (Nombre, RFC, TipoProveedorID, Telefono, Correo)
-           OUTPUT INSERTED.ProveedorID
+           OUTPUT INSERTED.ProveedorID, INSERTED.Nombre, INSERTED.TipoProveedorID
            VALUES (@Nombre, @RFC, @TipoProveedorID, @Telefono, @Correo)`
         );
+      
+      console.log('INSERT executed. Recordset:', result.recordset);
+      
+      if (!result.recordset || result.recordset.length === 0) {
+        throw new Error('INSERT query executed but no record returned');
+      }
+      
+      console.log('Proveedor created successfully:', result.recordset[0]);
       return result.recordset[0];
     } catch (error) {
-      throw error;
+      console.error('ProveedorService.createProveedor error:', error.message);
+      throw new Error(`Error creating proveedor: ${error.message}`);
     }
   }
 
@@ -60,11 +79,11 @@ class ProveedorService {
       await pool
         .request()
         .input('ProveedorID', sql.Int, id)
-        .input('Nombre', sql.NVarChar, proveedor.Nombre)
-        .input('RFC', sql.NVarChar, proveedor.RFC || null)
+        .input('Nombre', sql.NVarChar(120), proveedor.Nombre)
+        .input('RFC', sql.NVarChar(13), proveedor.RFC || null)
         .input('TipoProveedorID', sql.Int, proveedor.TipoProveedorID)
-        .input('Telefono', sql.NVarChar, proveedor.Telefono || null)
-        .input('Correo', sql.NVarChar, proveedor.Correo || null)
+        .input('Telefono', sql.NVarChar(30), proveedor.Telefono || null)
+        .input('Correo', sql.NVarChar(120), proveedor.Correo || null)
         .query(
           `UPDATE Proveedor
            SET Nombre = @Nombre, RFC = @RFC, TipoProveedorID = @TipoProveedorID, 
@@ -73,7 +92,8 @@ class ProveedorService {
         );
       return { success: true };
     } catch (error) {
-      throw error;
+      console.error('ProveedorService.updateProveedor error:', error.message);
+      throw new Error(`Error updating proveedor: ${error.message}`);
     }
   }
 
@@ -86,7 +106,8 @@ class ProveedorService {
         .query('DELETE FROM Proveedor WHERE ProveedorID = @ProveedorID');
       return { success: true };
     } catch (error) {
-      throw error;
+      console.error('ProveedorService.deleteProveedor error:', error.message);
+      throw new Error(`Error deleting proveedor: ${error.message}`);
     }
   }
 }

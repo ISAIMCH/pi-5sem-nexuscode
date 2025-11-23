@@ -13,7 +13,8 @@ class IngresoService {
       );
       return result.recordset;
     } catch (error) {
-      throw error;
+      console.error('IngresoService.getAllIngresos error:', error.message);
+      throw new Error(`Error fetching ingresos: ${error.message}`);
     }
   }
 
@@ -32,29 +33,47 @@ class IngresoService {
         );
       return result.recordset;
     } catch (error) {
-      throw error;
+      console.error('IngresoService.getIngresosByObra error:', error.message);
+      throw new Error(`Error fetching ingresos for obra ${obraId}: ${error.message}`);
     }
   }
 
   async createIngreso(ingreso) {
     try {
+      console.log('Creating ingreso with data:', ingreso);
+      
+      if (!ingreso.ObraID || !ingreso.TipoIngresoID || !ingreso.Fecha || !ingreso.Monto) {
+        throw new Error('Missing required fields: ObraID, TipoIngresoID, Fecha, Monto');
+      }
+
       const pool = await poolPromise;
+      console.log('Pool obtained, executing INSERT query...');
+      
       const result = await pool
         .request()
         .input('ObraID', sql.Int, ingreso.ObraID)
         .input('Fecha', sql.Date, ingreso.Fecha)
         .input('TipoIngresoID', sql.Int, ingreso.TipoIngresoID)
-        .input('Descripcion', sql.NVarChar, ingreso.Descripcion)
+        .input('Descripcion', sql.NVarChar(500), ingreso.Descripcion)
         .input('Monto', sql.Decimal(18, 2), ingreso.Monto)
-        .input('FacturaRef', sql.NVarChar, ingreso.FacturaRef || null)
+        .input('FacturaRef', sql.NVarChar(100), ingreso.FacturaRef || null)
         .query(
           `INSERT INTO Ingreso (ObraID, Fecha, TipoIngresoID, Descripcion, Monto, FacturaRef)
-           OUTPUT INSERTED.IngresoID
+           OUTPUT INSERTED.IngresoID, INSERTED.Fecha, INSERTED.Monto
            VALUES (@ObraID, @Fecha, @TipoIngresoID, @Descripcion, @Monto, @FacturaRef)`
         );
+      
+      console.log('INSERT executed. Recordset:', result.recordset);
+      
+      if (!result.recordset || result.recordset.length === 0) {
+        throw new Error('INSERT query executed but no record returned');
+      }
+      
+      console.log('Ingreso created successfully:', result.recordset[0]);
       return result.recordset[0];
     } catch (error) {
-      throw error;
+      console.error('IngresoService.createIngreso error:', error.message);
+      throw new Error(`Error creating ingreso: ${error.message}`);
     }
   }
 
@@ -66,9 +85,9 @@ class IngresoService {
         .input('IngresoID', sql.Int, id)
         .input('Fecha', sql.Date, ingreso.Fecha)
         .input('TipoIngresoID', sql.Int, ingreso.TipoIngresoID)
-        .input('Descripcion', sql.NVarChar, ingreso.Descripcion)
+        .input('Descripcion', sql.NVarChar(500), ingreso.Descripcion)
         .input('Monto', sql.Decimal(18, 2), ingreso.Monto)
-        .input('FacturaRef', sql.NVarChar, ingreso.FacturaRef || null)
+        .input('FacturaRef', sql.NVarChar(100), ingreso.FacturaRef || null)
         .query(
           `UPDATE Ingreso
            SET Fecha = @Fecha, TipoIngresoID = @TipoIngresoID, Descripcion = @Descripcion,
@@ -77,7 +96,8 @@ class IngresoService {
         );
       return { success: true };
     } catch (error) {
-      throw error;
+      console.error('IngresoService.updateIngreso error:', error.message);
+      throw new Error(`Error updating ingreso: ${error.message}`);
     }
   }
 
@@ -90,7 +110,8 @@ class IngresoService {
         .query('DELETE FROM Ingreso WHERE IngresoID = @IngresoID');
       return { success: true };
     } catch (error) {
-      throw error;
+      console.error('IngresoService.deleteIngreso error:', error.message);
+      throw new Error(`Error deleting ingreso: ${error.message}`);
     }
   }
 }

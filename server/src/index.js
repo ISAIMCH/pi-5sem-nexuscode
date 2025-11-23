@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { poolPromise } = require('./config/database');
 
 const app = express();
 
@@ -46,13 +47,23 @@ app.use('/api/reportes', reportesRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Server Error:', err.stack);
   res.status(500).json({ error: err.message });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+// Start server only after database connection is established
+poolPromise
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✓ Server running on port ${PORT}`);
+      console.log(`✓ Database connection pool initialized`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to start server due to database connection error:', err);
+    process.exit(1);
+  });
 
 module.exports = app;
