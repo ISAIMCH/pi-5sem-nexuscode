@@ -234,4 +234,4 @@ Este proyecto ha sido diseñado, documentado y programado por:
 
 ## Licencia
 
-Este proyecto está bajo licencia ISC.
+Este proyecto está bajo licencia NexusCode.

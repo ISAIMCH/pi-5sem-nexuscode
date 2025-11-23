@@ -22,7 +22,7 @@
 
 .selector-label {
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 16px;
   white-space: nowrap;
 }
@@ -34,21 +34,21 @@
   border: 2px solid #e0e6ed;
   border-radius: 8px;
   font-size: 15px;
-  color: #2c3e50;
+  color: #1a1a1a;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .obra-select:hover {
-  border-color: #3498db;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+  border-color: #C41E3A;
+  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.15);
 }
 
 .obra-select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #C41E3A;
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
 }
 
 /* ===== MENSAJES DE ERROR ===== */
@@ -77,7 +77,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: all 0.3s ease;
-  border-top: 4px solid #3498db;
+  border-top: 4px solid #C41E3A;
 }
 
 .metric-card:hover {
@@ -87,7 +87,7 @@
 
 .metric-label {
   font-size: 13px;
-  color: #7f8c8d;
+  color: #999999;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -125,7 +125,7 @@
 .progress-label {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .progress-percentage {
@@ -159,7 +159,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #7f8c8d;
+  color: #999999;
   font-weight: 600;
 }
 
@@ -185,11 +185,11 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .btn-agregar-reporte {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -198,12 +198,12 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.4);
 }
 
 .btn-agregar-reporte:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 6px 16px rgba(196, 30, 58, 0.6);
 }
 
 /* ===== GRID DE REPORTES ===== */
@@ -214,7 +214,7 @@
 }
 
 .reporte-card {
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  background: linear-gradient(135deg, #C41E3A15 0%, #A0183015 100%);
   border: 2px solid #e0e6ed;
   border-radius: 12px;
   overflow: hidden;
@@ -225,12 +225,12 @@
 
 .reporte-card:hover {
   transform: translateY(-6px);
-  border-color: #667eea;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+  border-color: #C41E3A;
+  box-shadow: 0 8px 20px rgba(196, 30, 58, 0.2);
 }
 
 .reporte-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   padding: 20px;
   display: flex;
@@ -336,7 +336,7 @@
 .no-data-message {
   text-align: center;
   padding: 40px 20px;
-  color: #7f8c8d;
+  color: #999999;
   font-size: 16px;
 }
 
@@ -389,14 +389,14 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .btn-close {
   background: none;
   border: none;
   font-size: 28px;
-  color: #7f8c8d;
+  color: #999999;
   cursor: pointer;
   transition: color 0.3s ease;
   padding: 0;
@@ -408,7 +408,7 @@
 }
 
 .btn-close:hover {
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 /* ===== FORMULARIOS ===== */
@@ -424,7 +424,7 @@
 
 .form-group label {
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin-bottom: 8px;
   font-size: 14px;
 }
@@ -471,7 +471,7 @@
 .progress-bar-mini {
   width: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2563eb 0%, #667eea 100%);
+  background: linear-gradient(90deg, #C41E3A 0%, #C41E3A 100%);
   border-radius: 2px;
   transition: width 0.3s ease;
   margin-top: 8px;
@@ -499,7 +499,7 @@
 
 .btn-cancelar {
   background: #ecf0f1;
-  color: #7f8c8d;
+  color: #999999;
 }
 
 .btn-cancelar:hover {
@@ -507,13 +507,13 @@
 }
 
 .btn-guardar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.4);
 }
 
 .btn-guardar:hover {
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 6px 16px rgba(196, 30, 58, 0.6);
 }
 
 .btn-guardar:disabled {
@@ -532,7 +532,7 @@
 
 .evidence-date {
   font-size: 13px;
-  color: #7f8c8d;
+  color: #999999;
   margin: 0 0 20px 0;
   font-weight: 600;
 }
@@ -547,7 +547,7 @@
 }
 
 .no-evidence-message {
-  color: #7f8c8d;
+  color: #999999;
   font-size: 15px;
   font-weight: 500;
 }
@@ -565,24 +565,24 @@
 .upload-label {
   display: block;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin-bottom: 12px;
   font-size: 14px;
 }
 
 .upload-area {
   position: relative;
-  border: 2px dashed #667eea;
+  border: 2px dashed #C41E3A;
   border-radius: 8px;
   padding: 30px;
   text-align: center;
-  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  background: linear-gradient(135deg, #C41E3A08 0%, #A0183008 100%);
   transition: all 0.3s ease;
 }
 
 .upload-area:hover {
-  border-color: #764ba2;
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border-color: #A01830;
+  background: linear-gradient(135deg, #C41E3A15 0%, #A0183015 100%);
 }
 
 .evidence-input {
@@ -591,7 +591,7 @@
 
 .upload-button {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
@@ -630,7 +630,7 @@
 .file-name {
   display: block;
   font-size: 11px;
-  color: #7f8c8d;
+  color: #999999;
   padding: 6px;
   text-align: center;
   word-break: break-word;
@@ -648,7 +648,7 @@
   text-align: center;
   padding: 40px;
   font-size: 16px;
-  color: #7f8c8d;
+  color: #999999;
   animation: pulse 1.5s infinite;
 }
 

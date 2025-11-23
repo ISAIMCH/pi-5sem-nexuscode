@@ -9,7 +9,7 @@
 .ingresos-header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0;
 }
 
@@ -23,12 +23,12 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  border-left: 4px solid #2ecc71;
+  border-left: 4px solid #C41E3A;
 }
 
 .selector-label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   white-space: nowrap;
   font-size: 14px;
 }
@@ -39,7 +39,7 @@
   border: 1px solid #bdc3c7;
   border-radius: 4px;
   font-size: 14px;
-  color: #2c3e50;
+  color: #1a1a1a;
   background-color: white;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -48,9 +48,9 @@
 
 .obra-select:hover,
 .obra-select:focus {
-  border-color: #2ecc71;
+  border-color: #C41E3A;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.1);
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.1);
 }
 
 /* Total Ingresos Card */
@@ -60,7 +60,7 @@
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #2ecc71;
+  border-left: 4px solid #C41E3A;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -69,7 +69,7 @@
 .total-ingresos-card h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #7f8c8d;
+  color: #999999;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
@@ -78,7 +78,7 @@
 .total-amount {
   font-size: 32px;
   font-weight: 700;
-  color: #2ecc71;
+  color: #C41E3A;
   margin: 0;
 }
 
@@ -99,7 +99,7 @@
 .chart-box h2 {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 20px;
   padding-bottom: 12px;
   border-bottom: 2px solid #ecf0f1;
@@ -112,13 +112,13 @@
   padding: 20px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #C41E3A;
 }
 
 .filtros-section h3 {
   font-size: 14px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 16px;
@@ -139,7 +139,7 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .filtro-group input,
@@ -155,8 +155,8 @@
 .filtro-group input:focus,
 .filtro-group select:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  border-color: #C41E3A;
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.1);
 }
 
 /* Ingresos Table Section */
@@ -179,12 +179,12 @@
 .section-header h2 {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0;
 }
 
 .btn-nuevo-ingreso {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #C41E3A 100%);
   color: white;
   border: none;
   padding: 10px 16px;
@@ -220,7 +220,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -242,7 +242,7 @@
 
 .ingresos-table .fecha {
   font-weight: 500;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .tipo-badge {
@@ -273,7 +273,7 @@
 .ingresos-table .descripcion {
   max-width: 300px;
   word-wrap: break-word;
-  color: #7f8c8d;
+  color: #999999;
 }
 
 .ingresos-table .factura {
@@ -283,7 +283,7 @@
 .factura-ref {
   font-family: 'Courier New', monospace;
   font-size: 12px;
-  color: #3498db;
+  color: #C41E3A;
   font-weight: 600;
 }
 
@@ -296,7 +296,7 @@
   text-align: right;
   font-family: 'Courier New', monospace;
   font-weight: 600;
-  color: #2ecc71;
+  color: #C41E3A;
 }
 
 .ingresos-table .acciones {
@@ -319,14 +319,14 @@
 
 .no-data {
   text-align: center;
-  color: #7f8c8d;
+  color: #999999;
   padding: 20px;
   font-size: 14px;
 }
 
 .loading {
   text-align: center;
-  color: #7f8c8d;
+  color: #999999;
   padding: 20px;
   font-size: 14px;
 }
@@ -380,7 +380,7 @@
 .modal-header h2 {
   font-size: 20px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0;
 }
 
@@ -400,7 +400,7 @@
 }
 
 .modal-close:hover {
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 /* Modal Form */
@@ -430,7 +430,7 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .form-group input,
@@ -454,7 +454,7 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: #C41E3A;
   box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.1);
   background-color: #f0fdf4;
 }
@@ -470,7 +470,7 @@
 
 .btn-cancel {
   background-color: white;
-  color: #7f8c8d;
+  color: #999999;
   border: 1px solid #bdc3c7;
   padding: 10px 20px;
   border-radius: 6px;
@@ -482,11 +482,11 @@
 
 .btn-cancel:hover {
   background-color: #ecf0f1;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #C41E3A 100%);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -563,7 +563,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .obra-selector select {
@@ -586,7 +586,7 @@
 .filtros-container h3 {
   margin: 0 0 16px;
   font-size: 16px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .filtros-grid {
@@ -604,7 +604,7 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 4px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .filtro-group input,
@@ -622,7 +622,7 @@
   border-radius: 8px;
   margin-bottom: 24px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #C41E3A;
 }
 
 .form-container form {
@@ -634,7 +634,7 @@
 .form-section-title {
   font-size: 14px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-top: 12px;
@@ -661,7 +661,7 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .form-group input,
@@ -683,8 +683,8 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  border-color: #C41E3A;
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.1);
 }
 
 /* File input */
@@ -703,14 +703,14 @@
 .file-input-label {
   display: block;
   padding: 10px;
-  border: 2px dashed #3498db;
+  border: 2px dashed #C41E3A;
   border-radius: 4px;
-  background-color: #f0f7ff;
+  background-color: #fff5f5;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
   font-size: 13px;
-  color: #3498db;
+  color: #C41E3A;
 }
 
 .file-input-label:hover {
@@ -725,7 +725,7 @@
 }
 
 .btn-submit {
-  background-color: #3498db;
+  background-color: #C41E3A;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -737,12 +737,12 @@
 }
 
 .btn-submit:hover {
-  background-color: #2980b9;
+  background-color: #A01830;
 }
 
 /* Total Card */
 .total-card {
-  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #229954 100%);
   color: white;
   padding: 24px;
   border-radius: 8px;
@@ -785,7 +785,7 @@
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 /* Table */
@@ -800,7 +800,7 @@
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .table-responsive {
@@ -821,7 +821,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   border-bottom: 2px solid #ecf0f1;
 }
 
@@ -849,7 +849,7 @@
   display: inline-block;
   padding: 4px 10px;
   background-color: #e8f4fd;
-  color: #3498db;
+  color: #C41E3A;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
@@ -860,7 +860,7 @@
 }
 
 .btn-download {
-  background-color: #3498db;
+  background-color: #C41E3A;
   color: white;
   border: none;
   padding: 6px 10px;
@@ -872,7 +872,7 @@
 }
 
 .btn-download:hover {
-  background-color: #2980b9;
+  background-color: #A01830;
 }
 
 .sin-factura {
@@ -886,7 +886,7 @@
 
 .btn-delete {
   background-color: transparent;
-  color: #e74c3c;
+  color: #C41E3A;
   border: none;
   cursor: pointer;
   font-size: 16px;
@@ -906,7 +906,7 @@
 
 .loading {
   text-align: center;
-  color: #7f8c8d;
+  color: #999999;
   padding: 20px;
   font-size: 14px;
 }

@@ -21,7 +21,7 @@
 .progress-label {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .progress-percentage {
@@ -55,7 +55,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #7f8c8d;
+  color: #999999;
   font-weight: 600;
 }
 
@@ -69,13 +69,13 @@
 .dashboard-header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 8px;
 }
 
 .dashboard-subtitle {
   font-size: 14px;
-  color: #7f8c8d;
+  color: #999999;
   margin: 0;
 }
 
@@ -89,12 +89,12 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #C41E3A;
 }
 
 .selector-label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   white-space: nowrap;
   font-size: 14px;
 }
@@ -105,7 +105,7 @@
   border: 1px solid #bdc3c7;
   border-radius: 4px;
   font-size: 14px;
-  color: #2c3e50;
+  color: #1a1a1a;
   background-color: white;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -114,9 +114,9 @@
 
 .project-select:hover,
 .project-select:focus {
-  border-color: #3498db;
+  border-color: #C41E3A;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.1);
 }
 
 /* Metrics Grid */
@@ -141,25 +141,25 @@
 }
 
 .dashboard-card.blue {
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #C41E3A;
 }
 
 .dashboard-card.green {
-  border-left: 4px solid #27ae60;
+  border-left: 4px solid #C41E3A;
 }
 
 .dashboard-card.red {
-  border-left: 4px solid #e74c3c;
+  border-left: 4px solid #C41E3A;
 }
 
 .dashboard-card.orange {
-  border-left: 4px solid #f39c12;
+  border-left: 4px solid #C41E3A;
 }
 
 .dashboard-card h3 {
   margin: 0 0 8px;
   font-size: 13px;
-  color: #7f8c8d;
+  color: #666666;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -168,13 +168,13 @@
 .card-number {
   font-size: 28px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0;
 }
 
 .card-description {
   margin: 8px 0 0;
-  color: #7f8c8d;
+  color: #666666;
   font-size: 12px;
 }
 
@@ -201,10 +201,10 @@
 .chart-box h2 {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 20px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #ecf0f1;
+  border-bottom: 2px solid #C41E3A;
 }
 
 /* Recent Activity */
@@ -219,10 +219,10 @@
 .dashboard-section h2 {
   font-size: 18px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #ecf0f1;
+  border-bottom: 2px solid #C41E3A;
 }
 
 /* Table in Dashboard */
@@ -241,7 +241,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 13px;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .activity-table tbody tr.balance-row {
-  background-color: #f0f7ff;
+  background-color: #fff5f5;
   font-weight: 600;
 }
 
@@ -290,7 +290,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -306,11 +306,11 @@
 }
 
 .movimientos-table tbody tr.movimiento-row.ingreso {
-  border-left: 3px solid #27ae60;
+  border-left: 3px solid #C41E3A;
 }
 
 .movimientos-table tbody tr.movimiento-row.gasto {
-  border-left: 3px solid #e74c3c;
+  border-left: 3px solid #666666;
 }
 
 .movimientos-table td {
@@ -320,7 +320,7 @@
 
 .movimientos-table .fecha {
   font-weight: 500;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .movimientos-table .tipo-badge {
@@ -334,23 +334,24 @@
 }
 
 .movimientos-table .tipo-badge.ingreso {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #ffe6e6;
+  color: #C41E3A;
 }
 
 .movimientos-table .tipo-badge.gasto {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #f0f0f0;
+  color: #1a1a1a;
 }
 
 .movimientos-table .categoria {
   font-weight: 500;
+  color: #1a1a1a;
 }
 
 .movimientos-table .descripcion {
   max-width: 300px;
   word-wrap: break-word;
-  color: #7f8c8d;
+  color: #999999;
 }
 
 .movimientos-table .monto {
@@ -360,11 +361,11 @@
 }
 
 .movimientos-table .monto.ingreso {
-  color: #27ae60;
+  color: #C41E3A;
 }
 
 .movimientos-table .monto.gasto {
-  color: #e74c3c;
+  color: #1a1a1a;
 }
 
 /* ===== PROGRESS SECTION ===== */
@@ -374,7 +375,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
-  border-left: 4px solid #10b981;
+  border-left: 4px solid #C41E3A;
 }
 
 .progress-header {
@@ -387,7 +388,7 @@
 .progress-label {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .progress-percentage {
@@ -421,13 +422,13 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #7f8c8d;
+  color: #999999;
   font-weight: 600;
 }
 
 .no-data {
   text-align: center;
-  color: #7f8c8d;
+  color: #999999;
   padding: 20px;
   font-size: 14px;
 }

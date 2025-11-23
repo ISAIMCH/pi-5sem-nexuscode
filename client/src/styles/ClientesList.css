@@ -5,7 +5,7 @@
 }
 
 .clientes-container h1 {
-  color: #2c3e50;
+  color: #1a1a1a;
   margin-bottom: 20px;
 }
 
@@ -29,8 +29,8 @@
 
 .cliente-form input:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+  border-color: #C41E3A;
+  box-shadow: 0 0 5px rgba(196, 30, 58, 0.3);
 }
 
 .clientes-table {
@@ -43,7 +43,7 @@
 }
 
 .clientes-table thead {
-  background-color: #3498db;
+  background-color: #C41E3A;
   color: white;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .btn-primary {
-  background-color: #27ae60;
+  background-color: #C41E3A;
   color: white;
   padding: 10px 20px;
   margin-bottom: 20px;
@@ -69,5 +69,5 @@
 }
 
 .btn-primary:hover {
-  background-color: #229954;
+  background-color: #A01830;
 }

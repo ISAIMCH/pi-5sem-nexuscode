@@ -4,7 +4,7 @@
 
 .obras-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -39,7 +39,7 @@
 
 /* Botón Agregar Proyecto */
 .btn-add-project {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -47,14 +47,14 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
   transition: all 0.3s ease;
   white-space: nowrap;
 }
 
 .btn-add-project:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+  box-shadow: 0 6px 20px rgba(196, 30, 58, 0.6);
 }
 
 .btn-add-project:active {
@@ -88,12 +88,12 @@
 
 .no-obras h2 {
   font-size: 1.8rem;
-  color: #333;
+  color: #1a1a1a;
   margin: 0 0 0.5rem 0;
 }
 
 .no-obras p {
-  color: #999;
+  color: #999999;
   font-size: 1rem;
   margin: 0;
 }
@@ -112,7 +112,7 @@
 }
 
 .obras-table thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   font-weight: 600;
 }
@@ -121,7 +121,7 @@
   padding: 1.2rem;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid #C41E3A;
 }
 
 .obras-table tbody tr {
@@ -144,7 +144,7 @@
 
 .col-id {
   font-weight: 600;
-  color: #667eea;
+  color: #C41E3A;
   width: 5%;
 }
 
@@ -158,14 +158,14 @@
 
 .col-ubicacion {
   width: 15%;
-  color: #666;
+  color: #999999;
   font-size: 0.9rem;
 }
 
 .col-monto {
   width: 15%;
   font-weight: 600;
-  color: #2e7d32;
+  color: #C41E3A;
 }
 
 .col-estatus {
@@ -188,18 +188,18 @@
 }
 
 .status-active {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: #ffe6e6;
+  color: #C41E3A;
 }
 
 .status-closed {
-  background-color: #ffe0e0;
-  color: #c62828;
+  background-color: #f0f0f0;
+  color: #666666;
 }
 
 .status-recovered {
-  background-color: #e0f2f1;
-  color: #00695c;
+  background-color: #ffe6e6;
+  color: #C41E3A;
 }
 
 .status-low {
@@ -208,8 +208,8 @@
 }
 
 .status-default {
-  background-color: #f3e5f5;
-  color: #6a1b9a;
+  background-color: #f0f0f0;
+  color: #666666;
 }
 
 /* ============ BOTONES ACCIÓN ============ */
@@ -225,12 +225,12 @@
 }
 
 .btn-view {
-  background-color: #667eea;
+  background-color: #C41E3A;
   color: white;
 }
 
 .btn-view:hover {
-  background-color: #5568d3;
+  background-color: #A01830;
   transform: scale(1.05);
 }
 
@@ -270,14 +270,14 @@
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #C41E3A;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .detail-section h3 {
   margin: 0 0 1.2rem 0;
   font-size: 1.1rem;
-  color: #667eea;
+  color: #C41E3A;
   font-weight: 600;
 }
 
@@ -288,7 +288,7 @@
 .detail-item label {
   display: block;
   font-weight: 600;
-  color: #555;
+  color: #1a1a1a;
   font-size: 0.85rem;
   margin-bottom: 0.4rem;
   text-transform: uppercase;
@@ -297,14 +297,14 @@
 
 .detail-item p {
   margin: 0;
-  color: #333;
+  color: #333333;
   font-size: 0.95rem;
   word-break: break-word;
 }
 
 .monto-value {
   font-size: 1.2rem !important;
-  color: #2e7d32 !important;
+  color: #C41E3A !important;
   font-weight: 700 !important;
 }
 
@@ -319,7 +319,7 @@
 .files-section h3 {
   margin: 0 0 1.5rem 0;
   font-size: 1.2rem;
-  color: #667eea;
+  color: #C41E3A;
   font-weight: 600;
 }
 
@@ -351,11 +351,11 @@
 .file-info h4 {
   margin: 0 0 1rem 0;
   font-size: 1rem;
-  color: #333;
+  color: #1a1a1a;
 }
 
 .no-file {
-  color: #999;
+  color: #999999;
   font-size: 0.85rem;
   margin: 0;
   font-style: italic;
@@ -380,21 +380,21 @@
 }
 
 .btn-download {
-  background-color: #667eea;
+  background-color: #C41E3A;
   color: white;
 }
 
 .btn-download:hover {
-  background-color: #5568d3;
+  background-color: #A01830;
 }
 
 .btn-view-file {
-  background-color: #764ba2;
+  background-color: #666666;
   color: white;
 }
 
 .btn-view-file:hover {
-  background-color: #653a89;
+  background-color: #4a4a4a;
 }
 
 /* ============ LOADING Y ERRORES ============ */
@@ -409,11 +409,11 @@
 }
 
 .loading {
-  color: #667eea;
+  color: #C41E3A;
 }
 
 .error {
-  color: #d32f2f;
+  color: #C41E3A;
 }
 
 /* ============ RESPONSIVE ============ */
@@ -541,48 +541,48 @@
 }
 
 .btn-view {
-  background-color: #3498db;
+  background-color: #C41E3A;
   color: white;
 }
 
 .btn-view:hover {
-  background-color: #2980b9;
+  background-color: #A01830;
 }
 
 .btn-edit {
-  background-color: #f39c12;
+  background-color: #666666;
   color: white;
 }
 
 .btn-edit:hover {
-  background-color: #e67e22;
+  background-color: #4a4a4a;
 }
 
 .btn-delete {
-  background-color: #e74c3c;
+  background-color: #C41E3A;
   color: white;
 }
 
 .btn-delete:hover {
-  background-color: #c0392b;
+  background-color: #A01830;
 }
 
 .btn-primary {
-  background-color: #27ae60;
+  background-color: #C41E3A;
   color: white;
   padding: 10px 20px;
   margin-bottom: 20px;
 }
 
 .btn-primary:hover {
-  background-color: #229954;
+  background-color: #A01830;
 }
 
 .btn-save {
-  background-color: #27ae60;
+  background-color: #C41E3A;
   color: white;
 }
 
 .btn-save:hover {
-  background-color: #229954;
+  background-color: #A01830;
 }

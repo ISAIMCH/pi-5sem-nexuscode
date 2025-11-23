@@ -32,13 +32,13 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #95a5a6;
+  color: #cccccc;
   z-index: 10;
   transition: color 0.3s;
 }
 
 .close-btn:hover {
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .form-wrapper {
@@ -56,13 +56,13 @@
 .form-main h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 8px;
 }
 
 .form-main .subtitle {
   font-size: 14px;
-  color: #95a5a6;
+  color: #999999;
   margin: 0 0 24px;
 }
 
@@ -99,7 +99,7 @@ form {
 .section-header h3 {
   font-size: 14px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
@@ -107,7 +107,7 @@ form {
 
 .section-desc {
   font-size: 12px;
-  color: #95a5a6;
+  color: #999999;
   margin: 0 0 16px;
 }
 
@@ -132,7 +132,7 @@ form {
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .form-group input,
@@ -155,9 +155,9 @@ form {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
-  background-color: #f0f7ff;
+  border-color: #C41E3A;
+  box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.1);
+  background-color: #fff5f5;
 }
 
 .input-with-prefix {
@@ -170,7 +170,7 @@ form {
   position: absolute;
   left: 12px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 14px;
 }
 
@@ -206,8 +206,8 @@ form {
 }
 
 .doc-label:hover {
-  border-color: #3498db;
-  background-color: #f0f7ff;
+  border-color: #C41E3A;
+  background-color: #fff5f5;
 }
 
 .doc-icon {
@@ -217,12 +217,12 @@ form {
 .doc-title {
   font-size: 13px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .doc-subtitle {
   font-size: 11px;
-  color: #95a5a6;
+  color: #999999;
 }
 
 /* Form Buttons */
@@ -237,8 +237,8 @@ form {
 
 .btn-cancel {
   background-color: white;
-  color: #7f8c8d;
-  border: 1px solid #bdc3c7;
+  color: #999999;
+  border: 1px solid #dddddd;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
@@ -248,12 +248,12 @@ form {
 }
 
 .btn-cancel:hover {
-  background-color: #ecf0f1;
-  color: #2c3e50;
+  background-color: #f0f0f0;
+  color: #1a1a1a;
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -266,7 +266,7 @@ form {
 
 .btn-submit:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
 }
 
 .btn-submit:disabled {
@@ -291,13 +291,13 @@ form {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #C41E3A;
 }
 
 .status-card h4 {
   font-size: 13px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 4px;
@@ -305,7 +305,7 @@ form {
 
 .status-label {
   font-size: 11px;
-  color: #95a5a6;
+  color: #999999;
   margin: 0 0 12px;
 }
 
@@ -323,29 +323,29 @@ form {
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
-  color: #7f8c8d;
+  color: #999999;
   transition: all 0.3s;
   text-align: left;
 }
 
 .status-btn:hover {
-  border-color: #3498db;
-  background-color: #f0f7ff;
-  color: #3498db;
+  border-color: #C41E3A;
+  background-color: #fff5f5;
+  color: #C41E3A;
 }
 
 .status-btn.active {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
-  border-color: #2980b9;
+  border-color: #A01830;
 }
 
 .status-desc {
   font-size: 11px;
-  color: #7f8c8d;
+  color: #999999;
   margin: 12px 0 0;
   padding: 8px;
-  background-color: #ecf0f1;
+  background-color: #f0f0f0;
   border-radius: 4px;
   line-height: 1.4;
 }
@@ -355,13 +355,13 @@ form {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  border-left: 4px solid #27ae60;
+  border-left: 4px solid #C41E3A;
 }
 
 .required-fields h4 {
   font-size: 13px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px;
@@ -375,7 +375,7 @@ form {
 
 .required-fields li {
   font-size: 12px;
-  color: #34495e;
+  color: #333333;
   margin: 0 0 6px;
   padding-left: 0;
   display: flex;
@@ -384,7 +384,7 @@ form {
 
 .required-fields li::before {
   content: '✓ ';
-  color: #27ae60;
+  color: #C41E3A;
   font-weight: 700;
   margin-right: 4px;
 }

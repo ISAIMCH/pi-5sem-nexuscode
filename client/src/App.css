@@ -18,7 +18,7 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 280px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   display: flex;
   flex-direction: column;
@@ -90,7 +90,7 @@ body {
 .menu-item.active {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
-  border-right: 3px solid #60a5fa;
+  border-right: 3px solid #FFD700;
 }
 
 .menu-item .icon {

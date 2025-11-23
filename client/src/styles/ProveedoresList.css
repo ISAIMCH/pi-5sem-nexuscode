@@ -20,14 +20,14 @@
 .header-content h1 {
   margin: 0;
   font-size: 2.5rem;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-weight: 700;
 }
 
 .header-content .subtitle {
   margin: 8px 0 0 0;
   font-size: 0.95rem;
-  color: #7f8c8d;
+  color: #999999;
 }
 
 /* ===================================
@@ -35,7 +35,7 @@
    =================================== */
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -44,7 +44,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.4);
   white-space: nowrap;
 }
 
@@ -55,7 +55,7 @@
 
 .btn-secondary {
   background: #ecf0f1;
-  color: #2c3e50;
+  color: #1a1a1a;
   border: 1px solid #bdc3c7;
   padding: 12px 24px;
   border-radius: 8px;
@@ -81,22 +81,22 @@
 }
 
 .btn-edit {
-  color: #3498db;
-  background: rgba(52, 152, 219, 0.1);
+  color: #C41E3A;
+  background: rgba(196, 30, 58, 0.1);
 }
 
 .btn-edit:hover {
-  background: rgba(52, 152, 219, 0.2);
+  background: rgba(196, 30, 58, 0.2);
   transform: scale(1.1);
 }
 
 .btn-delete {
-  color: #e74c3c;
-  background: rgba(231, 76, 60, 0.1);
+  color: #C41E3A;
+  background: rgba(196, 30, 58, 0.1);
 }
 
 .btn-delete:hover {
-  background: rgba(231, 76, 60, 0.2);
+  background: rgba(196, 30, 58, 0.2);
   transform: scale(1.1);
 }
 
@@ -112,8 +112,8 @@
 
 .btn-status.activo {
   background: rgba(46, 204, 113, 0.15);
-  color: #27ae60;
-  border: 1px solid #27ae60;
+  color: #C41E3A;
+  border: 1px solid #C41E3A;
 }
 
 .btn-status.activo:hover {
@@ -121,18 +121,18 @@
 }
 
 .btn-status.inactivo {
-  background: rgba(231, 76, 60, 0.15);
-  color: #c0392b;
-  border: 1px solid #c0392b;
+  background: rgba(196, 30, 58, 0.15);
+  color: #A01830;
+  border: 1px solid #A01830;
 }
 
 .btn-status.inactivo:hover {
-  background: rgba(231, 76, 60, 0.25);
+  background: rgba(196, 30, 58, 0.25);
 }
 
 .btn-expand {
   background: #ecf0f1;
-  color: #2c3e50;
+  color: #1a1a1a;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
@@ -150,7 +150,7 @@
 }
 
 .btn-expand.expanded {
-  background: #3498db;
+  background: #C41E3A;
   color: white;
 }
 
@@ -159,12 +159,12 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #7f8c8d;
+  color: #999999;
   transition: color 0.2s ease;
 }
 
 .btn-close:hover {
-  color: #e74c3c;
+  color: #C41E3A;
 }
 
 /* ===================================
@@ -190,12 +190,12 @@
 .proveedor-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
+  border-color: #C41E3A;
 }
 
 .card-header {
   padding: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -259,19 +259,19 @@
 
 .info-row .label {
   font-weight: 600;
-  color: #7f8c8d;
+  color: #999999;
   font-size: 0.9rem;
   min-width: 100px;
 }
 
 .info-row .value {
-  color: #2c3e50;
+  color: #1a1a1a;
   word-break: break-word;
   text-align: right;
 }
 
 .info-row .value.email {
-  color: #3498db;
+  color: #C41E3A;
   text-decoration: none;
 }
 
@@ -303,7 +303,7 @@
 .loading-text,
 .empty-text {
   text-align: center;
-  color: #7f8c8d;
+  color: #999999;
   padding: 20px;
   font-style: italic;
 }
@@ -326,7 +326,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   border-bottom: 2px solid #bdc3c7;
 }
 
@@ -386,7 +386,7 @@
 
 .modal-header {
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C41E3A 0%, #A01830 100%);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -438,7 +438,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #1a1a1a;
   font-size: 0.95rem;
 }
 
@@ -477,7 +477,7 @@
 .empty-state p {
   margin: 0 0 20px 0;
   font-size: 1.2rem;
-  color: #7f8c8d;
+  color: #999999;
 }
 
 /* ===================================
@@ -490,17 +490,17 @@
   align-items: center;
   padding: 16px;
   background: #fadbd8;
-  border-left: 4px solid #e74c3c;
+  border-left: 4px solid #C41E3A;
   border-radius: 8px;
   margin-bottom: 20px;
-  color: #c0392b;
+  color: #A01830;
   font-weight: 600;
 }
 
 .error-banner button {
   background: none;
   border: none;
-  color: #c0392b;
+  color: #A01830;
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0 8px;
@@ -520,7 +520,7 @@
   align-items: center;
   min-height: 100vh;
   font-size: 1.2rem;
-  color: #7f8c8d;
+  color: #999999;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
