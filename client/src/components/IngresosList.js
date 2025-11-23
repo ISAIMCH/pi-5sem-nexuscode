@@ -129,13 +129,13 @@ function IngresosList() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Convertir el nombre del tipo a su ID correspondiente
-      let tipoIngresoID = null;
-      Object.entries(tiposIngresoMap).forEach(([id, nombre]) => {
-        if (nombre === formData.TipoIngresoID) {
-          tipoIngresoID = parseInt(id);
-        }
-      });
+      // Validar que TipoIngresoID sea un número válido
+      const tipoIngresoID = parseInt(formData.TipoIngresoID);
+      
+      if (isNaN(tipoIngresoID) || tipoIngresoID === 0) {
+        alert('Por favor selecciona un tipo de ingreso válido');
+        return;
+      }
 
       const dataToSubmit = {
         ObraID: parseInt(selectedObra),
@@ -148,7 +148,8 @@ function IngresosList() {
 
       console.log('Enviando data:', dataToSubmit);
 
-      await api.ingresosAPI.create(dataToSubmit);
+      const response = await api.ingresosAPI.create(dataToSubmit);
+      console.log('Respuesta:', response);
       
       setFormData({
         TipoIngresoID: '',
@@ -159,6 +160,7 @@ function IngresosList() {
       });
       setShowModal(false);
       await loadIngresos();
+      alert('Ingreso guardado exitosamente');
     } catch (error) {
       console.error('Error creating ingreso:', error);
       alert('Error al guardar el ingreso: ' + (error.message || 'Error desconocido'));
@@ -346,9 +348,9 @@ function IngresosList() {
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="">-- Selecciona --</option>
-                        {tiposIngreso.map(tipo => (
-                          <option key={tipo} value={tipo}>{tipo}</option>
+                        <option value="">-- Selecciona un tipo --</option>
+                        {Object.entries(tiposIngresoMap).map(([id, nombre]) => (
+                          <option key={id} value={id}>{nombre}</option>
                         ))}
                       </select>
                     </div>

@@ -28,17 +28,24 @@ const ProveedoresList = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [proveedoresData, tiposData] = await Promise.all([
-        api.proveedoresAPI?.getAll() || [],
-        api.catalogosAPI?.getTiposProveedor?.() || []
-      ]);
+      setError(null);
+      
+      console.log('Cargando proveedores...');
+      const proveedoresData = await api.proveedoresAPI?.getAll();
+      console.log('Respuesta proveedores:', proveedoresData);
+      
+      const tiposData = await api.catalogosAPI?.getTiposProveedor?.();
+      console.log('Respuesta tipos:', tiposData);
 
       const proveedoresArray = Array.isArray(proveedoresData) ? proveedoresData : [];
       const tiposArray = Array.isArray(tiposData) ? tiposData : [];
 
       setProveedores(proveedoresArray);
       setTipos(tiposArray);
-      setError(null);
+      
+      if (tiposArray.length === 0) {
+        console.warn('⚠️ No se encontraron tipos de proveedor');
+      }
     } catch (err) {
       console.error('Error loading data:', err);
       setError('Error al cargar: ' + (err.message || 'Error desconocido'));
@@ -61,7 +68,7 @@ const ProveedoresList = () => {
       setFormData({
         Nombre: proveedor.Nombre,
         RFC: proveedor.RFC || '',
-        TipoProveedorID: proveedor.TipoProveedorID,
+        TipoProveedorID: proveedor.TipoProveedorID || (tipos.length > 0 ? tipos[0].TipoProveedorID : 1),
         Telefono: proveedor.Telefono || '',
         Correo: proveedor.Correo || ''
       });
@@ -70,7 +77,7 @@ const ProveedoresList = () => {
       setFormData({
         Nombre: '',
         RFC: '',
-        TipoProveedorID: 1,
+        TipoProveedorID: tipos.length > 0 ? tipos[0].TipoProveedorID : 1,
         Telefono: '',
         Correo: ''
       });
@@ -84,7 +91,7 @@ const ProveedoresList = () => {
     setFormData({
       Nombre: '',
       RFC: '',
-      TipoProveedorID: 1,
+      TipoProveedorID: tipos.length > 0 ? tipos[0].TipoProveedorID : 1,
       Telefono: '',
       Correo: ''
     });
@@ -93,14 +100,35 @@ const ProveedoresList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (editingId) {
-        await api.proveedoresAPI?.update(editingId, formData);
-      } else {
-        await api.proveedoresAPI?.create(formData);
+      // Validar que el nombre no esté vacío
+      if (!formData.Nombre || formData.Nombre.trim() === '') {
+        setError('El nombre del proveedor es requerido');
+        return;
       }
+
+      // Validar TipoProveedorID
+      if (!formData.TipoProveedorID || formData.TipoProveedorID === 0) {
+        setError('Debes seleccionar un tipo de proveedor');
+        return;
+      }
+
+      console.log('Guardando proveedor:', formData);
+
+      let response;
+      if (editingId) {
+        response = await api.proveedoresAPI?.update(editingId, formData);
+        console.log('Proveedor actualizado:', response);
+      } else {
+        response = await api.proveedoresAPI?.create(formData);
+        console.log('Proveedor creado:', response);
+      }
+      
       closeModal();
-      fetchData();
+      setError(null);
+      await fetchData();
+      alert(editingId ? 'Proveedor actualizado exitosamente' : 'Proveedor creado exitosamente');
     } catch (err) {
+      console.error('Error al guardar proveedor:', err);
       setError('Error al guardar proveedor: ' + (err.message || 'Error desconocido'));
     }
   };
@@ -305,12 +333,17 @@ const ProveedoresList = () => {
                     name="TipoProveedorID"
                     value={formData.TipoProveedorID}
                     onChange={handleInputChange}
+                    required
                   >
-                    {tipos.map(tipo => (
-                      <option key={tipo.TipoProveedorID} value={tipo.TipoProveedorID}>
-                        {tipo.Nombre}
-                      </option>
-                    ))}
+                    {tipos && tipos.length > 0 ? (
+                      tipos.map(tipo => (
+                        <option key={tipo.TipoProveedorID} value={tipo.TipoProveedorID}>
+                          {tipo.Nombre}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">-- Cargando tipos --</option>
+                    )}
                   </select>
                 </div>
 
