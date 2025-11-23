@@ -59,8 +59,8 @@ class IngresoService {
         .input('FacturaRef', sql.NVarChar(100), ingreso.FacturaRef || null)
         .query(
           `INSERT INTO Ingreso (ObraID, Fecha, TipoIngresoID, Descripcion, Monto, FacturaRef)
-           OUTPUT INSERTED.IngresoID, INSERTED.Fecha, INSERTED.Monto
-           VALUES (@ObraID, @Fecha, @TipoIngresoID, @Descripcion, @Monto, @FacturaRef)`
+           VALUES (@ObraID, @Fecha, @TipoIngresoID, @Descripcion, @Monto, @FacturaRef);
+           SELECT @@IDENTITY as IngresoID;`
         );
       
       console.log('INSERT executed. Recordset:', result.recordset);

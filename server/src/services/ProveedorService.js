@@ -55,8 +55,8 @@ class ProveedorService {
         .input('Correo', sql.NVarChar(120), proveedor.Correo || null)
         .query(
           `INSERT INTO Proveedor (Nombre, RFC, TipoProveedorID, Telefono, Correo)
-           OUTPUT INSERTED.ProveedorID, INSERTED.Nombre, INSERTED.TipoProveedorID
-           VALUES (@Nombre, @RFC, @TipoProveedorID, @Telefono, @Correo)`
+           VALUES (@Nombre, @RFC, @TipoProveedorID, @Telefono, @Correo);
+           SELECT @@IDENTITY as ProveedorID;`
         );
       
       console.log('INSERT executed. Recordset:', result.recordset);
