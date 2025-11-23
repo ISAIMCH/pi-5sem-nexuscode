@@ -1,0 +1,733 @@
+/* ====================================
+   GASTOS LIST - ESTILOS PRINCIPALES
+   ==================================== */
+
+.gastos-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ====================================
+   ENCABEZADO
+   ==================================== */
+
+.gastos-header {
+  margin-bottom: 30px;
+}
+
+.gastos-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ====================================
+   SELECTOR DE OBRA
+   ==================================== */
+
+.obra-selector-container {
+  background: white;
+  padding: 18px 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #e74c3c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  transition: box-shadow 0.3s ease;
+}
+
+.obra-selector-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.selector-label {
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.obra-select {
+  flex: 1;
+  min-width: 250px;
+  padding: 10px 14px;
+  border: 1px solid #ecf0f1;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.obra-select:hover {
+  border-color: #e74c3c;
+  box-shadow: inset 0 0 0 2px rgba(231, 76, 60, 0.1);
+}
+
+.obra-select:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* ====================================
+   TARJETA DE TOTAL GASTOS
+   ==================================== */
+
+.total-gastos-card {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #e74c3c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.total-gastos-card h3 {
+  font-size: 14px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.total-gastos-card .total-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e74c3c;
+  margin: 0;
+}
+
+/* ====================================
+   CONTENEDOR DE GRÁFICAS
+   ==================================== */
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.chart-box {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.chart-box:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.chart-box h2 {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.chart-box svg {
+  max-width: 100%;
+}
+
+/* ====================================
+   MENÚ DE CATEGORÍAS
+   ==================================== */
+
+.categories-menu {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.categories-menu h3 {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.categories-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.category-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #f8f9fa;
+  border: 2px solid #ecf0f1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 10px;
+}
+
+.category-tab:hover {
+  background: #f0f3f4;
+  border-color: #e74c3c;
+}
+
+.category-tab.active {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+}
+
+.category-tab .icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.category-tab .tab-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+}
+
+.category-tab .label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.category-tab .badge {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.category-tab.active .label,
+.category-tab.active .badge {
+  color: white;
+}
+
+.category-tab .amount {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #e74c3c;
+}
+
+.category-tab.active .amount {
+  color: white;
+}
+
+/* ====================================
+   SECCIÓN DE TABLA
+   ==================================== */
+
+.gastos-table-section {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-nuevo-gasto {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-nuevo-gasto:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.btn-nuevo-gasto:active {
+  transform: translateY(0);
+}
+
+/* ====================================
+   TABLA
+   ==================================== */
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.gastos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.gastos-table thead {
+  background: #f8f9fa;
+  border-top: 1px solid #ecf0f1;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.gastos-table th {
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.gastos-table td {
+  padding: 14px;
+  border-bottom: 1px solid #ecf0f1;
+  color: #34495e;
+}
+
+.gastos-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.gastos-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.gastos-table td.fecha {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.gastos-table td.descripcion {
+  max-width: 250px;
+  word-wrap: break-word;
+}
+
+.gastos-table td.monto {
+  font-weight: 600;
+  color: #e74c3c;
+  text-align: right;
+}
+
+.gastos-table td.factura {
+  text-align: center;
+}
+
+.factura-ref {
+  display: inline-block;
+  background: #ecf0f1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.sin-factura {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.gastos-table td.acciones {
+  text-align: center;
+  padding: 12px;
+}
+
+.btn-delete {
+  background: none;
+  border: 1px solid #ecf0f1;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover {
+  background: #fadbd8;
+  border-color: #e74c3c;
+}
+
+.btn-delete:active {
+  transform: scale(0.95);
+}
+
+/* ====================================
+   BADGES DE ESTADO
+   ==================================== */
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge-activa {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.badge-finalizada {
+  background: #d6eaf8;
+  color: #2980b9;
+}
+
+.badge-1 {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.badge-2 {
+  background: #fadbd8;
+  color: #e74c3c;
+}
+
+.badge-3 {
+  background: #fef5e7;
+  color: #f39c12;
+}
+
+.badge-4 {
+  background: #ebdef0;
+  color: #8e44ad;
+}
+
+/* ====================================
+   MODAL
+   ==================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #95a5a6;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: #f0f3f4;
+  color: #2c3e50;
+}
+
+.modal-form {
+  padding: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid #ecf0f1;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.btn-cancel,
+.btn-submit {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-cancel:hover {
+  background: #d5dbdb;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* ====================================
+   ESTADO DE CARGA Y VACÍO
+   ==================================== */
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #95a5a6;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* ====================================
+   RESPONSIVE DESIGN
+   ==================================== */
+
+@media (max-width: 768px) {
+  .gastos-container {
+    padding: 12px;
+  }
+
+  .gastos-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .obra-selector-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selector-label {
+    width: 100%;
+  }
+
+  .obra-select {
+    width: 100%;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .categories-tabs {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-nuevo-gasto {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gastos-table th,
+  .gastos-table td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .gastos-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .total-gastos-card .total-amount {
+    font-size: 2rem;
+  }
+
+  .chart-box h2 {
+    font-size: 14px;
+  }
+
+  .categories-tabs {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  .category-tab {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .gastos-table {
+    font-size: 11px;
+  }
+
+  .gastos-table th,
+  .gastos-table td {
+    padding: 8px;
+  }
+
+  .gastos-table td.descripcion {
+    max-width: 150px;
+  }
+}

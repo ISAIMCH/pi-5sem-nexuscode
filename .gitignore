@@ -1,0 +1,50 @@
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# React
+build/
+dist/
+.cache/
+
+# SQL Server
+*.mdf
+*.ldf
+*.bak
+
+# Temporal
+tmp/
+temp/
+.tmp/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Otros
+coverage/
+.env.production
+
+# Archivos de configuración local
+.env.development
+.env.test

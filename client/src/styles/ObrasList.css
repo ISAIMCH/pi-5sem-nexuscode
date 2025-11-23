@@ -1,0 +1,588 @@
+/* ============================================
+   OBRAS LIST - GESTIÓN DE PROYECTOS
+   ============================================ */
+
+.obras-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============ HEADER ============ */
+.obras-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  color: white;
+  flex: 1;
+}
+
+.header-title h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-title .subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Botón Agregar Proyecto */
+.btn-add-project {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-add-project:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+}
+
+.btn-add-project:active {
+  transform: translateY(0);
+}
+
+/* ============ CONTENIDO PRINCIPAL ============ */
+.obras-content {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  min-height: 60vh;
+}
+
+/* ============ SIN OBRAS ============ */
+.no-obras {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.no-obras-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.no-obras h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.no-obras p {
+  color: #999;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ============ TABLA DE OBRAS ============ */
+.tabla-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.obras-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.obras-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.obras-table th {
+  padding: 1.2rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #667eea;
+}
+
+.obras-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.obras-table tbody tr:hover {
+  background-color: #f8f9ff;
+}
+
+.obras-table tbody tr.expanded {
+  background-color: #f8f9ff;
+}
+
+.obras-table td {
+  padding: 1rem 1.2rem;
+  vertical-align: middle;
+}
+
+.col-id {
+  font-weight: 600;
+  color: #667eea;
+  width: 5%;
+}
+
+.col-nombre {
+  width: 20%;
+}
+
+.col-cliente {
+  width: 15%;
+}
+
+.col-ubicacion {
+  width: 15%;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.col-monto {
+  width: 15%;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.col-estatus {
+  width: 15%;
+}
+
+.col-acciones {
+  width: 10%;
+  text-align: center;
+}
+
+/* ============ STATUS BADGES ============ */
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-closed {
+  background-color: #ffe0e0;
+  color: #c62828;
+}
+
+.status-recovered {
+  background-color: #e0f2f1;
+  color: #00695c;
+}
+
+.status-low {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.status-default {
+  background-color: #f3e5f5;
+  color: #6a1b9a;
+}
+
+/* ============ BOTONES ACCIÓN ============ */
+.btn-action {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-view {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #5568d3;
+  transform: scale(1.05);
+}
+
+/* ============ FILA DE DETALLES EXPANDIBLE ============ */
+.details-row {
+  background-color: #f8f9ff;
+}
+
+.details-row td {
+  padding: 2rem 1.2rem;
+}
+
+.detail-content {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Grid de Secciones de Detalles */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.detail-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.detail-section h3 {
+  margin: 0 0 1.2rem 0;
+  font-size: 1.1rem;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.detail-item {
+  margin-bottom: 1rem;
+}
+
+.detail-item label {
+  display: block;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #333;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.monto-value {
+  font-size: 1.2rem !important;
+  color: #2e7d32 !important;
+  font-weight: 700 !important;
+}
+
+/* ============ SECCIÓN DE ARCHIVOS ============ */
+.files-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.files-section h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.file-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.file-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.file-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.file-info h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.no-file {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-download,
+.btn-view-file {
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-download {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-download:hover {
+  background-color: #5568d3;
+}
+
+.btn-view-file {
+  background-color: #764ba2;
+  color: white;
+}
+
+.btn-view-file:hover {
+  background-color: #653a89;
+}
+
+/* ============ LOADING Y ERRORES ============ */
+.loading,
+.error {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 1.1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  color: #667eea;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1200px) {
+  .obras-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-project {
+    width: 100%;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .obras-container {
+    padding: 1rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-title .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .obras-content {
+    padding: 1rem;
+  }
+
+  .obras-table {
+    font-size: 0.85rem;
+  }
+
+  .obras-table th,
+  .obras-table td {
+    padding: 0.75rem;
+  }
+
+  .col-ubicacion {
+    display: none;
+  }
+
+  .col-cliente {
+    width: 20%;
+  }
+
+  .col-nombre {
+    width: 25%;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .files-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-content {
+    padding: 0;
+  }
+
+  .detail-section {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .obras-table th:nth-child(n+5) {
+    display: none;
+  }
+
+  .obras-table td:nth-child(n+5) {
+    display: none;
+  }
+
+  .col-acciones {
+    width: 20%;
+  }
+
+  .col-nombre {
+    width: 35%;
+  }
+
+  .col-id {
+    width: 10%;
+  }
+
+  .btn-action {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .detail-item label {
+    font-size: 0.75rem;
+  }
+
+  .detail-item p {
+    font-size: 0.85rem;
+  }
+}
+
+.obras-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-view, .btn-edit, .btn-delete, .btn-primary, .btn-save {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-view {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #2980b9;
+}
+
+.btn-edit {
+  background-color: #f39c12;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #e67e22;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+.btn-primary {
+  background-color: #27ae60;
+  color: white;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+  background-color: #229954;
+}
+
+.btn-save {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #229954;
+}
