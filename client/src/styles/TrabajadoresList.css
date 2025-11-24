@@ -17,6 +17,41 @@
   margin: 0;
 }
 
+/* FILTER SECTION */
+.filtro-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtro-section label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.obra-select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 250px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.obra-select:focus {
+  outline: none;
+  border-color: #27ae60;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
 .trabajadores-table-section {
   background: white;
   border-radius: 10px;
@@ -115,6 +150,28 @@
 .trabajadores-table .nss {
   color: #95a5a6;
   font-family: 'Courier New', monospace;
+}
+
+.trabajadores-table .codigo {
+  color: #7f8c8d;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+.trabajadores-table .rfc {
+  color: #7f8c8d;
+  font-family: 'Courier New', monospace;
+}
+
+.trabajadores-table .correo {
+  color: #3498db;
+  word-break: break-all;
+}
+
+.trabajadores-table .obra {
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .estatus-badge {
@@ -267,6 +324,25 @@
 
 .modal-form {
   padding: 1.5rem;
+}
+
+.form-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.form-section h3 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #27ae60;
 }
 
 .form-grid {

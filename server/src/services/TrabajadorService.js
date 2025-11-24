@@ -17,6 +17,26 @@ class TrabajadorService {
     }
   }
 
+  async getTrabajadoresByObra(obraId) {
+    try {
+      const pool = await poolPromise;
+      const result = await pool
+        .request()
+        .input('ObraID', sql.Int, obraId)
+        .query(
+          `SELECT t.*, ce.Nombre as EstatusNombre
+           FROM Trabajador t
+           LEFT JOIN Cat_Estatus ce ON t.EstatusID = ce.EstatusID
+           WHERE t.ObraActualID = @ObraID
+           ORDER BY t.NombreCompleto`
+        );
+      return result.recordset;
+    } catch (error) {
+      console.error('TrabajadorService.getTrabajadoresByObra error:', error.message);
+      throw new Error(`Error fetching trabajadores for obra ${obraId}: ${error.message}`);
+    }
+  }
+
   async getTrabajadorById(id) {
     try {
       const pool = await poolPromise;
@@ -52,10 +72,25 @@ class TrabajadorService {
         .input('NombreCompleto', sql.NVarChar(150), trabajador.NombreCompleto)
         .input('Puesto', sql.NVarChar(100), trabajador.Puesto)
         .input('NSS', sql.NVarChar(20), trabajador.NSS || null)
+        .input('ClaveEmpleado', sql.NVarChar(20), trabajador.ClaveEmpleado || null)
+        .input('ApellidoPaterno', sql.NVarChar(60), trabajador.ApellidoPaterno || null)
+        .input('ApellidoMaterno', sql.NVarChar(60), trabajador.ApellidoMaterno || null)
+        .input('Oficio', sql.NVarChar(100), trabajador.Oficio || null)
+        .input('INE_Clave', sql.NVarChar(18), trabajador.INE_Clave || null)
+        .input('CURP', sql.NVarChar(18), trabajador.CURP || null)
+        .input('RFC', sql.NVarChar(13), trabajador.RFC || null)
+        .input('FechaNacimiento', sql.Date, trabajador.FechaNacimiento || null)
+        .input('Telefono', sql.NVarChar(20), trabajador.Telefono || null)
+        .input('Correo', sql.NVarChar(100), trabajador.Correo || null)
+        .input('Direccion', sql.NVarChar(250), trabajador.Direccion || null)
+        .input('Banco', sql.NVarChar(50), trabajador.Banco || null)
+        .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
+        .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
+        .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID || 1)
         .query(
-          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, EstatusID)
-           VALUES (@NombreCompleto, @Puesto, @NSS, @EstatusID);
+          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, ClaveEmpleado, ApellidoPaterno, ApellidoMaterno, Oficio, INE_Clave, CURP, RFC, FechaNacimiento, Telefono, Correo, Direccion, Banco, CuentaBancaria, EsFacturador, ObraActualID, EstatusID)
+           VALUES (@NombreCompleto, @Puesto, @NSS, @ClaveEmpleado, @ApellidoPaterno, @ApellidoMaterno, @Oficio, @INE_Clave, @CURP, @RFC, @FechaNacimiento, @Telefono, @Correo, @Direccion, @Banco, @CuentaBancaria, @EsFacturador, @ObraActualID, @EstatusID);
            SELECT @@IDENTITY as TrabajadorID;`
         );
       
@@ -82,10 +117,32 @@ class TrabajadorService {
         .input('NombreCompleto', sql.NVarChar(150), trabajador.NombreCompleto)
         .input('Puesto', sql.NVarChar(100), trabajador.Puesto)
         .input('NSS', sql.NVarChar(20), trabajador.NSS || null)
+        .input('ClaveEmpleado', sql.NVarChar(20), trabajador.ClaveEmpleado || null)
+        .input('ApellidoPaterno', sql.NVarChar(60), trabajador.ApellidoPaterno || null)
+        .input('ApellidoMaterno', sql.NVarChar(60), trabajador.ApellidoMaterno || null)
+        .input('Oficio', sql.NVarChar(100), trabajador.Oficio || null)
+        .input('INE_Clave', sql.NVarChar(18), trabajador.INE_Clave || null)
+        .input('CURP', sql.NVarChar(18), trabajador.CURP || null)
+        .input('RFC', sql.NVarChar(13), trabajador.RFC || null)
+        .input('FechaNacimiento', sql.Date, trabajador.FechaNacimiento || null)
+        .input('Telefono', sql.NVarChar(20), trabajador.Telefono || null)
+        .input('Correo', sql.NVarChar(100), trabajador.Correo || null)
+        .input('Direccion', sql.NVarChar(250), trabajador.Direccion || null)
+        .input('Banco', sql.NVarChar(50), trabajador.Banco || null)
+        .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
+        .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
+        .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID)
         .query(
           `UPDATE Trabajador
-           SET NombreCompleto = @NombreCompleto, Puesto = @Puesto, NSS = @NSS, EstatusID = @EstatusID
+           SET NombreCompleto = @NombreCompleto, Puesto = @Puesto, NSS = @NSS,
+               ClaveEmpleado = @ClaveEmpleado, ApellidoPaterno = @ApellidoPaterno,
+               ApellidoMaterno = @ApellidoMaterno, Oficio = @Oficio,
+               INE_Clave = @INE_Clave, CURP = @CURP, RFC = @RFC,
+               FechaNacimiento = @FechaNacimiento, Telefono = @Telefono,
+               Correo = @Correo, Direccion = @Direccion, Banco = @Banco,
+               CuentaBancaria = @CuentaBancaria, EsFacturador = @EsFacturador,
+               ObraActualID = @ObraActualID, EstatusID = @EstatusID
            WHERE TrabajadorID = @TrabajadorID`
         );
       return { success: true };
@@ -106,6 +163,43 @@ class TrabajadorService {
     } catch (error) {
       console.error('TrabajadorService.deleteTrabajador error:', error.message);
       throw new Error(`Error deleting trabajador: ${error.message}`);
+    }
+  }
+
+  async assignTrabajadorToObra(trabajadorId, obraId) {
+    try {
+      const pool = await poolPromise;
+      const result = await pool
+        .request()
+        .input('TrabajadorID', sql.Int, trabajadorId)
+        .input('ObraID', sql.Int, obraId)
+        .query(
+          `INSERT INTO TrabajadorObra (TrabajadorID, ObraID)
+           VALUES (@TrabajadorID, @ObraID);
+           SELECT @@IDENTITY as TrabajadorObraID;`
+        );
+      return result.recordset[0];
+    } catch (error) {
+      console.error('TrabajadorService.assignTrabajadorToObra error:', error.message);
+      throw new Error(`Error assigning trabajador to obra: ${error.message}`);
+    }
+  }
+
+  async removeTrabajadorFromObra(trabajadorId, obraId) {
+    try {
+      const pool = await poolPromise;
+      await pool
+        .request()
+        .input('TrabajadorID', sql.Int, trabajadorId)
+        .input('ObraID', sql.Int, obraId)
+        .query(
+          `UPDATE TrabajadorObra SET FechaFin = GETDATE() 
+           WHERE TrabajadorID = @TrabajadorID AND ObraID = @ObraID`
+        );
+      return { success: true };
+    } catch (error) {
+      console.error('TrabajadorService.removeTrabajadorFromObra error:', error.message);
+      throw new Error(`Error removing trabajador from obra: ${error.message}`);
     }
   }
 }

@@ -193,6 +193,7 @@ export const retencionesAPI = {
 // Trabajadores
 export const trabajadoresAPI = {
   getAll: () => fetch(`${API_URL}/trabajadores`).then(handleResponse),
+  getByObra: (obraId) => fetch(`${API_URL}/trabajadores/obra/${obraId}`).then(handleResponse),
   getById: (id) => fetch(`${API_URL}/trabajadores/${id}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/trabajadores`, {
     method: 'POST',
@@ -205,6 +206,16 @@ export const trabajadoresAPI = {
     body: JSON.stringify(data)
   }).then(handleResponse),
   delete: (id) => fetch(`${API_URL}/trabajadores/${id}`, { method: 'DELETE' }).then(handleResponse),
+  assignToObra: (id, obraId) => fetch(`${API_URL}/trabajadores/${id}/asignar-obra`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ obraId })
+  }).then(handleResponse),
+  removeFromObra: (id, obraId) => fetch(`${API_URL}/trabajadores/${id}/remover-obra`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ obraId })
+  }).then(handleResponse),
 };
 
 export const reportesAPI = {

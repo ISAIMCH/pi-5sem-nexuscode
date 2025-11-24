@@ -203,8 +203,29 @@ CREATE TABLE Trabajador (
   NombreCompleto  NVARCHAR(150) NOT NULL,
   Puesto          NVARCHAR(100) NULL,
   NSS             NVARCHAR(20) NULL,
+  CodigoEmpleado  NVARCHAR(50) NULL UNIQUE,
+  Correo          NVARCHAR(120) NULL,
+  RFC             NVARCHAR(13) NULL,
+  Direccion       NVARCHAR(MAX) NULL,
+  CuentaBancaria  NVARCHAR(50) NULL,
+  FechaIngreso    DATE NULL,
+  FechaTerminacion DATE NULL,
+  INERuta         NVARCHAR(MAX) NULL,
   EstatusID       INT NOT NULL DEFAULT 1,
   CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID)
+);
+
+
+CREATE TABLE TrabajadorObra (
+  TrabajadorObraID INT IDENTITY(1,1) PRIMARY KEY,
+  TrabajadorID     INT NOT NULL,
+  ObraID           INT NOT NULL,
+  FechaAsignacion  DATE DEFAULT GETDATE(),
+  FechaFin         DATE NULL,
+  
+  CONSTRAINT FK_TrabOb_Trab FOREIGN KEY (TrabajadorID) REFERENCES Trabajador(TrabajadorID) ON DELETE CASCADE,
+  CONSTRAINT FK_TrabOb_Obra FOREIGN KEY (ObraID) REFERENCES Obra(ObraID) ON DELETE CASCADE,
+  CONSTRAINT UQ_TrabOb UNIQUE (TrabajadorID, ObraID)
 );
 
 
