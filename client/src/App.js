@@ -7,6 +7,7 @@ import ProveedoresList from './components/ProveedoresList';
 import IngresosList from './components/IngresosList';
 import GastosList from './components/GastosList';
 import AvancesList from './components/AvancesList';
+import TrabajadoresList from './components/TrabajadoresList';
 import ObraForm from './components/ObraForm';
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
         return <GastosList />;
       case 'avances':
         return <AvancesList />;
+      case 'trabajadores':
+        return <TrabajadoresList />;
       case 'agregarProyecto':
         return <ObraForm onClose={() => setCurrentPage('obras')} onSaved={() => setCurrentPage('obras')} />;
       default:
@@ -79,11 +82,18 @@ function App() {
             <span>Proveedores</span>
           </button>
           <button
-            className={`menu-item ${currentPage === 'avances' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('avances')}
+            className={`menu-item ${currentPage === 'trabajadores' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('trabajadores')}
           >
-            <span className="icon">📊</span>
-            <span>Avances</span>
+            <span className="icon">👷</span>
+            <span>Trabajadores</span>
+          </button>
+          <button
+            className={`menu-item ${currentPage === 'ingresos' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('ingresos')}
+          >
+            <span className="icon">📈</span>
+            <span>Ingresos</span>
           </button>
           <hr className="menu-divider" />
           <button 

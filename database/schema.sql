@@ -245,6 +245,125 @@ CREATE TABLE ObraArchivo (
 
 
 /*===========================================================
+=      1. ACTUALIZACIÓN DE TABLA: TRABAJADOR               =
+=  Se agregan datos fiscales, bancarios e identificación   =
+===========================================================*/
+
+ALTER TABLE Trabajador
+ADD 
+    ClaveEmpleado   VARCHAR(20) NULL,    -- Ej: EMP-001
+    ApellidoPaterno NVARCHAR(60) NULL,
+    ApellidoMaterno NVARCHAR(60) NULL,
+    Oficio          NVARCHAR(100) NULL,  -- Ej: Carpintero, Soldador
+    
+    -- Datos de Identificación
+    INE_Clave       VARCHAR(18) NULL,    -- Clave de Elector
+    CURP            VARCHAR(18) NULL,
+    RFC             VARCHAR(13) NULL,
+    FechaNacimiento DATE NULL,
+    
+    -- Datos de Contacto
+    Telefono        NVARCHAR(20) NULL,
+    Correo          NVARCHAR(100) NULL,
+    Direccion       NVARCHAR(250) NULL,
+
+    -- Datos Bancarios
+    Banco           NVARCHAR(50) NULL,
+    CuentaBancaria  VARCHAR(20) NULL,    -- CLABE o Número de cuenta
+    
+    -- Datos Administrativos
+    EsFacturador    BIT DEFAULT 0,       -- 0 = Nómina normal, 1 = Emite Factura
+    FechaIngreso    DATE DEFAULT GETDATE(),
+    FechaBaja       DATE NULL;           -- Para historial cuando se den de baja
+GO
+
+-- Índice para buscar rápidamente por Clave de Empleado
+CREATE INDEX IX_Trabajador_Clave ON Trabajador(ClaveEmpleado);
+GO
+
+
+/*===========================================================
+=      2. NUEVO CATÁLOGO: CONCEPTOS DE NÓMINA              =
+=  Define qué se paga (Percepciones) y qué se descuenta    =
+===========================================================*/
+
+CREATE TABLE Cat_ConceptoNomina (
+    ConceptoID      INT IDENTITY(1,1) PRIMARY KEY,
+    Codigo          VARCHAR(10) NOT NULL, -- Ej. P01, D01
+    Nombre          NVARCHAR(100) NOT NULL,
+    Tipo            CHAR(1) NOT NULL CHECK (Tipo IN ('P', 'D')), -- P = Percepción (+), D = Deducción (-)
+    EsFijo          BIT DEFAULT 0 -- 1 = Se aplica siempre cada semana, 0 = Es eventual
+);
+GO
+
+-- Insertamos los conceptos estándar de construcción
+INSERT INTO Cat_ConceptoNomina (Codigo, Nombre, Tipo, EsFijo) VALUES 
+('P01', 'Sueldo Base / Raya', 'P', 1),
+('P02', 'Horas Extra', 'P', 0),
+('P03', 'Destajo / Avance', 'P', 0),
+('P04', 'Bono de Puntualidad', 'P', 0),
+('P05', 'Séptimo Día', 'P', 1),
+('D01', 'Préstamo Personal', 'D', 0),
+('D02', 'Falta de Herramienta', 'D', 0),
+('D03', 'Cuota IMSS', 'D', 1),
+('D04', 'Infonavit', 'D', 0);
+GO
+
+
+/*===========================================================
+=      3. ACTUALIZACIÓN DE TABLA: PAGO NOMINA (CABECERA)   =
+=  Se agregan fechas de periodo y folio                    =
+===========================================================*/
+
+ALTER TABLE PagoNomina
+ADD 
+    FolioNomina      VARCHAR(20) NULL,      -- Para control interno (Ej. NOM-2024-45)
+    FechaInicio      DATE NULL,             -- Inicio del periodo pagado
+    FechaFin         DATE NULL,             -- Fin del periodo pagado
+    DiasPagados      DECIMAL(4,1) DEFAULT 0,
+    Observaciones    NVARCHAR(250) NULL,
+    -- Auditoría
+    FechaRegistro    DATETIME DEFAULT GETDATE();
+GO
+
+
+/*===========================================================
+=      4. NUEVA TABLA: DETALLE DE NÓMINA                   =
+=  Desglosa línea por línea el pago (Sueldo, Extras, etc.) =
+===========================================================*/
+
+CREATE TABLE PagoNominaDetalle (
+    DetalleID       INT IDENTITY(1,1) PRIMARY KEY,
+    NominaID        INT NOT NULL,
+    ConceptoID      INT NOT NULL,
+    Cantidad        DECIMAL(18,2) DEFAULT 1, -- Ej. 8 horas, 1 unidad
+    MontoUnitario   DECIMAL(18,2) NOT NULL,  -- Cuánto vale la unidad
+    ImporteTotal    AS (Cantidad * MontoUnitario) PERSISTED, -- Cálculo automático
+    
+    CONSTRAINT FK_Detalle_Nomina FOREIGN KEY (NominaID) REFERENCES PagoNomina(NominaID) ON DELETE CASCADE,
+    CONSTRAINT FK_Detalle_Concepto FOREIGN KEY (ConceptoID) REFERENCES Cat_ConceptoNomina(ConceptoID)
+);
+GO
+
+
+/*===========================================================
+=      5. NUEVA TABLA: DOCUMENTOS DE TRABAJADOR            =
+=  Para guardar rutas de archivos (INE, Contrato, etc.)    =
+===========================================================*/
+
+CREATE TABLE DocumentoTrabajador (
+    DocumentoID     INT IDENTITY(1,1) PRIMARY KEY,
+    TrabajadorID    INT NOT NULL,
+    TipoDocumento   NVARCHAR(50) NOT NULL, -- Ej: 'INE', 'Comprobante Domicilio', 'Contrato'
+    NombreArchivo   NVARCHAR(150) NOT NULL,
+    RutaAlmacenamiento NVARCHAR(MAX) NULL, -- URL o Ruta en servidor local
+    FechaCarga      DATETIME DEFAULT GETDATE(),
+    
+    CONSTRAINT FK_Doc_Trab FOREIGN KEY (TrabajadorID) REFERENCES Trabajador(TrabajadorID) ON DELETE CASCADE
+);
+GO
+
+/*===========================================================
 =                Datos de las tablas                        =
 ===========================================================*/
 

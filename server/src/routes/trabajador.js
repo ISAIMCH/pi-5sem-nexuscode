@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const trabajadorController = require('../controllers/TrabajadorController');
 
-// Placeholder routes
-router.get('/', (req, res) => {
-  res.json({ message: 'Trabajadores endpoint' });
-});
+router.get('/', trabajadorController.getAllTrabajadores);
+router.get('/:id', trabajadorController.getTrabajadorById);
+router.post('/', trabajadorController.createTrabajador);
+router.put('/:id', trabajadorController.updateTrabajador);
+router.delete('/:id', trabajadorController.deleteTrabajador);
 
 module.exports = router;
