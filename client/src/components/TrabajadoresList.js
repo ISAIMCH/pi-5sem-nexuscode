@@ -30,6 +30,7 @@ function TrabajadoresList() {
     CuentaBancaria: '',
     EsFacturador: false,
     ObraActualID: '',
+    INE_PDF: '',
     EstatusID: 1
   });
 
@@ -37,7 +38,7 @@ function TrabajadoresList() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedObra) {
@@ -45,7 +46,7 @@ function TrabajadoresList() {
     } else {
       loadTrabajadores();
     }
-  }, [selectedObra]);
+  }, [selectedObra]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadInitialData = async () => {
     try {
@@ -126,6 +127,7 @@ function TrabajadoresList() {
         CuentaBancaria: formData.CuentaBancaria || null,
         EsFacturador: formData.EsFacturador ? 1 : 0,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
+        INE_PDF: formData.INE_PDF || null,
         EstatusID: parseInt(formData.EstatusID)
       };
 
@@ -177,6 +179,7 @@ function TrabajadoresList() {
       CuentaBancaria: '',
       EsFacturador: false,
       ObraActualID: '',
+      INE_PDF: '',
       EstatusID: 1
     });
     setEditingId(null);
@@ -202,6 +205,7 @@ function TrabajadoresList() {
       CuentaBancaria: trabajador.CuentaBancaria || '',
       EsFacturador: trabajador.EsFacturador || false,
       ObraActualID: trabajador.ObraActualID || '',
+      INE_PDF: trabajador.INE_PDF || '',
       EstatusID: trabajador.EstatusID
     });
     setEditingId(trabajador.TrabajadorID);
@@ -285,6 +289,7 @@ function TrabajadoresList() {
                   <th>RFC</th>
                   <th>Correo</th>
                   <th>Obra Actual</th>
+                  <th>INE</th>
                   <th>Estatus</th>
                   <th>Acciones</th>
                 </tr>
@@ -298,6 +303,21 @@ function TrabajadoresList() {
                     <td className="rfc">{trabajador.RFC || '—'}</td>
                     <td className="correo">{trabajador.Correo || '—'}</td>
                     <td className="obra">{getObraName(trabajador.ObraActualID) || '—'}</td>
+                    <td className="ine">
+                      {trabajador.INE_PDF ? (
+                        <a 
+                          href={trabajador.INE_PDF} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="btn-pdf"
+                          title="Descargar INE"
+                        >
+                          📄 PDF
+                        </a>
+                      ) : (
+                        <span className="no-pdf">—</span>
+                      )}
+                    </td>
                     <td className="estatus">
                       <span className={`estatus-badge ${getEstatusName(trabajador.EstatusID)?.toLowerCase()}`}>
                         {getEstatusName(trabajador.EstatusID)}
@@ -587,6 +607,25 @@ function TrabajadoresList() {
                       />
                       {' '}Es Facturador
                     </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Documentos</h3>
+                <div className="form-grid">
+                  <div className="form-group full-width">
+                    <label>INE PDF (URL o Ruta):</label>
+                    <input
+                      type="text"
+                      name="INE_PDF"
+                      value={formData.INE_PDF}
+                      onChange={handleInputChange}
+                      placeholder="Ej: https://ejemplo.com/ine-juan-perez.pdf"
+                    />
+                    <small style={{color: '#7f8c8d', marginTop: '0.25rem', display: 'block'}}>
+                      Puedes usar URLs externas o rutas locales
+                    </small>
                   </div>
                 </div>
               </div>

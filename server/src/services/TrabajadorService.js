@@ -87,10 +87,11 @@ class TrabajadorService {
         .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
         .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
         .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
+        .input('INE_PDF', sql.NVarChar(sql.MAX), trabajador.INE_PDF || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID || 1)
         .query(
-          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, ClaveEmpleado, ApellidoPaterno, ApellidoMaterno, Oficio, INE_Clave, CURP, RFC, FechaNacimiento, Telefono, Correo, Direccion, Banco, CuentaBancaria, EsFacturador, ObraActualID, EstatusID)
-           VALUES (@NombreCompleto, @Puesto, @NSS, @ClaveEmpleado, @ApellidoPaterno, @ApellidoMaterno, @Oficio, @INE_Clave, @CURP, @RFC, @FechaNacimiento, @Telefono, @Correo, @Direccion, @Banco, @CuentaBancaria, @EsFacturador, @ObraActualID, @EstatusID);
+          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, ClaveEmpleado, ApellidoPaterno, ApellidoMaterno, Oficio, INE_Clave, CURP, RFC, FechaNacimiento, Telefono, Correo, Direccion, Banco, CuentaBancaria, EsFacturador, ObraActualID, INE_PDF, EstatusID)
+           VALUES (@NombreCompleto, @Puesto, @NSS, @ClaveEmpleado, @ApellidoPaterno, @ApellidoMaterno, @Oficio, @INE_Clave, @CURP, @RFC, @FechaNacimiento, @Telefono, @Correo, @Direccion, @Banco, @CuentaBancaria, @EsFacturador, @ObraActualID, @INE_PDF, @EstatusID);
            SELECT @@IDENTITY as TrabajadorID;`
         );
       
@@ -132,6 +133,7 @@ class TrabajadorService {
         .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
         .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
         .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
+        .input('INE_PDF', sql.NVarChar(sql.MAX), trabajador.INE_PDF || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID)
         .query(
           `UPDATE Trabajador
@@ -142,7 +144,7 @@ class TrabajadorService {
                FechaNacimiento = @FechaNacimiento, Telefono = @Telefono,
                Correo = @Correo, Direccion = @Direccion, Banco = @Banco,
                CuentaBancaria = @CuentaBancaria, EsFacturador = @EsFacturador,
-               ObraActualID = @ObraActualID, EstatusID = @EstatusID
+               ObraActualID = @ObraActualID, INE_PDF = @INE_PDF, EstatusID = @EstatusID
            WHERE TrabajadorID = @TrabajadorID`
         );
       return { success: true };

@@ -317,6 +317,33 @@ CREATE TABLE Cat_ConceptoNomina (
 );
 GO
 
+USE NexusCode_2;
+GO
+
+/*===========================================================
+=      ACTUALIZACIÓN: ASIGNAR OBRA AL TRABAJADOR           =
+===========================================================*/
+
+-- 1. Agregar la columna para guardar el ID de la Obra
+ALTER TABLE Trabajador
+ADD ObraActualID INT NULL; 
+-- Es NULL porque un trabajador puede estar "en banca" o recién contratado sin asignación.
+
+GO
+
+-- 1b. Agregar columna para PDF del INE
+ALTER TABLE Trabajador
+ADD INE_PDF NVARCHAR(MAX) NULL;  -- Ruta o URL del archivo PDF del INE
+GO
+
+-- 2. Crear la relación (Llave Foránea) con la tabla Obra
+-- Esto asegura que solo puedas asignar obras que existan en tu catálogo.
+ALTER TABLE Trabajador
+ADD CONSTRAINT FK_Trabajador_Obra 
+FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID);
+
+GO
+
 -- Insertamos los conceptos estándar de construcción
 INSERT INTO Cat_ConceptoNomina (Codigo, Nombre, Tipo, EsFijo) VALUES 
 ('P01', 'Sueldo Base / Raya', 'P', 1),
@@ -497,13 +524,31 @@ VALUES
 (1, 3, '2024-03-01', 250000.00, 1),
 (2, 1, '2024-04-01', 180000.00, 1);
 
---✅ I) TRABAJADORES
-INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, EstatusID)
+--✅ I) TRABAJADORES CON DATOS COMPLETOS E INE PDF
+INSERT INTO Trabajador 
+(NombreCompleto, ApellidoPaterno, ApellidoMaterno, Puesto, Oficio, NSS, ClaveEmpleado, 
+ INE_Clave, CURP, RFC, Telefono, Correo, Direccion, Banco, CuentaBancaria, 
+ EsFacturador, ObraActualID, INE_PDF, EstatusID)
 VALUES
-('Juan Ramírez Torres', 'Albañil', '12345678901', 1),
-('Carlos Mendoza López', 'Soldador', '98765432122', 1),
-('Luis Gómez Rivera', 'Supervisor', '11223344556', 1),
-('Pedro Sánchez Aguilar', 'Operador de maquinaria', '66778899001', 1);
+('Juan', 'Ramírez', 'Torres', 'Albañil', 'Especialista en Albañilería', '12345678901', 'EMP-001',
+ 'INE123456789001', 'RATR800515HDFMRN01', 'RAT800515AB2', '5551234567', 'juan.ramirez@example.com', 
+ 'Calle Principal 123, Apt 5, León', 'Banco Azteca', '0123456789012345',
+ 0, 1, 'https://ejemplo.com/documentos/juan-ramirez-ine.pdf', 1),
+
+('Carlos', 'Mendoza', 'López', 'Soldador', 'Soldadura Estructural', '98765432122', 'EMP-002',
+ 'INE987654321002', 'MELC880420HDFNNR09', 'MEN880420CD3', '5559876543', 'carlos.mendoza@example.com',
+ 'Avenida Tecnológica 456, Apt 10, León', 'Bancomer', '9876543210123456',
+ 0, 1, 'https://ejemplo.com/documentos/carlos-mendoza-ine.pdf', 1),
+
+('Luis', 'Gómez', 'Rivera', 'Supervisor', 'Supervisión de Obra', '11223344556', 'EMP-003',
+ 'INE112233445003', 'GORL750812HDFMRV04', 'GRI750812EF4', '5552468013', 'luis.gomez@example.com',
+ 'Boulevard Central 789, Apt 15, CDMX', 'HSBC', '1234567890123456',
+ 0, 2, 'https://ejemplo.com/documentos/luis-gomez-ine.pdf', 1),
+
+('Pedro', 'Sánchez', 'Aguilar', 'Operador de maquinaria', 'Operación de Grúas', '66778899001', 'EMP-004',
+ 'INE667788990004', 'SAAP720315HDFGRD02', 'SAG720315HB5', '5553691215', 'pedro.sanchez@example.com',
+ 'Calle Sur 321, Apt 20, CDMX', 'Scotiabank', '5432109876543210',
+ 0, 2, 'https://ejemplo.com/documentos/pedro-sanchez-ine.pdf', 1);
 
 --✅ J) NÓMINA REALISTA
 INSERT INTO PagoNomina VALUES
