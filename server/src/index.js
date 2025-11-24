@@ -11,6 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Servir archivos estáticos desde la carpeta uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Routes
 const clienteRoutes = require('./routes/cliente');
 const proveedorRoutes = require('./routes/proveedor');
@@ -27,6 +30,7 @@ const nominaNuevaRoutes = require('./routes/nomina-nueva');
 const gastosGeneralesRoutes = require('./routes/gastos-generales');
 const retencionesRoutes = require('./routes/retenciones');
 const reportesRoutes = require('./routes/reportes');
+const uploadRoutes = require('./routes/upload');
 
 // Use routes
 app.use('/api/clientes', clienteRoutes);
@@ -44,6 +48,7 @@ app.use('/api/nomina', nominaNuevaRoutes);
 app.use('/api/gastos-generales', gastosGeneralesRoutes);
 app.use('/api/retenciones', retencionesRoutes);
 app.use('/api/reportes', reportesRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

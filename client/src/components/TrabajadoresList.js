@@ -10,6 +10,7 @@ function TrabajadoresList() {
   const [editingId, setEditingId] = useState(null);
   const [estatuses, setEstatuses] = useState([]);
   const [selectedObra, setSelectedObra] = useState('');
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const [formData, setFormData] = useState({
     NombreCompleto: '',
@@ -98,6 +99,44 @@ function TrabajadoresList() {
       ...prev,
       [name]: name === 'EstatusID' ? parseInt(value) : value
     }));
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar que sea PDF
+    if (file.type !== 'application/pdf') {
+      alert('Solo se permiten archivos PDF');
+      e.target.value = '';
+      return;
+    }
+
+    // Validar tamaño (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('El archivo es muy grande (máximo 10MB)');
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      setUploadingFile(true);
+      const response = await api.uploadAPI.uploadINE(file);
+      
+      if (response.success) {
+        setFormData(prev => ({
+          ...prev,
+          INE_PDF: response.filePath
+        }));
+        alert('Archivo subido exitosamente');
+        e.target.value = ''; // Limpiar input
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error al subir el archivo: ' + error.message);
+    } finally {
+      setUploadingFile(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -615,16 +654,35 @@ function TrabajadoresList() {
                 <h3>Documentos</h3>
                 <div className="form-grid">
                   <div className="form-group full-width">
-                    <label>INE PDF (URL o Ruta):</label>
-                    <input
-                      type="text"
-                      name="INE_PDF"
-                      value={formData.INE_PDF}
-                      onChange={handleInputChange}
-                      placeholder="Ej: https://ejemplo.com/ine-juan-perez.pdf"
-                    />
+                    <label>Subir INE (PDF):</label>
+                    <div className="file-upload-wrapper">
+                      <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileUpload}
+                        disabled={uploadingFile}
+                        className="file-input"
+                        id="ine-upload"
+                      />
+                      <label htmlFor="ine-upload" className="file-label">
+                        {uploadingFile ? '⏳ Subiendo...' : '📁 Seleccionar PDF'}
+                      </label>
+                      {formData.INE_PDF && (
+                        <div className="file-preview">
+                          ✅ Archivo cargado
+                          <a 
+                            href={formData.INE_PDF} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="file-link"
+                          >
+                            Ver
+                          </a>
+                        </div>
+                      )}
+                    </div>
                     <small style={{color: '#7f8c8d', marginTop: '0.25rem', display: 'block'}}>
-                      Puedes usar URLs externas o rutas locales
+                      Máximo 10MB, solo PDFs
                     </small>
                   </div>
                 </div>

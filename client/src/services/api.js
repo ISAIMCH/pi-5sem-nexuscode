@@ -235,6 +235,18 @@ export const reportesAPI = {
   getById: (id) => fetch(`${API_URL}/reportes/${id}`).then(handleResponse),
 };
 
+// File Upload API
+export const uploadAPI = {
+  uploadINE: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return fetch(`${API_URL}/upload/ine`, {
+      method: 'POST',
+      body: formData
+    }).then(handleResponse);
+  }
+};
+
 // Export default con todos los APIs
 export default {
   clientesAPI,
@@ -249,5 +261,6 @@ export default {
   nominaAPI,
   gastosGeneralesAPI,
   retencionesAPI,
-  trabajadoresAPI
+  trabajadoresAPI,
+  uploadAPI
 };
