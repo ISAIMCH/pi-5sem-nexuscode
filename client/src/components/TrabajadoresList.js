@@ -31,7 +31,7 @@ function TrabajadoresList() {
     CuentaBancaria: '',
     EsFacturador: false,
     ObraActualID: '',
-    INE_PDF: '',
+    INERuta: '',
     EstatusID: 1
   });
 
@@ -126,7 +126,7 @@ function TrabajadoresList() {
       if (response.success) {
         setFormData(prev => ({
           ...prev,
-          INE_PDF: response.filePath
+          INERuta: response.filePath
         }));
         alert('Archivo subido exitosamente');
         e.target.value = ''; // Limpiar input
@@ -166,7 +166,7 @@ function TrabajadoresList() {
         CuentaBancaria: formData.CuentaBancaria || null,
         EsFacturador: formData.EsFacturador ? 1 : 0,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
-        INE_PDF: formData.INE_PDF || null,
+        INERuta: formData.INERuta || null,
         EstatusID: parseInt(formData.EstatusID)
       };
 
@@ -218,7 +218,7 @@ function TrabajadoresList() {
       CuentaBancaria: '',
       EsFacturador: false,
       ObraActualID: '',
-      INE_PDF: '',
+      INERuta: '',
       EstatusID: 1
     });
     setEditingId(null);
@@ -244,7 +244,7 @@ function TrabajadoresList() {
       CuentaBancaria: trabajador.CuentaBancaria || '',
       EsFacturador: trabajador.EsFacturador || false,
       ObraActualID: trabajador.ObraActualID || '',
-      INE_PDF: trabajador.INE_PDF || '',
+      INERuta: trabajador.INERuta || '',
       EstatusID: trabajador.EstatusID
     });
     setEditingId(trabajador.TrabajadorID);
@@ -343,9 +343,9 @@ function TrabajadoresList() {
                     <td className="correo">{trabajador.Correo || '—'}</td>
                     <td className="obra">{getObraName(trabajador.ObraActualID) || '—'}</td>
                     <td className="ine">
-                      {trabajador.INE_PDF ? (
+                      {trabajador.INERuta ? (
                         <a 
-                          href={trabajador.INE_PDF} 
+                          href={trabajador.INERuta} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="btn-pdf"
@@ -667,11 +667,11 @@ function TrabajadoresList() {
                       <label htmlFor="ine-upload" className="file-label">
                         {uploadingFile ? '⏳ Subiendo...' : '📁 Seleccionar PDF'}
                       </label>
-                      {formData.INE_PDF && (
+                      {formData.INERuta && (
                         <div className="file-preview">
                           ✅ Archivo cargado
                           <a 
-                            href={formData.INE_PDF} 
+                            href={formData.INERuta} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="file-link"

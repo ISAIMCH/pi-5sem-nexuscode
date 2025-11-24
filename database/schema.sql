@@ -199,20 +199,29 @@ CREATE TABLE Retencion (
 ===========================================================*/
 
 CREATE TABLE Trabajador (
-  TrabajadorID    INT IDENTITY(1,1) PRIMARY KEY,
-  NombreCompleto  NVARCHAR(150) NOT NULL,
-  Puesto          NVARCHAR(100) NULL,
-  NSS             NVARCHAR(20) NULL,
-  CodigoEmpleado  NVARCHAR(50) NULL UNIQUE,
-  Correo          NVARCHAR(120) NULL,
-  RFC             NVARCHAR(13) NULL,
-  Direccion       NVARCHAR(MAX) NULL,
-  CuentaBancaria  NVARCHAR(50) NULL,
-  FechaIngreso    DATE NULL,
-  FechaTerminacion DATE NULL,
-  INERuta         NVARCHAR(MAX) NULL,
-  EstatusID       INT NOT NULL DEFAULT 1,
-  CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID)
+  TrabajadorID      INT IDENTITY(1,1) PRIMARY KEY,
+  NombreCompleto    NVARCHAR(150) NOT NULL,
+  Puesto            NVARCHAR(100) NULL,
+  NSS               NVARCHAR(20) NULL,
+  ClaveEmpleado     NVARCHAR(20) NULL,
+  ApellidoPaterno   NVARCHAR(60) NULL,
+  ApellidoMaterno   NVARCHAR(60) NULL,
+  Oficio            NVARCHAR(100) NULL,
+  INE_Clave         NVARCHAR(18) NULL,
+  CURP              NVARCHAR(18) NULL,
+  RFC               NVARCHAR(13) NULL,
+  FechaNacimiento   DATE NULL,
+  Telefono          NVARCHAR(20) NULL,
+  Correo            NVARCHAR(100) NULL,
+  Direccion         NVARCHAR(250) NULL,
+  Banco             NVARCHAR(50) NULL,
+  CuentaBancaria    NVARCHAR(20) NULL,
+  EsFacturador      BIT NOT NULL DEFAULT 0,
+  ObraActualID      INT NULL,
+  INE_PDF           NVARCHAR(MAX) NULL,
+  EstatusID         INT NOT NULL DEFAULT 1,
+  CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID),
+  CONSTRAINT FK_Trab_Obra FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID)
 );
 
 
@@ -270,34 +279,6 @@ CREATE TABLE ObraArchivo (
 =  Se agregan datos fiscales, bancarios e identificación   =
 ===========================================================*/
 
-ALTER TABLE Trabajador
-ADD 
-    ClaveEmpleado   VARCHAR(20) NULL,    -- Ej: EMP-001
-    ApellidoPaterno NVARCHAR(60) NULL,
-    ApellidoMaterno NVARCHAR(60) NULL,
-    Oficio          NVARCHAR(100) NULL,  -- Ej: Carpintero, Soldador
-    
-    -- Datos de Identificación
-    INE_Clave       VARCHAR(18) NULL,    -- Clave de Elector
-    CURP            VARCHAR(18) NULL,
-    RFC             VARCHAR(13) NULL,
-    FechaNacimiento DATE NULL,
-    
-    -- Datos de Contacto
-    Telefono        NVARCHAR(20) NULL,
-    Correo          NVARCHAR(100) NULL,
-    Direccion       NVARCHAR(250) NULL,
-
-    -- Datos Bancarios
-    Banco           NVARCHAR(50) NULL,
-    CuentaBancaria  VARCHAR(20) NULL,    -- CLABE o Número de cuenta
-    
-    -- Datos Administrativos
-    EsFacturador    BIT DEFAULT 0,       -- 0 = Nómina normal, 1 = Emite Factura
-    FechaIngreso    DATE DEFAULT GETDATE(),
-    FechaBaja       DATE NULL;           -- Para historial cuando se den de baja
-GO
-
 -- Índice para buscar rápidamente por Clave de Empleado
 CREATE INDEX IX_Trabajador_Clave ON Trabajador(ClaveEmpleado);
 GO
@@ -333,15 +314,7 @@ GO
 
 -- 1b. Agregar columna para PDF del INE
 ALTER TABLE Trabajador
-ADD INE_PDF NVARCHAR(MAX) NULL;  -- Ruta o URL del archivo PDF del INE
-GO
-
--- 2. Crear la relación (Llave Foránea) con la tabla Obra
--- Esto asegura que solo puedas asignar obras que existan en tu catálogo.
-ALTER TABLE Trabajador
-ADD CONSTRAINT FK_Trabajador_Obra 
-FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID);
-
+ADD INERuta NVARCHAR(MAX) NULL;  -- Ruta o URL del archivo PDF del INE
 GO
 
 -- Insertamos los conceptos estándar de construcción
@@ -411,9 +384,9 @@ CREATE TABLE DocumentoTrabajador (
 );
 GO
 
-/*===========================================================
-=                Datos de las tablas                        =
-===========================================================*/
+ALTER TABLE Trabajador
+ADD INERuta NVARCHAR(MAX) NULL;
+GO
 
 INSERT INTO Cat_TipoProveedor VALUES ('Material'), ('Maquinaria'), ('Varios');
 
@@ -528,27 +501,27 @@ VALUES
 INSERT INTO Trabajador 
 (NombreCompleto, ApellidoPaterno, ApellidoMaterno, Puesto, Oficio, NSS, ClaveEmpleado, 
  INE_Clave, CURP, RFC, Telefono, Correo, Direccion, Banco, CuentaBancaria, 
- EsFacturador, ObraActualID, INE_PDF, EstatusID)
+ EsFacturador, ObraActualID, INERuta, EstatusID)
 VALUES
 ('Juan', 'Ramírez', 'Torres', 'Albañil', 'Especialista en Albañilería', '12345678901', 'EMP-001',
  'INE123456789001', 'RATR800515HDFMRN01', 'RAT800515AB2', '5551234567', 'juan.ramirez@example.com', 
  'Calle Principal 123, Apt 5, León', 'Banco Azteca', '0123456789012345',
- 0, 1, 'https://ejemplo.com/documentos/juan-ramirez-ine.pdf', 1),
+ 0, 1, '/uploads/ine/juan-ramirez-ine.pdf', 1),
 
 ('Carlos', 'Mendoza', 'López', 'Soldador', 'Soldadura Estructural', '98765432122', 'EMP-002',
  'INE987654321002', 'MELC880420HDFNNR09', 'MEN880420CD3', '5559876543', 'carlos.mendoza@example.com',
  'Avenida Tecnológica 456, Apt 10, León', 'Bancomer', '9876543210123456',
- 0, 1, 'https://ejemplo.com/documentos/carlos-mendoza-ine.pdf', 1),
+ 0, 1, '/uploads/ine/carlos-mendoza-ine.pdf', 1),
 
 ('Luis', 'Gómez', 'Rivera', 'Supervisor', 'Supervisión de Obra', '11223344556', 'EMP-003',
  'INE112233445003', 'GORL750812HDFMRV04', 'GRI750812EF4', '5552468013', 'luis.gomez@example.com',
  'Boulevard Central 789, Apt 15, CDMX', 'HSBC', '1234567890123456',
- 0, 2, 'https://ejemplo.com/documentos/luis-gomez-ine.pdf', 1),
+ 0, 2, '/uploads/ine/luis-gomez-ine.pdf', 1),
 
 ('Pedro', 'Sánchez', 'Aguilar', 'Operador de maquinaria', 'Operación de Grúas', '66778899001', 'EMP-004',
  'INE667788990004', 'SAAP720315HDFGRD02', 'SAG720315HB5', '5553691215', 'pedro.sanchez@example.com',
  'Calle Sur 321, Apt 20, CDMX', 'Scotiabank', '5432109876543210',
- 0, 2, 'https://ejemplo.com/documentos/pedro-sanchez-ine.pdf', 1);
+ 0, 2, '/uploads/ine/pedro-sanchez-ine.pdf', 1);
 
 --✅ J) NÓMINA REALISTA
 INSERT INTO PagoNomina VALUES
