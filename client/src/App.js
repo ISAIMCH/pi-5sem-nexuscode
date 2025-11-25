@@ -89,11 +89,11 @@ function App() {
             <span>Trabajadores</span>
           </button>
           <button
-            className={`menu-item ${currentPage === 'ingresos' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('ingresos')}
+            className={`menu-item ${currentPage === 'avances' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('avances')}
           >
-            <span className="icon">📈</span>
-            <span>Ingresos</span>
+            <span className="icon">📋</span>
+            <span>Avances</span>
           </button>
           <hr className="menu-divider" />
           <button 
