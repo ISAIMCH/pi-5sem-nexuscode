@@ -1,11 +1,10 @@
-const { connect } = require('../config/database');
-const sql = require('mssql');
+const { sql, poolPromise } = require('../config/database');
 
 class NominaService {
   // Obtener todos los pagos de nómina de una obra
   static async getPagosByObra(obraID) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       const result = await pool
         .request()
         .input('ObraID', sql.Int, obraID)
@@ -39,7 +38,7 @@ class NominaService {
   // Crear un nuevo pago de nómina
   static async createPago(pagoData) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       
       const result = await pool
         .request()
@@ -68,7 +67,7 @@ class NominaService {
   // Crear múltiples pagos de nómina (lote semanal)
   static async createLoteNomina(pagosList) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       const transaction = new sql.Transaction(pool);
       
       await transaction.begin();
@@ -108,7 +107,7 @@ class NominaService {
   // Obtener trabajadores asignados a una obra
   static async getTrabajadoresByObra(obraID) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       const result = await pool
         .request()
         .input('ObraID', sql.Int, obraID)
@@ -138,7 +137,7 @@ class NominaService {
   // Eliminar un pago de nómina
   static async deletePago(nominaID) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       const result = await pool
         .request()
         .input('NominaID', sql.Int, nominaID)
@@ -154,7 +153,7 @@ class NominaService {
   // Actualizar un pago de nómina
   static async updatePago(nominaID, pagoData) {
     try {
-      const pool = await connect();
+      const pool = await poolPromise;
       const result = await pool
         .request()
         .input('NominaID', sql.Int, nominaID)
