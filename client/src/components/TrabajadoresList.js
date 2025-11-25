@@ -205,7 +205,14 @@ function TrabajadoresList() {
         EstatusID: parseInt(formData.EstatusID)
       };
 
+      console.log('=== SUBMIT TRABAJADOR ===');
+      console.log('Editing:', editingId);
+      console.log('Form Data SueldoDiario:', formData.SueldoDiario);
+      console.log('Submit Data SueldoDiario:', dataToSubmit.SueldoDiario);
+      console.log('Full data to submit:', dataToSubmit);
+
       if (editingId) {
+        console.log('Actualizando trabajador:', editingId);
         await api.trabajadoresAPI.update(editingId, dataToSubmit);
         alert('Trabajador actualizado exitosamente');
       } else {

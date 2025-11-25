@@ -117,54 +117,62 @@ class TrabajadorService {
       
       request.input('TrabajadorID', sql.Int, id);
 
-      // Campos actualizables con sus tipos SQL
+      // Campos actualizables - solo agregar si están definidos
       const campos = [];
-      const actualizables = {
-        'NombreCompleto': { type: sql.NVarChar(150), value: trabajador.NombreCompleto },
-        'ApellidoPaterno': { type: sql.NVarChar(60), value: trabajador.ApellidoPaterno },
-        'ApellidoMaterno': { type: sql.NVarChar(60), value: trabajador.ApellidoMaterno },
-        'Puesto': { type: sql.NVarChar(100), value: trabajador.Puesto },
-        'Oficio': { type: sql.NVarChar(100), value: trabajador.Oficio },
-        'NSS': { type: sql.NVarChar(20), value: trabajador.NSS },
-        'ClaveEmpleado': { type: sql.NVarChar(20), value: trabajador.ClaveEmpleado },
-        'INE_Clave': { type: sql.NVarChar(18), value: trabajador.INE_Clave },
-        'CURP': { type: sql.NVarChar(18), value: trabajador.CURP },
-        'RFC': { type: sql.NVarChar(13), value: trabajador.RFC },
-        'FechaNacimiento': { type: sql.Date, value: trabajador.FechaNacimiento },
-        'Telefono': { type: sql.NVarChar(20), value: trabajador.Telefono },
-        'Correo': { type: sql.NVarChar(100), value: trabajador.Correo },
-        'Direccion': { type: sql.NVarChar(250), value: trabajador.Direccion },
-        'Banco': { type: sql.NVarChar(50), value: trabajador.Banco },
-        'CuentaBancaria': { type: sql.NVarChar(20), value: trabajador.CuentaBancaria },
-        'EsFacturador': { type: sql.Bit, value: trabajador.EsFacturador },
-        'FechaIngreso': { type: sql.Date, value: trabajador.FechaIngreso },
-        'ObraActualID': { type: sql.Int, value: trabajador.ObraActualID },
-        'SueldoDiario': { type: sql.Decimal(18, 2), value: trabajador.SueldoDiario },
-        'EstatusID': { type: sql.Int, value: trabajador.EstatusID }
-      };
+      
+      // Mapear cada campo con su tipo SQL
+      const fieldMappings = [
+        { name: 'NombreCompleto', type: sql.NVarChar(150) },
+        { name: 'ApellidoPaterno', type: sql.NVarChar(60) },
+        { name: 'ApellidoMaterno', type: sql.NVarChar(60) },
+        { name: 'Puesto', type: sql.NVarChar(100) },
+        { name: 'Oficio', type: sql.NVarChar(100) },
+        { name: 'NSS', type: sql.NVarChar(20) },
+        { name: 'ClaveEmpleado', type: sql.NVarChar(20) },
+        { name: 'INE_Clave', type: sql.NVarChar(18) },
+        { name: 'CURP', type: sql.NVarChar(18) },
+        { name: 'RFC', type: sql.NVarChar(13) },
+        { name: 'FechaNacimiento', type: sql.Date },
+        { name: 'Telefono', type: sql.NVarChar(20) },
+        { name: 'Correo', type: sql.NVarChar(100) },
+        { name: 'Direccion', type: sql.NVarChar(250) },
+        { name: 'Banco', type: sql.NVarChar(50) },
+        { name: 'CuentaBancaria', type: sql.NVarChar(20) },
+        { name: 'EsFacturador', type: sql.Bit },
+        { name: 'FechaIngreso', type: sql.Date },
+        { name: 'ObraActualID', type: sql.Int },
+        { name: 'SueldoDiario', type: sql.Decimal(18, 2) },
+        { name: 'EstatusID', type: sql.Int }
+      ];
 
-      // Construir dinámicamente la consulta solo con campos enviados
-      // Incluyendo 0 como valor válido
-      for (const [field, config] of Object.entries(actualizables)) {
-        if (config.value !== undefined && config.value !== null && config.value !== '') {
-          request.input(field, config.type, config.value);
-          campos.push(`${field} = @${field}`);
+      // Procesar cada campo
+      fieldMappings.forEach(field => {
+        if (Object.prototype.hasOwnProperty.call(trabajador, field.name)) {
+          const value = trabajador[field.name];
+          // Incluir el campo si tiene un valor definido (incluso si es 0, false, o null)
+          request.input(field.name, field.type, value);
+          campos.push(`${field.name} = @${field.name}`);
         }
-      }
+      });
 
       if (campos.length === 0) {
         throw new Error('No fields to update provided');
       }
 
       const query = `UPDATE Trabajador SET ${campos.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
-      console.log('Update query:', query);
-      console.log('Update data:', trabajador);
       
-      await request.query(query);
+      console.log('=== UPDATE TRABAJADOR ===');
+      console.log('ID:', id);
+      console.log('Query:', query);
+      console.log('Data received:', trabajador);
       
+      const result = await request.query(query);
+      
+      console.log('Update result:', result);
       return { success: true };
     } catch (error) {
       console.error('TrabajadorService.updateTrabajador error:', error.message);
+      console.error('Stack:', error.stack);
       throw new Error(`Error updating trabajador: ${error.message}`);
     }
   }
