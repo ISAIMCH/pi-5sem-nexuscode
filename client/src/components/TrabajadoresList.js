@@ -24,7 +24,6 @@ function TrabajadoresList() {
     ApellidoPaterno: '',
     ApellidoMaterno: '',
     Puesto: '',
-    Oficio: '',
     NSS: '',
     ClaveEmpleado: '',
     INE_Clave: '',
@@ -34,13 +33,10 @@ function TrabajadoresList() {
     Telefono: '',
     Correo: '',
     Direccion: '',
-    Banco: '',
-    CuentaBancaria: '',
     EsFacturador: false,
     FechaIngreso: '',
     ObraActualID: '',
     INERuta: '',
-    SueldoDiario: '',
     EstatusID: 1
   });
 
@@ -129,7 +125,6 @@ function TrabajadoresList() {
     setFormData(prev => ({
       ...prev,
       [name]: name === 'EstatusID' ? parseInt(value) : 
-              name === 'SueldoDiario' ? (value === '' ? '' : parseFloat(value)) :
               value
     }));
   };
@@ -185,7 +180,6 @@ function TrabajadoresList() {
         ApellidoPaterno: formData.ApellidoPaterno || null,
         ApellidoMaterno: formData.ApellidoMaterno || null,
         Puesto: formData.Puesto,
-        Oficio: formData.Oficio || null,
         NSS: formData.NSS || null,
         ClaveEmpleado: formData.ClaveEmpleado || null,
         INE_Clave: formData.INE_Clave || null,
@@ -195,13 +189,10 @@ function TrabajadoresList() {
         Telefono: formData.Telefono || null,
         Correo: formData.Correo || null,
         Direccion: formData.Direccion || null,
-        Banco: formData.Banco || null,
-        CuentaBancaria: formData.CuentaBancaria || null,
         EsFacturador: formData.EsFacturador ? 1 : 0,
         FechaIngreso: formData.FechaIngreso || null,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
         INERuta: formData.INERuta || null,
-        SueldoDiario: formData.SueldoDiario !== '' && formData.SueldoDiario !== null ? parseFloat(formData.SueldoDiario) : null,
         EstatusID: parseInt(formData.EstatusID)
       };
 
@@ -246,7 +237,6 @@ function TrabajadoresList() {
       ApellidoPaterno: '',
       ApellidoMaterno: '',
       Puesto: '',
-      Oficio: '',
       NSS: '',
       ClaveEmpleado: '',
       INE_Clave: '',
@@ -256,13 +246,10 @@ function TrabajadoresList() {
       Telefono: '',
       Correo: '',
       Direccion: '',
-      Banco: '',
-      CuentaBancaria: '',
       EsFacturador: false,
       FechaIngreso: '',
       ObraActualID: '',
       INERuta: '',
-      SueldoDiario: '',
       EstatusID: 1
     });
     setEditingId(null);
@@ -274,7 +261,6 @@ function TrabajadoresList() {
       ApellidoPaterno: trabajador.ApellidoPaterno || '',
       ApellidoMaterno: trabajador.ApellidoMaterno || '',
       Puesto: trabajador.Puesto,
-      Oficio: trabajador.Oficio || '',
       NSS: trabajador.NSS || '',
       ClaveEmpleado: trabajador.ClaveEmpleado || '',
       INE_Clave: trabajador.INE_Clave || '',
@@ -284,13 +270,10 @@ function TrabajadoresList() {
       Telefono: trabajador.Telefono || '',
       Correo: trabajador.Correo || '',
       Direccion: trabajador.Direccion || '',
-      Banco: trabajador.Banco || '',
-      CuentaBancaria: trabajador.CuentaBancaria || '',
       EsFacturador: trabajador.EsFacturador || false,
       FechaIngreso: trabajador.FechaIngreso ? trabajador.FechaIngreso.split('T')[0] : '',
       ObraActualID: trabajador.ObraActualID || '',
       INERuta: trabajador.INERuta || '',
-      SueldoDiario: trabajador.SueldoDiario || '',
       EstatusID: trabajador.EstatusID
     });
     setEditingId(trabajador.TrabajadorID);
@@ -502,16 +485,6 @@ function TrabajadoresList() {
                       ))}
                     </select>
                   </div>
-                  <div className="form-group">
-                    <label>Oficio/Especialidad:</label>
-                    <input
-                      type="text"
-                      name="Oficio"
-                      value={formData.Oficio}
-                      onChange={handleInputChange}
-                      placeholder="Ej: Carpintero, Soldador"
-                    />
-                  </div>
                 </div>
 
                 <div className="form-grid">
@@ -529,18 +502,6 @@ function TrabajadoresList() {
                         </option>
                       ))}
                     </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Sueldo Diario:</label>
-                    <input
-                      type="number"
-                      name="SueldoDiario"
-                      value={formData.SueldoDiario}
-                      onChange={handleInputChange}
-                      placeholder="Ej: 150.00"
-                      step="0.01"
-                      min="0"
-                    />
                   </div>
                   <div className="form-group">
                     <label>Estatus:</label>
@@ -677,46 +638,6 @@ function TrabajadoresList() {
                       onChange={handleInputChange}
                       placeholder="Ej: Calle Principal 123, Apt 5"
                     />
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-section">
-                <h3>Información Bancaria</h3>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Banco:</label>
-                    <input
-                      type="text"
-                      name="Banco"
-                      value={formData.Banco}
-                      onChange={handleInputChange}
-                      placeholder="Ej: Banco Azteca"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Cuenta Bancaria (CLABE/Número):</label>
-                    <input
-                      type="text"
-                      name="CuentaBancaria"
-                      value={formData.CuentaBancaria}
-                      onChange={handleInputChange}
-                      placeholder="Ej: 0123456789012345"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="EsFacturador"
-                        checked={formData.EsFacturador}
-                        onChange={(e) => setFormData({...formData, EsFacturador: e.target.checked})}
-                      />
-                      {' '}Es Facturador
-                    </label>
                   </div>
                 </div>
               </div>
