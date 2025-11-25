@@ -78,22 +78,33 @@ exports.updateMaterial = async (req, res) => {
     const { ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra } = req.body;
     const { id } = req.params;
     const pool = await poolPromise;
-    const query = `
+    
+    // Si hay nuevo archivo, actualizar la ruta
+    let updateQuery = `
       UPDATE CompraMaterial
       SET ObraID = @obraId, ProveedorID = @proveedorId, Fecha = @fecha, 
           FolioFactura = @folioFactura, TotalCompra = @totalCompra
-      WHERE CompraID = @id
     `;
-    await pool.request()
+    
+    const request = pool.request()
       .input('id', sql.Int, id)
       .input('obraId', sql.Int, ObraID)
       .input('proveedorId', sql.Int, ProveedorID)
       .input('fecha', sql.DateTime, Fecha)
       .input('folioFactura', sql.NVarChar, FolioFactura)
-      .input('totalCompra', sql.Decimal(10, 2), TotalCompra)
-      .query(query);
+      .input('totalCompra', sql.Decimal(10, 2), TotalCompra);
     
-    res.json({ CompraID: id, ...req.body });
+    if (req.file) {
+      updateQuery += `, FacturaRuta = @facturaRuta`;
+      request.input('facturaRuta', sql.NVarChar, `/uploads/facturas/${req.file.filename}`);
+    }
+    
+    updateQuery += ` WHERE CompraID = @id`;
+    
+    await request.query(updateQuery);
+    
+    const facturaRuta = req.file ? `/uploads/facturas/${req.file.filename}` : null;
+    res.json({ CompraID: id, FacturaRuta: facturaRuta, ...req.body });
   } catch (error) {
     console.error('Error en updateMaterial:', error);
     res.status(500).json({ error: error.message });

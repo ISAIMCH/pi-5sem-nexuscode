@@ -27,6 +27,8 @@ function GastosList() {
   
   // Formulario dinámico
   const [formData, setFormData] = useState({});
+  const [editingId, setEditingId] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const COLORS = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
 
@@ -161,6 +163,8 @@ function GastosList() {
 
   const resetForm = () => {
     setFormData({});
+    setEditingId(null);
+    setEditingCategory(null);
   };
 
   const openModalForCategory = (category) => {
@@ -169,26 +173,28 @@ function GastosList() {
     setShowModal(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      switch (activeTab) {
-        case 'Materiales':
-          await submitMaterial();
-          break;
-        case 'Maquinaria':
-          await submitMaquinaria();
-          break;
-        default:
-          break;
-      }
-      resetForm();
-      setShowModal(false);
-      await loadAllGastos();
-    } catch (error) {
-      console.error('Error creating gasto:', error);
-      alert('Error al guardar: ' + (error.message || 'Error desconocido'));
+  const openEditModal = (item, category) => {
+    setEditingId(category === 'Materiales' ? item.CompraID : item.RentaID);
+    setEditingCategory(category);
+    setActiveTab(category);
+    
+    if (category === 'Materiales') {
+      setFormData({
+        ProveedorID: item.ProveedorID,
+        Fecha: item.Fecha ? item.Fecha.split('T')[0] : '',
+        FolioFactura: item.FolioFactura || '',
+        TotalCompra: item.TotalCompra
+      });
+    } else if (category === 'Maquinaria') {
+      setFormData({
+        ProveedorID: item.ProveedorID,
+        Descripcion: item.Descripcion,
+        FechaInicio: item.FechaInicio ? item.FechaInicio.split('T')[0] : '',
+        FechaFin: item.FechaFin ? item.FechaFin.split('T')[0] : '',
+        CostoTotal: item.CostoTotal
+      });
     }
+    setShowModal(true);
   };
 
   const submitMaterial = async () => {
@@ -220,6 +226,67 @@ function GastosList() {
     }
     
     await api.maquinariaAPI?.create(formDataToSend);
+  };
+
+  const updateMaterial = async () => {
+    const formDataToSend = new FormData();
+    formDataToSend.append('ObraID', parseInt(selectedObra));
+    formDataToSend.append('ProveedorID', parseInt(formData.ProveedorID));
+    formDataToSend.append('Fecha', formData.Fecha);
+    formDataToSend.append('FolioFactura', formData.FolioFactura || '');
+    formDataToSend.append('TotalCompra', parseFloat(formData.TotalCompra));
+    
+    if (formData.FacturaArchivo instanceof File) {
+      formDataToSend.append('FacturaArchivo', formData.FacturaArchivo);
+    }
+    
+    await api.materialesAPI?.update(editingId, formDataToSend);
+  };
+
+  const updateMaquinaria = async () => {
+    const formDataToSend = new FormData();
+    formDataToSend.append('ObraID', parseInt(selectedObra));
+    formDataToSend.append('ProveedorID', parseInt(formData.ProveedorID));
+    formDataToSend.append('Descripcion', formData.Descripcion);
+    formDataToSend.append('FechaInicio', formData.FechaInicio);
+    formDataToSend.append('FechaFin', formData.FechaFin || '');
+    formDataToSend.append('CostoTotal', parseFloat(formData.CostoTotal));
+    
+    if (formData.FacturaArchivo instanceof File) {
+      formDataToSend.append('FacturaArchivo', formData.FacturaArchivo);
+    }
+    
+    await api.maquinariaAPI?.update(editingId, formDataToSend);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      switch (activeTab) {
+        case 'Materiales':
+          if (editingId) {
+            await updateMaterial();
+          } else {
+            await submitMaterial();
+          }
+          break;
+        case 'Maquinaria':
+          if (editingId) {
+            await updateMaquinaria();
+          } else {
+            await submitMaquinaria();
+          }
+          break;
+        default:
+          break;
+      }
+      resetForm();
+      setShowModal(false);
+      await loadAllGastos();
+    } catch (error) {
+      console.error('Error creating gasto:', error);
+      alert('Error al guardar: ' + (error.message || 'Error desconocido'));
+    }
   };
 
   const handleDelete = async (id, category) => {
@@ -431,6 +498,7 @@ function GastosList() {
                   </td>
                   <td className="monto">${m.TotalCompra.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
                   <td className="acciones">
+                    <button className="btn-edit" onClick={() => openEditModal(m, 'Materiales')} title="Editar">✏️</button>
                     <button className="btn-delete" onClick={() => handleDelete(m.CompraID, 'Materiales')} title="Eliminar">🗑️</button>
                   </td>
                 </tr>
@@ -472,6 +540,7 @@ function GastosList() {
                   </td>
                   <td className="monto">${m.CostoTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
                   <td className="acciones">
+                    <button className="btn-edit" onClick={() => openEditModal(m, 'Maquinaria')} title="Editar">✏️</button>
                     <button className="btn-delete" onClick={() => handleDelete(m.RentaID, 'Maquinaria')} title="Eliminar">🗑️</button>
                   </td>
                 </tr>

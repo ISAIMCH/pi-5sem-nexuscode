@@ -111,13 +111,11 @@ export const materialesAPI = {
   getByObra: (obraId) => fetch(`${API_URL}/materiales/obra/${obraId}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/materiales`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: data  // FormData se envía sin Content-Type
   }).then(handleResponse),
   update: (id, data) => fetch(`${API_URL}/materiales/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: data  // FormData se envía sin Content-Type
   }).then(handleResponse),
   delete: (id) => fetch(`${API_URL}/materiales/${id}`, { method: 'DELETE' }).then(handleResponse),
 };
@@ -128,13 +126,11 @@ export const maquinariaAPI = {
   getByObra: (obraId) => fetch(`${API_URL}/maquinaria/obra/${obraId}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/maquinaria`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: data  // FormData se envía sin Content-Type
   }).then(handleResponse),
   update: (id, data) => fetch(`${API_URL}/maquinaria/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: data  // FormData se envía sin Content-Type
   }).then(handleResponse),
   delete: (id) => fetch(`${API_URL}/maquinaria/${id}`, { method: 'DELETE' }).then(handleResponse),
 };

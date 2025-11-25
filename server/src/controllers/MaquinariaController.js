@@ -81,23 +81,34 @@ exports.updateMaquinaria = async (req, res) => {
     const { ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal } = req.body;
     const { id } = req.params;
     const pool = await poolPromise;
-    const query = `
+    
+    // Si hay nuevo archivo, actualizar la ruta
+    let updateQuery = `
       UPDATE RentaMaquinaria
       SET ObraID = @obraId, ProveedorID = @proveedorId, Descripcion = @descripcion,
           FechaInicio = @fechaInicio, FechaFin = @fechaFin, CostoTotal = @costoTotal
-      WHERE RentaID = @id
     `;
-    await pool.request()
+    
+    const request = pool.request()
       .input('id', sql.Int, id)
       .input('obraId', sql.Int, ObraID)
       .input('proveedorId', sql.Int, ProveedorID)
       .input('descripcion', sql.NVarChar, Descripcion)
       .input('fechaInicio', sql.DateTime, FechaInicio)
       .input('fechaFin', sql.DateTime, FechaFin)
-      .input('costoTotal', sql.Decimal(10, 2), CostoTotal)
-      .query(query);
+      .input('costoTotal', sql.Decimal(10, 2), CostoTotal);
     
-    res.json({ RentaID: id, ...req.body });
+    if (req.file) {
+      updateQuery += `, FacturaRuta = @facturaRuta`;
+      request.input('facturaRuta', sql.NVarChar, `/uploads/facturas/${req.file.filename}`);
+    }
+    
+    updateQuery += ` WHERE RentaID = @id`;
+    
+    await request.query(updateQuery);
+    
+    const facturaRuta = req.file ? `/uploads/facturas/${req.file.filename}` : null;
+    res.json({ RentaID: id, FacturaRuta: facturaRuta, ...req.body });
   } catch (error) {
     console.error('Error en updateMaquinaria:', error);
     res.status(500).json({ error: error.message });
