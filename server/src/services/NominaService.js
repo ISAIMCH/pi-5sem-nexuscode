@@ -24,8 +24,7 @@ class NominaService {
             pn.FolioNomina,
             pn.FechaRegistro,
             t.NombreCompleto,
-            t.Puesto,
-            t.SueldoDiario
+            t.Puesto
           FROM PagoNomina pn
           JOIN Trabajador t ON pn.TrabajadorID = t.TrabajadorID
           WHERE pn.ObraID = @ObraID
