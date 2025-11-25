@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import SueldosCalculadoraModal from './modals/SueldosCalculadoraModal';
+import SueldosPagoModal from './modals/SueldosPagoModal';
 import SueldosHistorialModal from './modals/SueldosHistorialModal';
 import '../styles/SueldosListView.css';
 
@@ -10,7 +10,7 @@ function SueldosListView({ selectedObra }) {
   const [mensaje, setMensaje] = useState({ type: '', text: '' });
   
   // Modales
-  const [showCalculadoraModal, setShowCalculadoraModal] = useState(false);
+  const [showPagoModal, setShowPagoModal] = useState(false);
   const [showHistorialModal, setShowHistorialModal] = useState(false);
   const [selectedTrabajador, setSelectedTrabajador] = useState(null);
 
@@ -21,14 +21,14 @@ function SueldosListView({ selectedObra }) {
       // Recargar trabajadores cada 5 segundos SOLO si no hay modales abiertos
       // Esto evita que los modales parpadeen al cerrarse
       const interval = setInterval(() => {
-        if (!showCalculadoraModal && !showHistorialModal) {
+        if (!showPagoModal && !showHistorialModal) {
           loadTrabajadores();
         }
       }, 5000);
       
       return () => clearInterval(interval);
     }
-  }, [selectedObra, showCalculadoraModal, showHistorialModal]);
+  }, [selectedObra, showPagoModal, showHistorialModal]);
 
   const loadTrabajadores = async () => {
     try {
@@ -45,9 +45,9 @@ function SueldosListView({ selectedObra }) {
     }
   };
 
-  const handleAbrirCalculadora = (trabajador) => {
+  const handleAbrirPago = (trabajador) => {
     setSelectedTrabajador(trabajador);
-    setShowCalculadoraModal(true);
+    setShowPagoModal(true);
   };
 
   const handleAbrirHistorial = (trabajador) => {
@@ -56,7 +56,7 @@ function SueldosListView({ selectedObra }) {
   };
 
   const handleCerrarModal = () => {
-    setShowCalculadoraModal(false);
+    setShowPagoModal(false);
     setShowHistorialModal(false);
     setSelectedTrabajador(null);
   };
@@ -66,12 +66,6 @@ function SueldosListView({ selectedObra }) {
     handleCerrarModal();
     // Recargar trabajadores solo después de guardar un pago (no en cada cierre)
     await loadTrabajadores();
-  };
-
-  const handleCerrarModalConRecarga = () => {
-    // Cerrar el modal sin hacer recarga adicional
-    // La recarga se hará en el siguiente ciclo de 5 segundos si está habilitada
-    handleCerrarModal();
   };
 
   if (loading) {
@@ -123,7 +117,7 @@ function SueldosListView({ selectedObra }) {
               <div className="card-footer">
                 <button
                   className="btn-pago"
-                  onClick={() => handleAbrirCalculadora(trabajador)}
+                  onClick={() => handleAbrirPago(trabajador)}
                   title="Registrar nuevo pago"
                 >
                   💵 Pago
@@ -141,12 +135,12 @@ function SueldosListView({ selectedObra }) {
         </div>
       )}
 
-      {/* Modal: Calculadora de Nómina */}
-      {showCalculadoraModal && selectedTrabajador && (
-        <SueldosCalculadoraModal
+      {/* Modal: Pago */}
+      {showPagoModal && selectedTrabajador && (
+        <SueldosPagoModal
           trabajador={selectedTrabajador}
           obraID={selectedObra}
-          onClose={handleCerrarModalConRecarga}
+          onClose={handleCerrarModal}
           onPagoGuardado={handlePagoGuardado}
         />
       )}
@@ -156,7 +150,7 @@ function SueldosListView({ selectedObra }) {
         <SueldosHistorialModal
           trabajador={selectedTrabajador}
           obraID={selectedObra}
-          onClose={handleCerrarModalConRecarga}
+          onClose={handleCerrarModal}
         />
       )}
     </div>
