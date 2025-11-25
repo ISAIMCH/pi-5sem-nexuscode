@@ -40,6 +40,7 @@ function TrabajadoresList() {
     FechaIngreso: '',
     ObraActualID: '',
     INERuta: '',
+    SueldoDiario: '',
     EstatusID: 1
   });
 
@@ -198,6 +199,7 @@ function TrabajadoresList() {
         FechaIngreso: formData.FechaIngreso || null,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
         INERuta: formData.INERuta || null,
+        SueldoDiario: formData.SueldoDiario ? parseFloat(formData.SueldoDiario) : null,
         EstatusID: parseInt(formData.EstatusID)
       };
 
@@ -251,6 +253,7 @@ function TrabajadoresList() {
       FechaIngreso: '',
       ObraActualID: '',
       INERuta: '',
+      SueldoDiario: '',
       EstatusID: 1
     });
     setEditingId(null);
@@ -278,6 +281,7 @@ function TrabajadoresList() {
       FechaIngreso: trabajador.FechaIngreso ? trabajador.FechaIngreso.split('T')[0] : '',
       ObraActualID: trabajador.ObraActualID || '',
       INERuta: trabajador.INERuta || '',
+      SueldoDiario: trabajador.SueldoDiario || '',
       EstatusID: trabajador.EstatusID
     });
     setEditingId(trabajador.TrabajadorID);
@@ -367,9 +371,14 @@ function TrabajadoresList() {
                 </tr>
               </thead>
               <tbody>
-                {trabajadores.map(trabajador => (
+                {trabajadores.map(trabajador => {
+                  const nombreCompleto = trabajador.ApellidoPaterno || trabajador.ApellidoMaterno 
+                    ? `${trabajador.NombreCompleto} ${trabajador.ApellidoPaterno || ''} ${trabajador.ApellidoMaterno || ''}`.trim()
+                    : trabajador.NombreCompleto;
+                  
+                  return (
                   <tr key={trabajador.TrabajadorID}>
-                    <td className="nombre">{trabajador.NombreCompleto}</td>
+                    <td className="nombre">{nombreCompleto}</td>
                     <td className="puesto">{trabajador.Puesto}</td>
                     <td className="codigo">{trabajador.ClaveEmpleado || '—'}</td>
                     <td className="rfc">{trabajador.RFC || '—'}</td>
@@ -410,7 +419,8 @@ function TrabajadoresList() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -510,6 +520,18 @@ function TrabajadoresList() {
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Sueldo Diario:</label>
+                    <input
+                      type="number"
+                      name="SueldoDiario"
+                      value={formData.SueldoDiario}
+                      onChange={handleInputChange}
+                      placeholder="Ej: 150.00"
+                      step="0.01"
+                      min="0"
+                    />
                   </div>
                   <div className="form-group">
                     <label>Estatus:</label>

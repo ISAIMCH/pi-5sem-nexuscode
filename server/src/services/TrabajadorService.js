@@ -112,8 +112,53 @@ class TrabajadorService {
 
   async updateTrabajador(id, trabajador) {
     try {
-      // Funcionalidad de editar trabajadores removida
-      throw new Error('Editar trabajadores no está disponible');
+      const pool = await poolPromise;
+      const request = pool.request();
+      
+      request.input('TrabajadorID', sql.Int, id);
+
+      // Campos actualizables con sus tipos SQL
+      const campos = [];
+      const actualizables = {
+        'NombreCompleto': { type: sql.NVarChar(150), value: trabajador.NombreCompleto },
+        'ApellidoPaterno': { type: sql.NVarChar(60), value: trabajador.ApellidoPaterno },
+        'ApellidoMaterno': { type: sql.NVarChar(60), value: trabajador.ApellidoMaterno },
+        'Puesto': { type: sql.NVarChar(100), value: trabajador.Puesto },
+        'Oficio': { type: sql.NVarChar(100), value: trabajador.Oficio },
+        'NSS': { type: sql.NVarChar(20), value: trabajador.NSS },
+        'ClaveEmpleado': { type: sql.NVarChar(20), value: trabajador.ClaveEmpleado },
+        'INE_Clave': { type: sql.NVarChar(18), value: trabajador.INE_Clave },
+        'CURP': { type: sql.NVarChar(18), value: trabajador.CURP },
+        'RFC': { type: sql.NVarChar(13), value: trabajador.RFC },
+        'FechaNacimiento': { type: sql.Date, value: trabajador.FechaNacimiento },
+        'Telefono': { type: sql.NVarChar(20), value: trabajador.Telefono },
+        'Correo': { type: sql.NVarChar(100), value: trabajador.Correo },
+        'Direccion': { type: sql.NVarChar(250), value: trabajador.Direccion },
+        'Banco': { type: sql.NVarChar(50), value: trabajador.Banco },
+        'CuentaBancaria': { type: sql.NVarChar(20), value: trabajador.CuentaBancaria },
+        'EsFacturador': { type: sql.Bit, value: trabajador.EsFacturador },
+        'FechaIngreso': { type: sql.Date, value: trabajador.FechaIngreso },
+        'ObraActualID': { type: sql.Int, value: trabajador.ObraActualID },
+        'SueldoDiario': { type: sql.Decimal(18, 2), value: trabajador.SueldoDiario },
+        'EstatusID': { type: sql.Int, value: trabajador.EstatusID }
+      };
+
+      // Construir dinámicamente la consulta solo con campos enviados
+      for (const [field, config] of Object.entries(actualizables)) {
+        if (config.value !== undefined && config.value !== null) {
+          request.input(field, config.type, config.value);
+          campos.push(`${field} = @${field}`);
+        }
+      }
+
+      if (campos.length === 0) {
+        throw new Error('No fields to update provided');
+      }
+
+      const query = `UPDATE Trabajador SET ${campos.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
+      await request.query(query);
+      
+      return { success: true };
     } catch (error) {
       console.error('TrabajadorService.updateTrabajador error:', error.message);
       throw new Error(`Error updating trabajador: ${error.message}`);
