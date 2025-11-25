@@ -4,7 +4,7 @@ exports.getAllMateriales = async (req, res) => {
   try {
     const pool = await poolPromise;
     const query = `
-      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra,
+      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra, cm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM CompraMaterial cm
       LEFT JOIN Proveedor p ON cm.ProveedorID = p.ProveedorID
@@ -23,7 +23,7 @@ exports.getMaterialesByObra = async (req, res) => {
     const pool = await poolPromise;
     const { obraId } = req.params;
     const query = `
-      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra,
+      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra, cm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM CompraMaterial cm
       LEFT JOIN Proveedor p ON cm.ProveedorID = p.ProveedorID
@@ -44,9 +44,17 @@ exports.createMaterial = async (req, res) => {
   try {
     const { ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra } = req.body;
     const pool = await poolPromise;
+    
+    // Generar ruta del archivo si existe
+    let facturaRuta = null;
+    if (req.file) {
+      // Ruta relativa desde el servidor
+      facturaRuta = `/uploads/facturas/${req.file.filename}`;
+    }
+    
     const query = `
-      INSERT INTO CompraMaterial (ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra)
-      VALUES (@obraId, @proveedorId, @fecha, @folioFactura, @totalCompra);
+      INSERT INTO CompraMaterial (ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra, FacturaRuta)
+      VALUES (@obraId, @proveedorId, @fecha, @folioFactura, @totalCompra, @facturaRuta);
       SELECT @@IDENTITY as CompraID;
     `;
     const result = await pool.request()
@@ -55,9 +63,10 @@ exports.createMaterial = async (req, res) => {
       .input('fecha', sql.DateTime, Fecha)
       .input('folioFactura', sql.NVarChar, FolioFactura)
       .input('totalCompra', sql.Decimal(10, 2), TotalCompra)
+      .input('facturaRuta', sql.NVarChar, facturaRuta)
       .query(query);
     
-    res.status(201).json({ CompraID: result.recordset[0].CompraID, ...req.body });
+    res.status(201).json({ CompraID: result.recordset[0].CompraID, FacturaRuta: facturaRuta, ...req.body });
   } catch (error) {
     console.error('Error en createMaterial:', error);
     res.status(500).json({ error: error.message });

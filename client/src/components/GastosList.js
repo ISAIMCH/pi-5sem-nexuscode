@@ -147,6 +147,16 @@ function GastosList() {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: files[0]
+      }));
+    }
+  };
+
   const resetForm = () => {
     setFormData({});
   };
@@ -180,26 +190,34 @@ function GastosList() {
   };
 
   const submitMaterial = async () => {
-    const data = {
-      ObraID: parseInt(selectedObra),
-      ProveedorID: parseInt(formData.ProveedorID),
-      Fecha: formData.Fecha,
-      FolioFactura: formData.FolioFactura || null,
-      TotalCompra: parseFloat(formData.TotalCompra)
-    };
-    await api.materialesAPI?.create(data);
+    const formDataToSend = new FormData();
+    formDataToSend.append('ObraID', parseInt(selectedObra));
+    formDataToSend.append('ProveedorID', parseInt(formData.ProveedorID));
+    formDataToSend.append('Fecha', formData.Fecha);
+    formDataToSend.append('FolioFactura', formData.FolioFactura || '');
+    formDataToSend.append('TotalCompra', parseFloat(formData.TotalCompra));
+    
+    if (formData.FacturaArchivo) {
+      formDataToSend.append('FacturaArchivo', formData.FacturaArchivo);
+    }
+    
+    await api.materialesAPI?.create(formDataToSend);
   };
 
   const submitMaquinaria = async () => {
-    const data = {
-      ObraID: parseInt(selectedObra),
-      ProveedorID: parseInt(formData.ProveedorID),
-      Descripcion: formData.Descripcion,
-      FechaInicio: formData.FechaInicio,
-      FechaFin: formData.FechaFin || null,
-      CostoTotal: parseFloat(formData.CostoTotal)
-    };
-    await api.maquinariaAPI?.create(data);
+    const formDataToSend = new FormData();
+    formDataToSend.append('ObraID', parseInt(selectedObra));
+    formDataToSend.append('ProveedorID', parseInt(formData.ProveedorID));
+    formDataToSend.append('Descripcion', formData.Descripcion);
+    formDataToSend.append('FechaInicio', formData.FechaInicio);
+    formDataToSend.append('FechaFin', formData.FechaFin || '');
+    formDataToSend.append('CostoTotal', parseFloat(formData.CostoTotal));
+    
+    if (formData.FacturaArchivo) {
+      formDataToSend.append('FacturaArchivo', formData.FacturaArchivo);
+    }
+    
+    await api.maquinariaAPI?.create(formDataToSend);
   };
 
   const handleDelete = async (id, category) => {
@@ -277,6 +295,17 @@ function GastosList() {
                 />
               </div>
             </div>
+            <div className="form-group">
+              <label>Archivo de Factura (PDF):</label>
+              <input
+                type="file"
+                name="FacturaArchivo"
+                onChange={handleFileChange}
+                accept=".pdf"
+                className="file-input"
+              />
+              {formData.FacturaArchivo && <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>}
+            </div>
           </>
         );
       
@@ -345,6 +374,17 @@ function GastosList() {
                 />
               </div>
             </div>
+            <div className="form-group">
+              <label>Archivo de Factura (PDF):</label>
+              <input
+                type="file"
+                name="FacturaArchivo"
+                onChange={handleFileChange}
+                accept=".pdf"
+                className="file-input"
+              />
+              {formData.FacturaArchivo && <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>}
+            </div>
           </>
         );
       
@@ -362,6 +402,7 @@ function GastosList() {
               <tr>
                 <th>Proveedor</th>
                 <th>Fecha</th>
+                <th>Folio</th>
                 <th>Factura</th>
                 <th>Total</th>
                 <th>Acciones</th>
@@ -372,7 +413,16 @@ function GastosList() {
                 <tr key={m.CompraID}>
                   <td>{proveedores.find(p => p.ProveedorID === m.ProveedorID)?.Nombre || m.ProveedorID}</td>
                   <td>{new Date(m.Fecha).toLocaleDateString('es-MX')}</td>
-                  <td className="factura">{m.FolioFactura ? <span className="factura-ref">{m.FolioFactura}</span> : <span className="sin-factura">—</span>}</td>
+                  <td className="folio">{m.FolioFactura ? <span className="factura-ref">{m.FolioFactura}</span> : <span className="sin-factura">—</span>}</td>
+                  <td className="factura-col">
+                    {m.FacturaRuta ? (
+                      <a href={m.FacturaRuta} target="_blank" rel="noopener noreferrer" className="btn-descargar-factura" title="Descargar factura">
+                        📄 PDF
+                      </a>
+                    ) : (
+                      <span className="sin-factura">—</span>
+                    )}
+                  </td>
                   <td className="monto">${m.TotalCompra.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
                   <td className="acciones">
                     <button className="btn-delete" onClick={() => handleDelete(m.CompraID, 'Materiales')} title="Eliminar">🗑️</button>
@@ -394,6 +444,7 @@ function GastosList() {
                 <th>Proveedor</th>
                 <th>Equipo</th>
                 <th>Período</th>
+                <th>Factura</th>
                 <th>Costo</th>
                 <th>Acciones</th>
               </tr>
@@ -404,6 +455,15 @@ function GastosList() {
                   <td>{proveedores.find(p => p.ProveedorID === m.ProveedorID)?.Nombre || m.ProveedorID}</td>
                   <td>{m.Descripcion}</td>
                   <td>{new Date(m.FechaInicio).toLocaleDateString('es-MX')} {m.FechaFin ? `- ${new Date(m.FechaFin).toLocaleDateString('es-MX')}` : '- En curso'}</td>
+                  <td className="factura-col">
+                    {m.FacturaRuta ? (
+                      <a href={m.FacturaRuta} target="_blank" rel="noopener noreferrer" className="btn-descargar-factura" title="Descargar factura">
+                        📄 PDF
+                      </a>
+                    ) : (
+                      <span className="sin-factura">—</span>
+                    )}
+                  </td>
                   <td className="monto">${m.CostoTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
                   <td className="acciones">
                     <button className="btn-delete" onClick={() => handleDelete(m.RentaID, 'Maquinaria')} title="Eliminar">🗑️</button>

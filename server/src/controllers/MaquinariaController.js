@@ -5,7 +5,7 @@ exports.getAllMaquinaria = async (req, res) => {
     const pool = await poolPromise;
     const query = `
       SELECT rm.RentaID, rm.ObraID, rm.ProveedorID, rm.Descripcion, rm.FechaInicio, 
-             rm.FechaFin, rm.CostoTotal,
+             rm.FechaFin, rm.CostoTotal, rm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM RentaMaquinaria rm
       LEFT JOIN Proveedor p ON rm.ProveedorID = p.ProveedorID
@@ -25,7 +25,7 @@ exports.getMaquinariaByObra = async (req, res) => {
     const { obraId } = req.params;
     const query = `
       SELECT rm.RentaID, rm.ObraID, rm.ProveedorID, rm.Descripcion, rm.FechaInicio, 
-             rm.FechaFin, rm.CostoTotal,
+             rm.FechaFin, rm.CostoTotal, rm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM RentaMaquinaria rm
       LEFT JOIN Proveedor p ON rm.ProveedorID = p.ProveedorID
@@ -46,9 +46,17 @@ exports.createMaquinaria = async (req, res) => {
   try {
     const { ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal } = req.body;
     const pool = await poolPromise;
+    
+    // Generar ruta del archivo si existe
+    let facturaRuta = null;
+    if (req.file) {
+      // Ruta relativa desde el servidor
+      facturaRuta = `/uploads/facturas/${req.file.filename}`;
+    }
+    
     const query = `
-      INSERT INTO RentaMaquinaria (ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal)
-      VALUES (@obraId, @proveedorId, @descripcion, @fechaInicio, @fechaFin, @costoTotal);
+      INSERT INTO RentaMaquinaria (ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal, FacturaRuta)
+      VALUES (@obraId, @proveedorId, @descripcion, @fechaInicio, @fechaFin, @costoTotal, @facturaRuta);
       SELECT @@IDENTITY as RentaID;
     `;
     const result = await pool.request()
@@ -58,9 +66,10 @@ exports.createMaquinaria = async (req, res) => {
       .input('fechaInicio', sql.DateTime, FechaInicio)
       .input('fechaFin', sql.DateTime, FechaFin)
       .input('costoTotal', sql.Decimal(10, 2), CostoTotal)
+      .input('facturaRuta', sql.NVarChar, facturaRuta)
       .query(query);
     
-    res.status(201).json({ RentaID: result.recordset[0].RentaID, ...req.body });
+    res.status(201).json({ RentaID: result.recordset[0].RentaID, FacturaRuta: facturaRuta, ...req.body });
   } catch (error) {
     console.error('Error en createMaquinaria:', error);
     res.status(500).json({ error: error.message });
