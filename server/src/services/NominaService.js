@@ -162,13 +162,21 @@ class NominaService {
       const result = await pool
         .request()
         .input('NominaID', sql.Int, nominaID)
-        .input('MontoPagado', sql.Decimal(18, 2), pagoData.MontoPagado)
-        .input('DiasPagados', sql.Decimal(4, 1), pagoData.DiasPagados || 0)
+        .input('FechaPago', sql.Date, pagoData.FechaPago || null)
+        .input('PeriodoInicio', sql.Date, pagoData.PeriodoInicio || null)
+        .input('PeriodoFin', sql.Date, pagoData.PeriodoFin || null)
+        .input('MontoPagado', sql.Decimal(18, 2), pagoData.MontoPagado || 0)
+        .input('EstatusPago', sql.NVarChar(50), pagoData.EstatusPago || 'Pendiente')
+        .input('Concepto', sql.NVarChar(100), pagoData.Concepto || null)
         .input('Observaciones', sql.NVarChar(250), pagoData.Observaciones || null)
         .query(`
           UPDATE PagoNomina
-          SET MontoPagado = @MontoPagado,
-              DiasPagados = @DiasPagados,
+          SET FechaPago = @FechaPago,
+              PeriodoInicio = @PeriodoInicio,
+              PeriodoFin = @PeriodoFin,
+              MontoPagado = @MontoPagado,
+              EstatusPago = @EstatusPago,
+              Concepto = @Concepto,
               Observaciones = @Observaciones
           WHERE NominaID = @NominaID
         `);

@@ -199,6 +199,35 @@
   text-overflow: ellipsis;
 }
 
+.historial-table .acciones {
+  text-align: center;
+}
+
+/* Botón editar pago */
+.btn-editar-pago {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-editar-pago:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-editar-pago:active {
+  transform: scale(0.95);
+}
+
 /* Resumen */
 .historial-summary {
   display: grid;

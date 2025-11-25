@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
+import SueldosEditarPagoModal from './SueldosEditarPagoModal';
 import '../../styles/modals/SueldosHistorialModal.css';
 
 function SueldosHistorialModal({ trabajador, obraID, onClose }) {
   const [historialPagos, setHistorialPagos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagoEditando, setPagoEditando] = useState(null);
 
   useEffect(() => {
     loadHistorial();
@@ -60,6 +62,30 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
 
   const totales = calcularTotales();
 
+  const handleEditarClick = (pago) => {
+    setPagoEditando(pago);
+  };
+
+  const handleCloseEditar = () => {
+    setPagoEditando(null);
+  };
+
+  const handleUpdatePago = () => {
+    loadHistorial();
+  };
+
+  // Si hay modal de edición abierto, mostrar ese en su lugar
+  if (pagoEditando) {
+    return (
+      <SueldosEditarPagoModal
+        pago={pagoEditando}
+        trabajador={trabajador}
+        onClose={handleCloseEditar}
+        onUpdate={handleUpdatePago}
+      />
+    );
+  }
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-historial" onClick={(e) => e.stopPropagation()}>
@@ -98,6 +124,7 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
                       <th>Estatus</th>
                       <th>Concepto</th>
                       <th>Observaciones</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -125,6 +152,15 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
                         </td>
                         <td className="observaciones">
                           {pago.Observaciones || '—'}
+                        </td>
+                        <td className="acciones">
+                          <button
+                            className="btn-editar-pago"
+                            onClick={() => handleEditarClick(pago)}
+                            title="Editar pago"
+                          >
+                            ✏️
+                          </button>
                         </td>
                       </tr>
                     ))}

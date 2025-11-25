@@ -86,11 +86,15 @@ class NominaController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { MontoPagado, DiasPagados, Observaciones } = req.body;
+      const { FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones } = req.body;
 
       const result = await NominaService.updatePago(parseInt(id), {
+        FechaPago,
+        PeriodoInicio,
+        PeriodoFin,
         MontoPagado,
-        DiasPagados,
+        EstatusPago,
+        Concepto,
         Observaciones
       });
 
