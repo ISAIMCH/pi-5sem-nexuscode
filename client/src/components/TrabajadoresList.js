@@ -358,7 +358,6 @@ function TrabajadoresList() {
                   <th>Nombre Completo</th>
                   <th>Puesto</th>
                   <th>Clave</th>
-                  <th>Fecha Ingreso</th>
                   <th>RFC</th>
                   <th>Correo</th>
                   <th>Obra Actual</th>
@@ -373,7 +372,6 @@ function TrabajadoresList() {
                     <td className="nombre">{trabajador.NombreCompleto}</td>
                     <td className="puesto">{trabajador.Puesto}</td>
                     <td className="codigo">{trabajador.ClaveEmpleado || '—'}</td>
-                    <td className="fecha">{trabajador.FechaIngreso ? new Date(trabajador.FechaIngreso).toLocaleDateString('es-MX') : '—'}</td>
                     <td className="rfc">{trabajador.RFC || '—'}</td>
                     <td className="correo">{trabajador.Correo || '—'}</td>
                     <td className="obra">{getObraName(trabajador.ObraActualID) || '—'}</td>
