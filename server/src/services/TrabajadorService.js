@@ -113,44 +113,55 @@ class TrabajadorService {
   async updateTrabajador(id, trabajador) {
     try {
       const pool = await poolPromise;
-      await pool
-        .request()
-        .input('TrabajadorID', sql.Int, id)
-        .input('NombreCompleto', sql.NVarChar(150), trabajador.NombreCompleto)
-        .input('Puesto', sql.NVarChar(100), trabajador.Puesto)
-        .input('NSS', sql.NVarChar(20), trabajador.NSS || null)
-        .input('ClaveEmpleado', sql.NVarChar(20), trabajador.ClaveEmpleado || null)
-        .input('ApellidoPaterno', sql.NVarChar(60), trabajador.ApellidoPaterno || null)
-        .input('ApellidoMaterno', sql.NVarChar(60), trabajador.ApellidoMaterno || null)
-        .input('Oficio', sql.NVarChar(100), trabajador.Oficio || null)
-        .input('INE_Clave', sql.NVarChar(18), trabajador.INE_Clave || null)
-        .input('CURP', sql.NVarChar(18), trabajador.CURP || null)
-        .input('RFC', sql.NVarChar(13), trabajador.RFC || null)
-        .input('FechaNacimiento', sql.Date, trabajador.FechaNacimiento || null)
-        .input('Telefono', sql.NVarChar(20), trabajador.Telefono || null)
-        .input('Correo', sql.NVarChar(100), trabajador.Correo || null)
-        .input('Direccion', sql.NVarChar(250), trabajador.Direccion || null)
-        .input('Banco', sql.NVarChar(50), trabajador.Banco || null)
-        .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
-        .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
-        .input('FechaIngreso', sql.Date, trabajador.FechaIngreso || null)
-        .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
-        .input('INERuta', sql.NVarChar(sql.MAX), trabajador.INERuta || null)
-        .input('SueldoDiario', sql.Decimal(18, 2), trabajador.SueldoDiario || null)
-        .input('EstatusID', sql.Int, trabajador.EstatusID)
-        .query(
-          `UPDATE Trabajador
-           SET NombreCompleto = @NombreCompleto, Puesto = @Puesto, NSS = @NSS,
-               ClaveEmpleado = @ClaveEmpleado, ApellidoPaterno = @ApellidoPaterno,
-               ApellidoMaterno = @ApellidoMaterno, Oficio = @Oficio,
-               INE_Clave = @INE_Clave, CURP = @CURP, RFC = @RFC,
-               FechaNacimiento = @FechaNacimiento, Telefono = @Telefono,
-               Correo = @Correo, Direccion = @Direccion, Banco = @Banco,
-               CuentaBancaria = @CuentaBancaria, EsFacturador = @EsFacturador,
-               FechaIngreso = @FechaIngreso, ObraActualID = @ObraActualID, INERuta = @INERuta, 
-               SueldoDiario = @SueldoDiario, EstatusID = @EstatusID
-           WHERE TrabajadorID = @TrabajadorID`
-        );
+      
+      // Construir dinámicamente la consulta solo con los campos enviados
+      const fields = [];
+      const request = pool.request();
+      
+      request.input('TrabajadorID', sql.Int, id);
+
+      // Mapeo de campos con sus tipos SQL
+      const fieldMap = {
+        'NombreCompleto': { type: sql.NVarChar(150), nullable: false },
+        'Puesto': { type: sql.NVarChar(100), nullable: false },
+        'NSS': { type: sql.NVarChar(20), nullable: true },
+        'ClaveEmpleado': { type: sql.NVarChar(20), nullable: true },
+        'ApellidoPaterno': { type: sql.NVarChar(60), nullable: true },
+        'ApellidoMaterno': { type: sql.NVarChar(60), nullable: true },
+        'Oficio': { type: sql.NVarChar(100), nullable: true },
+        'INE_Clave': { type: sql.NVarChar(18), nullable: true },
+        'CURP': { type: sql.NVarChar(18), nullable: true },
+        'RFC': { type: sql.NVarChar(13), nullable: true },
+        'FechaNacimiento': { type: sql.Date, nullable: true },
+        'Telefono': { type: sql.NVarChar(20), nullable: true },
+        'Correo': { type: sql.NVarChar(100), nullable: true },
+        'Direccion': { type: sql.NVarChar(250), nullable: true },
+        'Banco': { type: sql.NVarChar(50), nullable: true },
+        'CuentaBancaria': { type: sql.NVarChar(20), nullable: true },
+        'EsFacturador': { type: sql.Bit, nullable: true },
+        'FechaIngreso': { type: sql.Date, nullable: true },
+        'ObraActualID': { type: sql.Int, nullable: true },
+        'INERuta': { type: sql.NVarChar(sql.MAX), nullable: true },
+        'SueldoDiario': { type: sql.Decimal(18, 2), nullable: true },
+        'EstatusID': { type: sql.Int, nullable: true }
+      };
+
+      // Solo agregar campos que fueron enviados
+      for (const [field, config] of Object.entries(fieldMap)) {
+        if (trabajador.hasOwnProperty(field) && trabajador[field] !== undefined) {
+          const value = trabajador[field];
+          request.input(field, config.type, value || (config.nullable ? null : value));
+          fields.push(`${field} = @${field}`);
+        }
+      }
+
+      if (fields.length === 0) {
+        throw new Error('No fields to update');
+      }
+
+      const query = `UPDATE Trabajador SET ${fields.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
+      await request.query(query);
+      
       return { success: true };
     } catch (error) {
       console.error('TrabajadorService.updateTrabajador error:', error.message);
