@@ -17,6 +17,13 @@ function SueldosListView({ selectedObra }) {
   useEffect(() => {
     if (selectedObra) {
       loadTrabajadores();
+      
+      // Recargar trabajadores cada 5 segundos para mostrar cambios en tiempo real
+      const interval = setInterval(() => {
+        loadTrabajadores();
+      }, 5000);
+      
+      return () => clearInterval(interval);
     }
   }, [selectedObra]);
 
@@ -55,6 +62,12 @@ function SueldosListView({ selectedObra }) {
     setMensaje({ type: 'success', text: '✅ Pago guardado correctamente' });
     setTimeout(() => setMensaje({ type: '', text: '' }), 2000);
     handleCerrarModal();
+    await loadTrabajadores();
+  };
+
+  const handleCerrarModalConRecarga = async () => {
+    handleCerrarModal();
+    // Recargar trabajadores después de cerrar cualquier modal
     await loadTrabajadores();
   };
 
@@ -130,7 +143,7 @@ function SueldosListView({ selectedObra }) {
         <SueldosCalculadoraModal
           trabajador={selectedTrabajador}
           obraID={selectedObra}
-          onClose={handleCerrarModal}
+          onClose={handleCerrarModalConRecarga}
           onPagoGuardado={handlePagoGuardado}
         />
       )}
@@ -140,7 +153,7 @@ function SueldosListView({ selectedObra }) {
         <SueldosHistorialModal
           trabajador={selectedTrabajador}
           obraID={selectedObra}
-          onClose={handleCerrarModal}
+          onClose={handleCerrarModalConRecarga}
         />
       )}
     </div>
