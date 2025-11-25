@@ -128,7 +128,9 @@ function TrabajadoresList() {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'EstatusID' ? parseInt(value) : value
+      [name]: name === 'EstatusID' ? parseInt(value) : 
+              name === 'SueldoDiario' ? (value === '' ? '' : parseFloat(value)) :
+              value
     }));
   };
 
@@ -199,7 +201,7 @@ function TrabajadoresList() {
         FechaIngreso: formData.FechaIngreso || null,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
         INERuta: formData.INERuta || null,
-        SueldoDiario: formData.SueldoDiario ? parseFloat(formData.SueldoDiario) : null,
+        SueldoDiario: formData.SueldoDiario !== '' && formData.SueldoDiario !== null ? parseFloat(formData.SueldoDiario) : null,
         EstatusID: parseInt(formData.EstatusID)
       };
 

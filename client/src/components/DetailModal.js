@@ -126,6 +126,17 @@ const DetailModal = ({ isOpen, trabajador, onClose }) => {
               </div>
             </section>
 
+            {/* Sueldo */}
+            <section className="detail-section">
+              <h3>💰 Remuneración</h3>
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <label>Sueldo Diario:</label>
+                  <span className="sueldo-highlight">${trabajador.SueldoDiario?.toFixed(2) || '0.00'}</span>
+                </div>
+              </div>
+            </section>
+
             {/* Estado */}
             <section className="detail-section">
               <h3>⚙️ Estado</h3>

@@ -247,3 +247,14 @@
     font-size: 0.95rem;
   }
 }
+
+/* Sueldo highlight */
+.sueldo-highlight {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}

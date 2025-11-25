@@ -144,8 +144,9 @@ class TrabajadorService {
       };
 
       // Construir dinámicamente la consulta solo con campos enviados
+      // Incluyendo 0 como valor válido
       for (const [field, config] of Object.entries(actualizables)) {
-        if (config.value !== undefined && config.value !== null) {
+        if (config.value !== undefined && config.value !== null && config.value !== '') {
           request.input(field, config.type, config.value);
           campos.push(`${field} = @${field}`);
         }
@@ -156,6 +157,9 @@ class TrabajadorService {
       }
 
       const query = `UPDATE Trabajador SET ${campos.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
+      console.log('Update query:', query);
+      console.log('Update data:', trabajador);
+      
       await request.query(query);
       
       return { success: true };
