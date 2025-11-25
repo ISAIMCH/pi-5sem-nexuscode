@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import PDFModal from './PDFModal';
 import '../styles/TrabajadoresList.css';
 
 function TrabajadoresList() {
@@ -11,6 +12,9 @@ function TrabajadoresList() {
   const [estatuses, setEstatuses] = useState([]);
   const [selectedObra, setSelectedObra] = useState('');
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
+  const [selectedPdfPath, setSelectedPdfPath] = useState('');
+  const [selectedPdfName, setSelectedPdfName] = useState('');
 
   const [formData, setFormData] = useState({
     NombreCompleto: '',
@@ -91,6 +95,18 @@ function TrabajadoresList() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenPdfModal = (filePath, fileName) => {
+    setSelectedPdfPath(filePath);
+    setSelectedPdfName(fileName);
+    setPdfModalOpen(true);
+  };
+
+  const handleClosePdfModal = () => {
+    setPdfModalOpen(false);
+    setSelectedPdfPath('');
+    setSelectedPdfName('');
   };
 
   const handleInputChange = (e) => {
@@ -344,15 +360,13 @@ function TrabajadoresList() {
                     <td className="obra">{getObraName(trabajador.ObraActualID) || '—'}</td>
                     <td className="ine">
                       {trabajador.INERuta ? (
-                        <a 
-                          href={trabajador.INERuta} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
+                        <button 
+                          onClick={() => handleOpenPdfModal(trabajador.INERuta, `${trabajador.NombreCompleto}_INE.pdf`)}
                           className="btn-pdf"
-                          title="Descargar INE"
+                          title="Ver INE"
                         >
-                          📄 PDF
-                        </a>
+                          📄 Ver
+                        </button>
                       ) : (
                         <span className="no-pdf">—</span>
                       )}
@@ -670,14 +684,13 @@ function TrabajadoresList() {
                       {formData.INERuta && (
                         <div className="file-preview">
                           ✅ Archivo cargado
-                          <a 
-                            href={formData.INERuta} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
+                          <button 
+                            onClick={() => handleOpenPdfModal(formData.INERuta, 'INE_Documento.pdf')}
                             className="file-link"
+                            type="button"
                           >
                             Ver
-                          </a>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -700,6 +713,12 @@ function TrabajadoresList() {
           </div>
         </div>
       )}
+      <PDFModal 
+        isOpen={pdfModalOpen}
+        filePath={selectedPdfPath}
+        fileName={selectedPdfName}
+        onClose={handleClosePdfModal}
+      />
     </div>
   );
 }
