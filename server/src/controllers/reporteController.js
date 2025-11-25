@@ -1,9 +1,9 @@
-const { getConnection } = require('../config/database');
+const { sql, poolPromise } = require('../config/database');
 
 // ✅ Obtener todos los reportes
 const getAll = async (req, res) => {
   try {
-    const pool = await getConnection();
+    const pool = await poolPromise;
     const result = await pool
       .request()
       .query('SELECT * FROM ReporteAvance ORDER BY FechaReporte DESC');
@@ -24,7 +24,7 @@ const getByObra = async (req, res) => {
       return res.status(400).json({ error: 'obraId es requerido' });
     }
 
-    const pool = await getConnection();
+    const pool = await poolPromise;
     const result = await pool
       .request()
       .input('ObraID', obraId)
@@ -55,7 +55,7 @@ const create = async (req, res) => {
       });
     }
 
-    const pool = await getConnection();
+    const pool = await poolPromise;
     const result = await pool
       .request()
       .input('ObraID', ObraID)
@@ -103,7 +103,7 @@ const update = async (req, res) => {
       });
     }
 
-    const pool = await getConnection();
+    const pool = await poolPromise;
     
     // Verificar que el reporte existe
     const checkResult = await pool
@@ -147,7 +147,7 @@ const deleteReport = async (req, res) => {
       return res.status(400).json({ error: 'AvanceID es requerido' });
     }
 
-    const pool = await getConnection();
+    const pool = await poolPromise;
 
     // Verificar que el reporte existe
     const checkResult = await pool
@@ -181,7 +181,7 @@ const getById = async (req, res) => {
       return res.status(400).json({ error: 'AvanceID es requerido' });
     }
 
-    const pool = await getConnection();
+    const pool = await poolPromise;
     const result = await pool
       .request()
       .input('AvanceID', id)
