@@ -14,6 +14,7 @@ function GastosList() {
   // Datos por categoría
   const [materiales, setMateriales] = useState([]);
   const [maquinaria, setMaquinaria] = useState([]);
+  const [sueldosPagos, setSueldosPagos] = useState([]);
   
   // Datos de soporte
   const [proveedores, setProveedores] = useState([]);
@@ -81,38 +82,45 @@ function GastosList() {
       setLoading(true);
       const materialesResp = await api.materialesAPI?.getByObra(selectedObra);
       const maquinariaResp = await api.maquinariaAPI?.getByObra(selectedObra);
+      const sueldosResp = await api.nominaAPI?.getByObra(selectedObra);
       
       // Asegurar que todas las respuestas son arrays
       const mat = Array.isArray(materialesResp) ? materialesResp : [];
       const maq = Array.isArray(maquinariaResp) ? maquinariaResp : [];
+      const sueldos = Array.isArray(sueldosResp) ? sueldosResp : [];
       
       setMateriales(mat);
       setMaquinaria(maq);
+      setSueldosPagos(sueldos);
       
-      calculateTotalsAndCharts(mat, maq);
+      calculateTotalsAndCharts(mat, maq, sueldos);
     } catch (error) {
       console.error('Error loading gastos:', error);
       // Set empty arrays on error
       setMateriales([]);
       setMaquinaria([]);
+      setSueldosPagos([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateTotalsAndCharts = (mat, maq) => {
+  const calculateTotalsAndCharts = (mat, maq, sueldos) => {
     const totales = {
       Materiales: (mat || []).reduce((sum, m) => sum + (m.TotalCompra || 0), 0),
-      Maquinaria: (maq || []).reduce((sum, m) => sum + (m.CostoTotal || 0), 0)
+      Maquinaria: (maq || []).reduce((sum, m) => sum + (m.CostoTotal || 0), 0),
+      Sueldos: (sueldos || []).reduce((sum, s) => sum + (s.MontoPagado || 0), 0)
     };
 
     const total = Object.values(totales).reduce((sum, val) => sum + val, 0);
     setTotalGastos(total);
 
-    const categoryChartData = Object.entries(totales).map(([name, value]) => ({
-      name,
-      value
-    }));
+    const categoryChartData = Object.entries(totales)
+      .filter(([name, value]) => value > 0)
+      .map(([name, value]) => ({
+        name,
+        value
+      }));
     setCategoryData(categoryChartData);
 
     // Preparar datos para gráfica acumulada (por fecha)
@@ -521,6 +529,9 @@ function GastosList() {
                 } else if (cat.key === 'Maquinaria') {
                   count = (maquinaria || []).length;
                   total = (maquinaria || []).reduce((sum, m) => sum + (m.CostoTotal || 0), 0);
+                } else if (cat.key === 'Sueldos') {
+                  count = (sueldosPagos || []).length;
+                  total = (sueldosPagos || []).reduce((sum, s) => sum + (s.MontoPagado || 0), 0);
                 }
                 
                 return (
@@ -532,7 +543,8 @@ function GastosList() {
                     <span className="icon">{cat.icon}</span>
                     <div className="tab-info">
                       <span className="label">{cat.label}</span>
-                      {cat.key !== 'Sueldos' && <span className="badge">{count}</span>}
+                      {(cat.key === 'Materiales' || cat.key === 'Maquinaria') && <span className="badge">{count}</span>}
+                      {cat.key === 'Sueldos' && count > 0 && <span className="badge">{count}</span>}
                     </div>
                     {total > 0 && <span className="amount">${total.toLocaleString('es-MX')}</span>}
                   </button>
