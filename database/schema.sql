@@ -220,6 +220,7 @@ CREATE TABLE Trabajador (
   FechaIngreso      DATE NULL,
   ObraActualID      INT NULL,
   INERuta           NVARCHAR(MAX) NULL,
+  SueldoDiario      DECIMAL(18,2) NULL,
   EstatusID         INT NOT NULL DEFAULT 1,
   CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID),
   CONSTRAINT FK_Trab_Obra FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID)
