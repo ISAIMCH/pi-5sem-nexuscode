@@ -6,8 +6,6 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
   const [raya, setRaya] = useState(null);
   const [saving, setSaving] = useState(false);
   const [mensaje, setMensaje] = useState({ type: '', text: '' });
-  const [editingSueldo, setEditingSueldo] = useState(false);
-  const [nuevoSueldo, setNuevoSueldo] = useState(0);
 
   const PRECIO_HORA_EXTRA = 75;
 
@@ -29,7 +27,6 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
       totalAPagar: 0,
       FechaPago: new Date().toISOString().split('T')[0]
     });
-    setNuevoSueldo(trabajador.SueldoDiario || 0);
   };
 
   const calcularTotal = (dias, sueldo, horas, deducciones) => {
@@ -54,30 +51,6 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
     }
 
     setRaya(updatedRaya);
-  };
-
-  const handleGuardarSueldo = async () => {
-    try {
-      setSaving(true);
-      const result = await api.trabajadoresAPI?.update(trabajador.TrabajadorID, {
-        SueldoDiario: parseFloat(nuevoSueldo)
-      });
-
-      const updatedRaya = {
-        ...raya,
-        SueldoDiario: parseFloat(nuevoSueldo)
-      };
-      setRaya(updatedRaya);
-      setEditingSueldo(false);
-      setMensaje({ type: 'success', text: '✅ Sueldo diario actualizado' });
-      setTimeout(() => setMensaje({ type: '', text: '' }), 2000);
-    } catch (error) {
-      console.error('Error actualizando sueldo:', error);
-      const errorMsg = error?.message || 'Error desconocido';
-      setMensaje({ type: 'error', text: `Error al actualizar sueldo: ${errorMsg}` });
-    } finally {
-      setSaving(false);
-    }
   };
 
   const handleGuardarPago = async () => {
@@ -137,49 +110,12 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
             </div>
           )}
 
-          {/* Sueldo Diario Editable */}
+          {/* Sueldo Diario - Solo Lectura */}
           <div className="section-sueldo">
             <h3>💰 Sueldo Diario</h3>
             <div className="sueldo-display">
               <span className="sueldo-amount">${raya.SueldoDiario.toFixed(2)}</span>
-              <button
-                className="btn-edit-small"
-                onClick={() => {
-                  setEditingSueldo(!editingSueldo);
-                  setNuevoSueldo(raya.SueldoDiario);
-                }}
-              >
-                ✏️ Editar
-              </button>
             </div>
-
-            {editingSueldo && (
-              <div className="sueldo-edit-inline">
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={nuevoSueldo}
-                  onChange={(e) => setNuevoSueldo(e.target.value)}
-                  className="input-sueldo"
-                  placeholder="Nuevo sueldo diario"
-                />
-                <button
-                  className="btn-save-small"
-                  onClick={handleGuardarSueldo}
-                  disabled={saving}
-                >
-                  Guardar
-                </button>
-                <button
-                  className="btn-cancel-small"
-                  onClick={() => setEditingSueldo(false)}
-                  disabled={saving}
-                >
-                  Cancelar
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Fecha de Pago */}

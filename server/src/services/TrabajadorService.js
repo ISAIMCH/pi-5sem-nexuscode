@@ -112,57 +112,8 @@ class TrabajadorService {
 
   async updateTrabajador(id, trabajador) {
     try {
-      const pool = await poolPromise;
-      
-      // Construir dinámicamente la consulta solo con los campos enviados
-      const fields = [];
-      const request = pool.request();
-      
-      request.input('TrabajadorID', sql.Int, id);
-
-      // Mapeo de campos con sus tipos SQL
-      const fieldMap = {
-        'NombreCompleto': { type: sql.NVarChar(150), nullable: false },
-        'Puesto': { type: sql.NVarChar(100), nullable: false },
-        'NSS': { type: sql.NVarChar(20), nullable: true },
-        'ClaveEmpleado': { type: sql.NVarChar(20), nullable: true },
-        'ApellidoPaterno': { type: sql.NVarChar(60), nullable: true },
-        'ApellidoMaterno': { type: sql.NVarChar(60), nullable: true },
-        'Oficio': { type: sql.NVarChar(100), nullable: true },
-        'INE_Clave': { type: sql.NVarChar(18), nullable: true },
-        'CURP': { type: sql.NVarChar(18), nullable: true },
-        'RFC': { type: sql.NVarChar(13), nullable: true },
-        'FechaNacimiento': { type: sql.Date, nullable: true },
-        'Telefono': { type: sql.NVarChar(20), nullable: true },
-        'Correo': { type: sql.NVarChar(100), nullable: true },
-        'Direccion': { type: sql.NVarChar(250), nullable: true },
-        'Banco': { type: sql.NVarChar(50), nullable: true },
-        'CuentaBancaria': { type: sql.NVarChar(20), nullable: true },
-        'EsFacturador': { type: sql.Bit, nullable: true },
-        'FechaIngreso': { type: sql.Date, nullable: true },
-        'ObraActualID': { type: sql.Int, nullable: true },
-        'INERuta': { type: sql.NVarChar(sql.MAX), nullable: true },
-        'SueldoDiario': { type: sql.Decimal(18, 2), nullable: true },
-        'EstatusID': { type: sql.Int, nullable: true }
-      };
-
-      // Solo agregar campos que fueron enviados
-      for (const [field, config] of Object.entries(fieldMap)) {
-        if (trabajador.hasOwnProperty(field) && trabajador[field] !== undefined) {
-          const value = trabajador[field];
-          request.input(field, config.type, value || (config.nullable ? null : value));
-          fields.push(`${field} = @${field}`);
-        }
-      }
-
-      if (fields.length === 0) {
-        throw new Error('No fields to update');
-      }
-
-      const query = `UPDATE Trabajador SET ${fields.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
-      await request.query(query);
-      
-      return { success: true };
+      // Funcionalidad de editar trabajadores removida
+      throw new Error('Editar trabajadores no está disponible');
     } catch (error) {
       console.error('TrabajadorService.updateTrabajador error:', error.message);
       throw new Error(`Error updating trabajador: ${error.message}`);
