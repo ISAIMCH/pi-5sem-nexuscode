@@ -107,13 +107,6 @@ function SueldosListView({ selectedObra }) {
                 <p className="puesto-badge">{trabajador.Puesto}</p>
               </div>
 
-              <div className="card-body">
-                <div className="info-row">
-                  <span className="label">💰 Sueldo Diario:</span>
-                  <span className="value">${trabajador.SueldoDiario?.toFixed(2) || '0.00'}</span>
-                </div>
-              </div>
-
               <div className="card-footer">
                 <button
                   className="btn-pago"
