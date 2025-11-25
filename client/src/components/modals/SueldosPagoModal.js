@@ -7,6 +7,7 @@ function SueldosPagoModal({ trabajador, obraID, onClose, onPagoGuardado }) {
     FechaPago: new Date().toISOString().split('T')[0],
     PeriodoInicio: '',
     PeriodoFin: '',
+    MontoPagado: '',
     EstatusPago: 'Pendiente'
   });
 
@@ -33,6 +34,10 @@ function SueldosPagoModal({ trabajador, obraID, onClose, onPagoGuardado }) {
       setMensaje({ type: 'error', text: 'La fecha de fin del periodo es requerida' });
       return false;
     }
+    if (!formData.MontoPagado || parseFloat(formData.MontoPagado) <= 0) {
+      setMensaje({ type: 'error', text: 'Ingresa un monto de pago válido' });
+      return false;
+    }
     if (new Date(formData.PeriodoFin) < new Date(formData.PeriodoInicio)) {
       setMensaje({ type: 'error', text: 'La fecha de fin debe ser posterior o igual a la fecha de inicio' });
       return false;
@@ -54,8 +59,8 @@ function SueldosPagoModal({ trabajador, obraID, onClose, onPagoGuardado }) {
         FechaPago: formData.FechaPago,
         PeriodoInicio: formData.PeriodoInicio,
         PeriodoFin: formData.PeriodoFin,
+        MontoPagado: parseFloat(formData.MontoPagado),
         EstatusPago: formData.EstatusPago,
-        MontoPagado: 0, // Se calculará en backend si es necesario
         Concepto: `Pago del periodo ${formData.PeriodoInicio} al ${formData.PeriodoFin}`
       };
 
@@ -124,6 +129,19 @@ function SueldosPagoModal({ trabajador, obraID, onClose, onPagoGuardado }) {
                 disabled={saving}
               />
             </div>
+          </div>
+
+          <div className="form-group">
+            <label>💰 Cantidad del Pago</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={formData.MontoPagado}
+              onChange={(e) => handleInputChange('MontoPagado', e.target.value)}
+              disabled={saving}
+              placeholder="0.00"
+            />
           </div>
 
           <div className="form-group">
