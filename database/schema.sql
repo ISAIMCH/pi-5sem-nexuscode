@@ -220,7 +220,6 @@ CREATE TABLE Trabajador (
   FechaIngreso      DATE NULL,
   ObraActualID      INT NULL,
   INERuta           NVARCHAR(MAX) NULL,
-  SueldoDiario      DECIMAL(18,2) NULL,
   EstatusID         INT NOT NULL DEFAULT 1,
   CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID),
   CONSTRAINT FK_Trab_Obra FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID)
@@ -423,6 +422,37 @@ GO
 ALTER TABLE Trabajador
 ADD INERuta NVARCHAR(MAX) NULL;
 GO
+
+-----------------------------------------------------------
+-- Agregar columna de Sueldo Diario al Trabajador
+-----------------------------------------------------------
+ALTER TABLE Trabajador
+ADD SueldoDiario DECIMAL(18,2) NOT NULL DEFAULT 0;
+-- SueldoDiario es más flexible para calcular faltas y pagos diarios
+
+
+CREATE TABLE ControlAsistencia (
+    AsistenciaID    INT IDENTITY(1,1) PRIMARY KEY,
+    ObraID          INT NOT NULL,
+    TrabajadorID    INT NOT NULL,
+    SemanaAnio      INT NOT NULL, -- Ej: 45 (Semana 45 del año)
+    Anio            INT NOT NULL, -- Ej: 2024
+    
+    -- El control real:
+    DiasTrabajados  INT DEFAULT 6,    -- Por defecto semana completa
+    HorasExtra      DECIMAL(4,1) DEFAULT 0,
+    Faltas          INT DEFAULT 0,
+    
+    -- Auditoría (Quién reportó la asistencia)
+    FechaRegistro   DATETIME DEFAULT GETDATE(),
+    Autorizado      BIT DEFAULT 0, -- 1 = Listo para pagar
+    
+    CONSTRAINT FK_Asist_Obra FOREIGN KEY (ObraID) REFERENCES Obra(ObraID),
+    CONSTRAINT FK_Asist_Trab FOREIGN KEY (TrabajadorID) REFERENCES Trabajador(TrabajadorID),
+    
+    -- Evitar duplicados: Un trabajador solo puede tener una lista de asistencia por semana y año en una obra
+    CONSTRAINT UC_Asistencia_Semana UNIQUE (TrabajadorID, SemanaAnio, Anio)
+);
 
 INSERT INTO Cat_TipoProveedor VALUES ('Material'), ('Maquinaria'), ('Varios');
 
