@@ -15,8 +15,11 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
       setLoading(true);
       // Cargar todos los pagos de todos los trabajadores de esta obra
       const allPagos = await api.nominaAPI?.getByObra(obraID) || [];
+      console.log('Pagos cargados:', allPagos);
+      console.log('TrabajadorID buscado:', trabajador.TrabajadorID);
       // Filtrar solo los del trabajador actual
-      const filtered = allPagos.filter(p => p.TrabajadorID === trabajador.TrabajadorID);
+      const filtered = allPagos.filter(p => parseInt(p.TrabajadorID) === parseInt(trabajador.TrabajadorID));
+      console.log('Pagos filtrados:', filtered);
       setHistorialPagos(filtered.sort((a, b) => new Date(b.FechaPago) - new Date(a.FechaPago)));
     } catch (error) {
       console.error('Error cargando historial:', error);
