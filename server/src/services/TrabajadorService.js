@@ -136,6 +136,7 @@ class TrabajadorService {
         .input('FechaIngreso', sql.Date, trabajador.FechaIngreso || null)
         .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
         .input('INERuta', sql.NVarChar(sql.MAX), trabajador.INERuta || null)
+        .input('SueldoDiario', sql.Decimal(18, 2), trabajador.SueldoDiario || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID)
         .query(
           `UPDATE Trabajador
@@ -146,7 +147,8 @@ class TrabajadorService {
                FechaNacimiento = @FechaNacimiento, Telefono = @Telefono,
                Correo = @Correo, Direccion = @Direccion, Banco = @Banco,
                CuentaBancaria = @CuentaBancaria, EsFacturador = @EsFacturador,
-               FechaIngreso = @FechaIngreso, ObraActualID = @ObraActualID, INERuta = @INERuta, EstatusID = @EstatusID
+               FechaIngreso = @FechaIngreso, ObraActualID = @ObraActualID, INERuta = @INERuta, 
+               SueldoDiario = @SueldoDiario, EstatusID = @EstatusID
            WHERE TrabajadorID = @TrabajadorID`
         );
       return { success: true };

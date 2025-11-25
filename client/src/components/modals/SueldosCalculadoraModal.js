@@ -59,7 +59,7 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
   const handleGuardarSueldo = async () => {
     try {
       setSaving(true);
-      await api.trabajadoresAPI?.update(trabajador.TrabajadorID, {
+      const result = await api.trabajadoresAPI?.update(trabajador.TrabajadorID, {
         SueldoDiario: parseFloat(nuevoSueldo)
       });
 
@@ -73,7 +73,8 @@ function SueldosCalculadoraModal({ trabajador, obraID, onClose, onPagoGuardado }
       setTimeout(() => setMensaje({ type: '', text: '' }), 2000);
     } catch (error) {
       console.error('Error actualizando sueldo:', error);
-      setMensaje({ type: 'error', text: 'Error al actualizar sueldo' });
+      const errorMsg = error?.message || 'Error desconocido';
+      setMensaje({ type: 'error', text: `Error al actualizar sueldo: ${errorMsg}` });
     } finally {
       setSaving(false);
     }
