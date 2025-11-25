@@ -18,14 +18,17 @@ function SueldosListView({ selectedObra }) {
     if (selectedObra) {
       loadTrabajadores();
       
-      // Recargar trabajadores cada 5 segundos para mostrar cambios en tiempo real
+      // Recargar trabajadores cada 5 segundos SOLO si no hay modales abiertos
+      // Esto evita que los modales parpadeen al cerrarse
       const interval = setInterval(() => {
-        loadTrabajadores();
+        if (!showCalculadoraModal && !showHistorialModal) {
+          loadTrabajadores();
+        }
       }, 5000);
       
       return () => clearInterval(interval);
     }
-  }, [selectedObra]);
+  }, [selectedObra, showCalculadoraModal, showHistorialModal]);
 
   const loadTrabajadores = async () => {
     try {
@@ -60,15 +63,15 @@ function SueldosListView({ selectedObra }) {
 
   const handlePagoGuardado = async () => {
     setMensaje({ type: 'success', text: '✅ Pago guardado correctamente' });
-    setTimeout(() => setMensaje({ type: '', text: '' }), 2000);
     handleCerrarModal();
+    // Recargar trabajadores solo después de guardar un pago (no en cada cierre)
     await loadTrabajadores();
   };
 
-  const handleCerrarModalConRecarga = async () => {
+  const handleCerrarModalConRecarga = () => {
+    // Cerrar el modal sin hacer recarga adicional
+    // La recarga se hará en el siguiente ciclo de 5 segundos si está habilitada
     handleCerrarModal();
-    // Recargar trabajadores después de cerrar cualquier modal
-    await loadTrabajadores();
   };
 
   if (loading) {
