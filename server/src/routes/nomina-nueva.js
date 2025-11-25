@@ -1,11 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const nominaController = require('../controllers/NominaController');
+const NominaController = require('../controllers/NominaNewController');
 
-router.get('/', nominaController.getAllNomina);
-router.get('/obra/:obraId', nominaController.getNominaByObra);
-router.post('/', nominaController.createNomina);
-router.put('/:id', nominaController.updateNomina);
-router.delete('/:id', nominaController.deleteNomina);
+// Obtener pagos de nómina de una obra
+router.get('/obra/:obraID', NominaController.getByObra);
+
+// Obtener trabajadores asignados a una obra
+router.get('/trabajadores/:obraID', NominaController.getTrabajadoresByObra);
+
+// Crear un pago de nómina individual
+router.post('/', NominaController.create);
+
+// Crear lote de nómina semanal
+router.post('/lote', NominaController.createLote);
+
+// Actualizar un pago
+router.put('/:id', NominaController.update);
+
+// Eliminar un pago
+router.delete('/:id', NominaController.delete);
 
 module.exports = router;

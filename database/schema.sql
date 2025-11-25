@@ -299,6 +299,40 @@ CREATE TABLE Cat_ConceptoNomina (
 );
 GO
 
+-----------------------------------------------------------
+-- Agregar columna de Sueldo Diario al Trabajador
+-----------------------------------------------------------
+ALTER TABLE Trabajador
+ADD SueldoDiario DECIMAL(18,2) NOT NULL DEFAULT 0; 
+-- O SueldoSemanal, según como prefiera el cliente. SueldoDiario es más flexible para calcular faltas.
+
+-----------------------------------------------------------
+-- Nueva tabla: Control de Asistencia Semanal
+-----------------------------------------------------------
+CREATE TABLE ControlAsistencia (
+    AsistenciaID    INT IDENTITY(1,1) PRIMARY KEY,
+    ObraID          INT NOT NULL,
+    TrabajadorID    INT NOT NULL,
+    SemanaAnio      INT NOT NULL, -- Ej: 45 (Semana 45 del año)
+    Anio            INT NOT NULL, -- Ej: 2024
+    
+    -- El control real:
+    DiasTrabajados  INT DEFAULT 6,    -- Por defecto semana completa
+    HorasExtra      DECIMAL(4,1) DEFAULT 0,
+    Faltas          INT DEFAULT 0,
+    
+    -- Auditoría (Quién reportó la asistencia)
+    FechaRegistro   DATETIME DEFAULT GETDATE(),
+    Autorizado      BIT DEFAULT 0, -- 1 = Listo para pagar
+    
+    CONSTRAINT FK_Asist_Obra FOREIGN KEY (ObraID) REFERENCES Obra(ObraID),
+    CONSTRAINT FK_Asist_Trab FOREIGN KEY (TrabajadorID) REFERENCES Trabajador(TrabajadorID),
+    
+    -- Evitar duplicados: Un trabajador solo puede tener una lista de asistencia por semana y año en una obra
+    CONSTRAINT UC_Asistencia_Semana UNIQUE (TrabajadorID, SemanaAnio, Anio)
+);
+
+
 USE NexusCode_2;
 GO
 
@@ -502,27 +536,27 @@ VALUES
 INSERT INTO Trabajador 
 (NombreCompleto, ApellidoPaterno, ApellidoMaterno, Puesto, Oficio, NSS, ClaveEmpleado, 
  INE_Clave, CURP, RFC, Telefono, Correo, Direccion, Banco, CuentaBancaria, 
- EsFacturador, ObraActualID, INERuta, EstatusID)
+ EsFacturador, ObraActualID, INERuta, EstatusID, SueldoDiario)
 VALUES
 ('Juan', 'Ramírez', 'Torres', 'Albañil', 'Especialista en Albañilería', '12345678901', 'EMP-001',
  'INE123456789001', 'RATR800515HDFMRN01', 'RAT800515AB2', '5551234567', 'juan.ramirez@example.com', 
  'Calle Principal 123, Apt 5, León', 'Banco Azteca', '0123456789012345',
- 0, 1, '/uploads/ine/juan-ramirez-ine.pdf', 1),
+ 0, 1, '/uploads/ine/juan-ramirez-ine.pdf', 1, 650.00),
 
 ('Carlos', 'Mendoza', 'López', 'Soldador', 'Soldadura Estructural', '98765432122', 'EMP-002',
  'INE987654321002', 'MELC880420HDFNNR09', 'MEN880420CD3', '5559876543', 'carlos.mendoza@example.com',
  'Avenida Tecnológica 456, Apt 10, León', 'Bancomer', '9876543210123456',
- 0, 1, '/uploads/ine/carlos-mendoza-ine.pdf', 1),
+ 0, 1, '/uploads/ine/carlos-mendoza-ine.pdf', 1, 750.00),
 
 ('Luis', 'Gómez', 'Rivera', 'Supervisor', 'Supervisión de Obra', '11223344556', 'EMP-003',
  'INE112233445003', 'GORL750812HDFMRV04', 'GRI750812EF4', '5552468013', 'luis.gomez@example.com',
  'Boulevard Central 789, Apt 15, CDMX', 'HSBC', '1234567890123456',
- 0, 2, '/uploads/ine/luis-gomez-ine.pdf', 1),
+ 0, 2, '/uploads/ine/luis-gomez-ine.pdf', 1, 1200.00),
 
 ('Pedro', 'Sánchez', 'Aguilar', 'Operador de maquinaria', 'Operación de Grúas', '66778899001', 'EMP-004',
  'INE667788990004', 'SAAP720315HDFGRD02', 'SAG720315HB5', '5553691215', 'pedro.sanchez@example.com',
  'Calle Sur 321, Apt 20, CDMX', 'Scotiabank', '5432109876543210',
- 0, 2, '/uploads/ine/pedro-sanchez-ine.pdf', 1);
+ 0, 2, '/uploads/ine/pedro-sanchez-ine.pdf', 1, 850.00);
 
 --✅ J) NÓMINA REALISTA
 INSERT INTO PagoNomina VALUES

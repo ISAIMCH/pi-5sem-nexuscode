@@ -143,10 +143,16 @@ export const maquinariaAPI = {
 export const nominaAPI = {
   getAll: () => fetch(`${API_URL}/nomina`).then(handleResponse),
   getByObra: (obraId) => fetch(`${API_URL}/nomina/obra/${obraId}`).then(handleResponse),
+  getTrabajadoresByObra: (obraId) => fetch(`${API_URL}/nomina/trabajadores/${obraId}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/nomina`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
+  }).then(handleResponse),
+  createLote: (pagosList) => fetch(`${API_URL}/nomina/lote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pagosList })
   }).then(handleResponse),
   update: (id, data) => fetch(`${API_URL}/nomina/${id}`, {
     method: 'PUT',
