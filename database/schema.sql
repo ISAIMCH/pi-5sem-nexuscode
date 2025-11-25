@@ -217,8 +217,9 @@ CREATE TABLE Trabajador (
   Banco             NVARCHAR(50) NULL,
   CuentaBancaria    NVARCHAR(20) NULL,
   EsFacturador      BIT NOT NULL DEFAULT 0,
+  FechaIngreso      DATE NULL,
   ObraActualID      INT NULL,
-  INE_PDF           NVARCHAR(MAX) NULL,
+  INERuta           NVARCHAR(MAX) NULL,
   EstatusID         INT NOT NULL DEFAULT 1,
   CONSTRAINT FK_Trab_Estatus FOREIGN KEY (EstatusID) REFERENCES Cat_Estatus(EstatusID),
   CONSTRAINT FK_Trab_Obra FOREIGN KEY (ObraActualID) REFERENCES Obra(ObraID)

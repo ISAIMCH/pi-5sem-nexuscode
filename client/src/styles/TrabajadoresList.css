@@ -307,7 +307,7 @@
   justify-content: flex-end;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-view {
   background: none;
   border: none;
   cursor: pointer;
@@ -315,6 +315,11 @@
   transition: transform 0.2s ease;
   padding: 0.4rem;
   border-radius: 4px;
+}
+
+.btn-view:hover {
+  transform: scale(1.2);
+  background-color: #d5f4e6;
 }
 
 .btn-edit:hover {

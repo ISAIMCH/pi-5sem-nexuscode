@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import PDFModal from './PDFModal';
+import DetailModal from './DetailModal';
 import '../styles/TrabajadoresList.css';
 
 function TrabajadoresList() {
@@ -15,6 +16,8 @@ function TrabajadoresList() {
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [selectedPdfPath, setSelectedPdfPath] = useState('');
   const [selectedPdfName, setSelectedPdfName] = useState('');
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedTrabajador, setSelectedTrabajador] = useState(null);
 
   const [formData, setFormData] = useState({
     NombreCompleto: '',
@@ -34,6 +37,7 @@ function TrabajadoresList() {
     Banco: '',
     CuentaBancaria: '',
     EsFacturador: false,
+    FechaIngreso: '',
     ObraActualID: '',
     INERuta: '',
     EstatusID: 1
@@ -109,6 +113,16 @@ function TrabajadoresList() {
     setSelectedPdfName('');
   };
 
+  const handleOpenDetailModal = (trabajador) => {
+    setSelectedTrabajador(trabajador);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setDetailModalOpen(false);
+    setSelectedTrabajador(null);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -181,6 +195,7 @@ function TrabajadoresList() {
         Banco: formData.Banco || null,
         CuentaBancaria: formData.CuentaBancaria || null,
         EsFacturador: formData.EsFacturador ? 1 : 0,
+        FechaIngreso: formData.FechaIngreso || null,
         ObraActualID: formData.ObraActualID ? parseInt(formData.ObraActualID) : null,
         INERuta: formData.INERuta || null,
         EstatusID: parseInt(formData.EstatusID)
@@ -233,6 +248,7 @@ function TrabajadoresList() {
       Banco: '',
       CuentaBancaria: '',
       EsFacturador: false,
+      FechaIngreso: '',
       ObraActualID: '',
       INERuta: '',
       EstatusID: 1
@@ -259,6 +275,7 @@ function TrabajadoresList() {
       Banco: trabajador.Banco || '',
       CuentaBancaria: trabajador.CuentaBancaria || '',
       EsFacturador: trabajador.EsFacturador || false,
+      FechaIngreso: trabajador.FechaIngreso ? trabajador.FechaIngreso.split('T')[0] : '',
       ObraActualID: trabajador.ObraActualID || '',
       INERuta: trabajador.INERuta || '',
       EstatusID: trabajador.EstatusID
@@ -341,6 +358,7 @@ function TrabajadoresList() {
                   <th>Nombre Completo</th>
                   <th>Puesto</th>
                   <th>Clave</th>
+                  <th>Fecha Ingreso</th>
                   <th>RFC</th>
                   <th>Correo</th>
                   <th>Obra Actual</th>
@@ -355,6 +373,7 @@ function TrabajadoresList() {
                     <td className="nombre">{trabajador.NombreCompleto}</td>
                     <td className="puesto">{trabajador.Puesto}</td>
                     <td className="codigo">{trabajador.ClaveEmpleado || '—'}</td>
+                    <td className="fecha">{trabajador.FechaIngreso ? new Date(trabajador.FechaIngreso).toLocaleDateString('es-MX') : '—'}</td>
                     <td className="rfc">{trabajador.RFC || '—'}</td>
                     <td className="correo">{trabajador.Correo || '—'}</td>
                     <td className="obra">{getObraName(trabajador.ObraActualID) || '—'}</td>
@@ -378,18 +397,18 @@ function TrabajadoresList() {
                     </td>
                     <td className="acciones">
                       <button
+                        className="btn-view"
+                        onClick={() => handleOpenDetailModal(trabajador)}
+                        title="Ver Detalles"
+                      >
+                        👁️ Ver
+                      </button>
+                      <button
                         className="btn-edit"
                         onClick={() => handleEdit(trabajador)}
                         title="Editar"
                       >
                         ✏️
-                      </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(trabajador.TrabajadorID)}
-                        title="Eliminar"
-                      >
-                        🗑️
                       </button>
                     </td>
                   </tr>
@@ -501,7 +520,7 @@ function TrabajadoresList() {
                       value={formData.EstatusID}
                       onChange={handleInputChange}
                     >
-                      {estatuses.map(estatus => (
+                      {estatuses.filter(est => est.Nombre === 'Activa' || est.Nombre === 'Baja').map(estatus => (
                         <option key={estatus.EstatusID} value={estatus.EstatusID}>
                           {estatus.Nombre}
                         </option>
@@ -579,6 +598,15 @@ function TrabajadoresList() {
                       type="date"
                       name="FechaNacimiento"
                       value={formData.FechaNacimiento}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Fecha de Ingreso:</label>
+                    <input
+                      type="date"
+                      name="FechaIngreso"
+                      value={formData.FechaIngreso}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -718,6 +746,11 @@ function TrabajadoresList() {
         filePath={selectedPdfPath}
         fileName={selectedPdfName}
         onClose={handleClosePdfModal}
+      />
+      <DetailModal
+        isOpen={detailModalOpen}
+        trabajador={selectedTrabajador}
+        onClose={handleCloseDetailModal}
       />
     </div>
   );

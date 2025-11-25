@@ -86,12 +86,13 @@ class TrabajadorService {
         .input('Banco', sql.NVarChar(50), trabajador.Banco || null)
         .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
         .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
+        .input('FechaIngreso', sql.Date, trabajador.FechaIngreso || null)
         .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
         .input('INERuta', sql.NVarChar(sql.MAX), trabajador.INERuta || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID || 1)
         .query(
-          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, ClaveEmpleado, ApellidoPaterno, ApellidoMaterno, Oficio, INE_Clave, CURP, RFC, FechaNacimiento, Telefono, Correo, Direccion, Banco, CuentaBancaria, EsFacturador, ObraActualID, INERuta, EstatusID)
-           VALUES (@NombreCompleto, @Puesto, @NSS, @ClaveEmpleado, @ApellidoPaterno, @ApellidoMaterno, @Oficio, @INE_Clave, @CURP, @RFC, @FechaNacimiento, @Telefono, @Correo, @Direccion, @Banco, @CuentaBancaria, @EsFacturador, @ObraActualID, @INERuta, @EstatusID);
+          `INSERT INTO Trabajador (NombreCompleto, Puesto, NSS, ClaveEmpleado, ApellidoPaterno, ApellidoMaterno, Oficio, INE_Clave, CURP, RFC, FechaNacimiento, Telefono, Correo, Direccion, Banco, CuentaBancaria, EsFacturador, FechaIngreso, ObraActualID, INERuta, EstatusID)
+           VALUES (@NombreCompleto, @Puesto, @NSS, @ClaveEmpleado, @ApellidoPaterno, @ApellidoMaterno, @Oficio, @INE_Clave, @CURP, @RFC, @FechaNacimiento, @Telefono, @Correo, @Direccion, @Banco, @CuentaBancaria, @EsFacturador, @FechaIngreso, @ObraActualID, @INERuta, @EstatusID);
            SELECT @@IDENTITY as TrabajadorID;`
         );
       
@@ -132,6 +133,7 @@ class TrabajadorService {
         .input('Banco', sql.NVarChar(50), trabajador.Banco || null)
         .input('CuentaBancaria', sql.NVarChar(20), trabajador.CuentaBancaria || null)
         .input('EsFacturador', sql.Bit, trabajador.EsFacturador || 0)
+        .input('FechaIngreso', sql.Date, trabajador.FechaIngreso || null)
         .input('ObraActualID', sql.Int, trabajador.ObraActualID || null)
         .input('INERuta', sql.NVarChar(sql.MAX), trabajador.INERuta || null)
         .input('EstatusID', sql.Int, trabajador.EstatusID)
@@ -144,7 +146,7 @@ class TrabajadorService {
                FechaNacimiento = @FechaNacimiento, Telefono = @Telefono,
                Correo = @Correo, Direccion = @Direccion, Banco = @Banco,
                CuentaBancaria = @CuentaBancaria, EsFacturador = @EsFacturador,
-               ObraActualID = @ObraActualID, INERuta = @INERuta, EstatusID = @EstatusID
+               FechaIngreso = @FechaIngreso, ObraActualID = @ObraActualID, INERuta = @INERuta, EstatusID = @EstatusID
            WHERE TrabajadorID = @TrabajadorID`
         );
       return { success: true };
