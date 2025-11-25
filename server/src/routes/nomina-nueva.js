@@ -8,11 +8,11 @@ router.get('/obra/:obraID', NominaController.getByObra);
 // Obtener trabajadores asignados a una obra
 router.get('/trabajadores/:obraID', NominaController.getTrabajadoresByObra);
 
+// Crear lote de nómina semanal (DEBE IR ANTES DE POST /)
+router.post('/lote', NominaController.createLote);
+
 // Crear un pago de nómina individual
 router.post('/', NominaController.create);
-
-// Crear lote de nómina semanal
-router.post('/lote', NominaController.createLote);
 
 // Actualizar un pago
 router.put('/:id', NominaController.update);
