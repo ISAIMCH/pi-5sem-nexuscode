@@ -51,10 +51,6 @@ const DetailModal = ({ isOpen, trabajador, onClose }) => {
                   <span>{trabajador.Puesto || '—'}</span>
                 </div>
                 <div className="detail-item">
-                  <label>Oficio:</label>
-                  <span>{trabajador.Oficio || '—'}</span>
-                </div>
-                <div className="detail-item">
                   <label>Clave de Empleado:</label>
                   <span>{trabajador.ClaveEmpleado || '—'}</span>
                 </div>
@@ -103,36 +99,6 @@ const DetailModal = ({ isOpen, trabajador, onClose }) => {
                 <div className="detail-item">
                   <label>NSS:</label>
                   <span>{trabajador.NSS || '—'}</span>
-                </div>
-              </div>
-            </section>
-
-            {/* Datos Bancarios */}
-            <section className="detail-section">
-              <h3>🏦 Datos Bancarios</h3>
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <label>Banco:</label>
-                  <span>{trabajador.Banco || '—'}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Cuenta Bancaria:</label>
-                  <span>{trabajador.CuentaBancaria || '—'}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Es Facturador:</label>
-                  <span>{trabajador.EsFacturador ? '✓ Sí' : '✗ No'}</span>
-                </div>
-              </div>
-            </section>
-
-            {/* Sueldo */}
-            <section className="detail-section">
-              <h3>💰 Remuneración</h3>
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <label>Sueldo Diario:</label>
-                  <span className="sueldo-highlight">${trabajador.SueldoDiario?.toFixed(2) || '0.00'}</span>
                 </div>
               </div>
             </section>
