@@ -30,6 +30,8 @@ function GastosList() {
 
   const COLORS = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
 
+  console.log('✓ GastosList component loaded with upload functionality');
+
   const categorias = [
     { key: 'Materiales', icon: '🏗️', label: 'Materiales' },
     { key: 'Maquinaria', icon: '🚜', label: 'Maquinaria' },
@@ -301,10 +303,12 @@ function GastosList() {
                 type="file"
                 name="FacturaArchivo"
                 onChange={handleFileChange}
-                accept=".pdf"
+                accept="application/pdf,.pdf"
                 className="file-input"
               />
-              {formData.FacturaArchivo && <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>}
+              {formData.FacturaArchivo && (
+                <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>
+              )}
             </div>
           </>
         );
@@ -380,10 +384,12 @@ function GastosList() {
                 type="file"
                 name="FacturaArchivo"
                 onChange={handleFileChange}
-                accept=".pdf"
+                accept="application/pdf,.pdf"
                 className="file-input"
               />
-              {formData.FacturaArchivo && <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>}
+              {formData.FacturaArchivo && (
+                <span className="file-selected">📄 {formData.FacturaArchivo.name}</span>
+              )}
             </div>
           </>
         );
