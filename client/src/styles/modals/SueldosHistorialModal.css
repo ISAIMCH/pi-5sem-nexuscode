@@ -1,0 +1,213 @@
+/* ====================================
+   MODAL: HISTORIAL DE PAGOS
+   ==================================== */
+
+.modal-historial {
+  background: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Loading State */
+.historial-loading {
+  padding: 60px 24px;
+  text-align: center;
+  color: #C41E3A;
+  font-weight: 600;
+}
+
+/* Empty State */
+.historial-empty {
+  padding: 60px 24px;
+  text-align: center;
+  color: #999999;
+  font-size: 1.05em;
+}
+
+/* Tabla Responsiva */
+.historial-table-responsive {
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+
+.historial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.historial-table thead {
+  background: linear-gradient(135deg, #C41E3A 0%, #a01628 100%);
+  color: white;
+}
+
+.historial-table thead th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.historial-table tbody tr {
+  border-bottom: 1px solid #ecf0f1;
+  transition: background-color 0.2s ease;
+}
+
+.historial-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.historial-table tbody tr:nth-child(odd) {
+  background-color: #fafbfc;
+}
+
+.historial-table tbody td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+.historial-table .fecha {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.historial-table .dias {
+  text-align: center;
+  color: #999999;
+  font-weight: 500;
+}
+
+.historial-table .monto {
+  font-weight: 700;
+  color: #C41E3A;
+  background-color: rgba(196, 30, 58, 0.05);
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.historial-table .horas {
+  color: #999999;
+  font-weight: 500;
+  text-align: center;
+}
+
+.historial-table .dias-pagados {
+  color: #999999;
+  text-align: center;
+}
+
+/* Resumen */
+.historial-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #ecf0f1;
+}
+
+.summary-card {
+  background: white;
+  padding: 16px;
+  border-radius: 6px;
+  border-left: 4px solid #bdc3c7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.summary-card.highlight {
+  border-left-color: #C41E3A;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff5f0 100%);
+}
+
+.summary-card .label {
+  display: block;
+  color: #999999;
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.summary-card .value {
+  display: block;
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.summary-card.highlight .value {
+  color: #C41E3A;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-historial {
+    max-width: 95%;
+  }
+
+  .historial-table {
+    font-size: 0.85em;
+  }
+
+  .historial-table thead th,
+  .historial-table tbody td {
+    padding: 10px 8px;
+  }
+
+  .historial-summary {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-historial {
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .historial-table {
+    font-size: 0.75em;
+  }
+
+  .historial-table thead th {
+    padding: 8px 4px;
+  }
+
+  .historial-table tbody td {
+    padding: 8px 4px;
+  }
+
+  .historial-summary {
+    padding: 12px;
+  }
+
+  .summary-card {
+    padding: 12px;
+  }
+
+  .summary-card .label {
+    font-size: 0.8em;
+    margin-bottom: 4px;
+  }
+
+  .summary-card .value {
+    font-size: 1.1em;
+  }
+}

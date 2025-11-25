@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import api from '../services/api';
-import SueldosCalculator from './SueldosCalculator';
+import SueldosListView from './SueldosListView';
 import '../styles/GastosList.css';
 
 function GastosList() {
@@ -541,9 +541,9 @@ function GastosList() {
             </div>
           </div>
 
-          {/* Mostrar Calculadora de Sueldos O Tabla de Gastos */}
+          {/* Mostrar Lista de Sueldos O Tabla de Gastos */}
           {activeTab === 'Sueldos' ? (
-            <SueldosCalculator selectedObra={selectedObra} />
+            <SueldosListView selectedObra={selectedObra} />
           ) : (
             <div className="gastos-table-section">
               <div className="section-header">
