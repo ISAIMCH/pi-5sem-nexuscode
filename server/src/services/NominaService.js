@@ -14,12 +14,15 @@ class NominaService {
             pn.ObraID,
             pn.TrabajadorID,
             pn.FechaPago,
+            pn.PeriodoInicio,
+            pn.PeriodoFin,
             pn.MontoPagado,
             pn.DiasPagados,
+            pn.EstatusPago,
+            pn.Concepto,
             pn.Observaciones,
             pn.FolioNomina,
-            pn.FechaInicio,
-            pn.FechaFin,
+            pn.FechaRegistro,
             t.NombreCompleto,
             t.Puesto,
             t.SueldoDiario
@@ -30,7 +33,7 @@ class NominaService {
         `);
       return result.recordset;
     } catch (error) {
-      console.error('Error in getNomina:', error);
+      console.error('Error in getPagosByObra:', error);
       throw error;
     }
   }
@@ -45,14 +48,17 @@ class NominaService {
         .input('ObraID', sql.Int, pagoData.ObraID)
         .input('TrabajadorID', sql.Int, pagoData.TrabajadorID)
         .input('FechaPago', sql.Date, pagoData.FechaPago)
+        .input('PeriodoInicio', sql.Date, pagoData.PeriodoInicio || null)
+        .input('PeriodoFin', sql.Date, pagoData.PeriodoFin || null)
         .input('MontoPagado', sql.Decimal(18, 2), pagoData.MontoPagado)
-        .input('DiasPagados', sql.Decimal(4, 1), pagoData.DiasPagados || 0)
+        .input('EstatusPago', sql.NVarChar(20), pagoData.EstatusPago || 'Pendiente')
+        .input('Concepto', sql.NVarChar(100), pagoData.Concepto || null)
         .input('Observaciones', sql.NVarChar(250), pagoData.Observaciones || null)
         .query(`
           INSERT INTO PagoNomina 
-          (ObraID, TrabajadorID, FechaPago, MontoPagado, DiasPagados, Observaciones, FechaRegistro)
+          (ObraID, TrabajadorID, FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones, FechaRegistro)
           VALUES 
-          (@ObraID, @TrabajadorID, @FechaPago, @MontoPagado, @DiasPagados, @Observaciones, GETDATE())
+          (@ObraID, @TrabajadorID, @FechaPago, @PeriodoInicio, @PeriodoFin, @MontoPagado, @EstatusPago, @Concepto, @Observaciones, GETDATE())
           
           SELECT SCOPE_IDENTITY() as NominaID
         `);
