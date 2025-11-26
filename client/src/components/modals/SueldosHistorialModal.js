@@ -60,6 +60,31 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
     return status === 'Pagado' ? 'pagado' : 'pendiente';
   };
 
+  const handleDescargar = (rutaArchivo, nombreArchivo) => {
+    if (!rutaArchivo) return;
+    const link = document.createElement('a');
+    link.href = rutaArchivo;
+    link.download = nombreArchivo || 'documento';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const renderDocumentoCell = (ruta, tipo) => {
+    if (!ruta) {
+      return <span className="sin-archivo">Sin archivo</span>;
+    }
+    return (
+      <button
+        className="btn-descargar-documento"
+        onClick={() => handleDescargar(ruta, `documento_${tipo}`)}
+        title={`Descargar ${tipo}`}
+      >
+        📥 Descargar
+      </button>
+    );
+  };
+
   const totales = calcularTotales();
 
   const handleEditarClick = (pago) => {
@@ -121,10 +146,9 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
                       <th>Período Inicio</th>
                       <th>Período Fin</th>
                       <th>Monto Pagado</th>
-                      <th>Estatus</th>
+                      <th>XML</th>
+                      <th>Factura</th>
                       <th>Concepto</th>
-                      <th>Observaciones</th>
-                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -142,25 +166,14 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
                         <td className="monto">
                           {formatMonto(pago.MontoPagado)}
                         </td>
-                        <td className="estatus">
-                          <span className={`estatus-badge ${getEstatusClass(pago.EstatusPago)}`}>
-                            {pago.EstatusPago}
-                          </span>
+                        <td className="documento">
+                          {renderDocumentoCell(pago.XMLRuta, 'XML')}
+                        </td>
+                        <td className="documento">
+                          {renderDocumentoCell(pago.FacturaRuta, 'Factura')}
                         </td>
                         <td className="concepto">
                           {pago.Concepto || '—'}
-                        </td>
-                        <td className="observaciones">
-                          {pago.Observaciones || '—'}
-                        </td>
-                        <td className="acciones">
-                          <button
-                            className="btn-editar-pago"
-                            onClick={() => handleEditarClick(pago)}
-                            title="Editar pago"
-                          >
-                            ✏️
-                          </button>
                         </td>
                       </tr>
                     ))}
@@ -181,10 +194,6 @@ function SueldosHistorialModal({ trabajador, obraID, onClose }) {
                 <div className="summary-card success">
                   <span className="label">✓ Pagados</span>
                   <span className="value">{totales.pagados}</span>
-                </div>
-                <div className="summary-card warning">
-                  <span className="label">⏳ Pendientes</span>
-                  <span className="value">{totales.pendientes}</span>
                 </div>
               </div>
             </>

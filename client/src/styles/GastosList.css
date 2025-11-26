@@ -357,6 +357,54 @@
   font-style: italic;
 }
 
+.gastos-table td.factura {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.factura-ref {
+  color: #C41E3A;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: rgba(196, 30, 58, 0.08);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.sin-factura {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
+.gastos-table td.archivo {
+  text-align: center;
+  max-width: 200px;
+}
+
+.archivo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: 4px;
+  border-left: 3px solid #667eea;
+}
+
+.archivo-nombre {
+  color: #667eea;
+  font-weight: 500;
+  font-size: 0.9rem;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.sin-archivo {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
 .gastos-table td.acciones {
   text-align: center;
   padding: 12px;
@@ -374,12 +422,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .btn-edit:hover {
-  background: #d5f4e6;
-  border-color: #27ae60;
+  background: #d1ecf1;
+  border-color: #0c5460;
 }
 
 .btn-edit:active {
@@ -398,6 +446,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-right: 6px;
 }
 
 .btn-delete:hover {
@@ -406,6 +455,31 @@
 }
 
 .btn-delete:active {
+  transform: scale(0.95);
+}
+
+.btn-download {
+  background: none;
+  border: 1px solid #ecf0f1;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.btn-download:hover {
+  background: #d1e7dd;
+  border-color: #0f5132;
+}
+
+.btn-download:active {
   transform: scale(0.95);
 }
 
@@ -757,78 +831,309 @@
 }
 
 /* ====================================
-   ESTILOS PARA CARGA DE FACTURAS
+   DOCUMENTOS - FILE UPLOAD
    ==================================== */
 
-.file-input {
+.documentos-section {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.documentos-section > label {
   display: block;
-  width: 100%;
-  padding: 10px;
-  border: 2px dashed #C41E3A;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+  font-size: 0.95rem;
 }
 
-.file-input:hover {
-  background-color: #f0f0f0;
-  border-color: #A01630;
-}
-
-.file-input:focus {
-  outline: none;
-  border-color: #C41E3A;
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
-}
-
-.file-selected {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 8px 12px;
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* Botón descargar factura */
-.btn-descargar-factura {
-  display: inline-flex;
+.file-upload-area {
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background-color: #e3f2fd;
-  color: #1976d2;
-  text-decoration: none;
-  border-radius: 4px;
-  border: 1px solid #1976d2;
+  justify-content: center;
+  gap: 10px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-block;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
   font-weight: 500;
   transition: all 0.3s ease;
+  text-align: center;
+  min-width: 250px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
-.btn-descargar-factura:hover {
-  background-color: #1976d2;
-  color: white;
+.file-label:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.btn-descargar-factura:active {
+.file-label:active {
   transform: translateY(0);
 }
 
-/* Columna de factura en tabla */
-.factura-col {
-  text-align: center;
+.file-input:disabled + .file-label {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.sin-factura {
-  color: #999;
-  font-size: 13px;
+.file-name {
+  color: #28a745;
+  font-weight: 600;
+  margin: 0;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.mensaje {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+.mensaje.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.mensaje.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====================================
+   PDF VIEWER MODAL
+   ==================================== */
+
+.pdf-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pdf-viewer-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 900px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pdf-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #ecf0f1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.pdf-viewer-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  word-break: break-word;
+  flex: 1;
+}
+
+.pdf-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.pdf-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.pdf-viewer-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 16px;
+  background: #f5f5f5;
+}
+
+.pdf-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+  background: white;
+}
+
+.pdf-viewer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid #ecf0f1;
+  background: white;
+  border-radius: 0 0 12px 12px;
+  gap: 12px;
+}
+
+.btn-download-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-download-pdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-close-pdf {
+  padding: 10px 20px;
+  background: #ecf0f1;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-close-pdf:hover {
+  background: #d5d8dc;
+}
+
+.archivo-item {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: 4px;
+  border-left: 3px solid #667eea;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.archivo-item:hover {
+  background: rgba(102, 126, 234, 0.15);
+  border-left-color: #764ba2;
+  transform: scale(1.02);
+}
+
+.archivo-nombre {
+  color: #667eea;
+  font-weight: 500;
+  font-size: 0.9rem;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* ====================================
+   RESPONSIVE PDF VIEWER
+   ==================================== */
+
+@media (max-width: 768px) {
+  .pdf-viewer-modal {
+    width: 95%;
+    height: 90vh;
+  }
+
+  .pdf-viewer-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .pdf-viewer-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-download-pdf,
+  .btn-close-pdf {
+    width: 100%;
+    text-align: center;
+  }
+}

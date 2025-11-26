@@ -36,18 +36,25 @@ exports.getTrabajadorById = async (req, res) => {
 
 exports.createTrabajador = async (req, res) => {
   try {
+    console.log('TrabajadorController.createTrabajador - Datos recibidos:', req.body);
     const result = await trabajadorService.createTrabajador(req.body);
+    console.log('TrabajadorController.createTrabajador - Resultado:', result);
     res.status(201).json(result);
   } catch (error) {
+    console.error('TrabajadorController.createTrabajador - Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.updateTrabajador = async (req, res) => {
   try {
+    console.log('TrabajadorController.updateTrabajador - ID:', req.params.id);
+    console.log('TrabajadorController.updateTrabajador - Datos recibidos:', req.body);
     const result = await trabajadorService.updateTrabajador(req.params.id, req.body);
+    console.log('TrabajadorController.updateTrabajador - Resultado:', result);
     res.json(result);
   } catch (error) {
+    console.error('TrabajadorController.updateTrabajador - Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };

@@ -2,7 +2,18 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
-  const data = await response.json();
+  const text = await response.text();
+  console.log('📡 API Response status:', response.status);
+  console.log('📡 API Response text:', text.substring(0, 200));
+  
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error('❌ Error parsing JSON:', e, 'Response text:', text);
+    throw new Error('Response is not valid JSON');
+  }
+  
   if (!response.ok) {
     throw new Error(data.error || `API Error: ${response.status}`);
   }
@@ -111,11 +122,13 @@ export const materialesAPI = {
   getByObra: (obraId) => fetch(`${API_URL}/materiales/obra/${obraId}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/materiales`, {
     method: 'POST',
-    body: data  // FormData se envía sin Content-Type
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   }).then(handleResponse),
   update: (id, data) => fetch(`${API_URL}/materiales/${id}`, {
     method: 'PUT',
-    body: data  // FormData se envía sin Content-Type
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   }).then(handleResponse),
   delete: (id) => fetch(`${API_URL}/materiales/${id}`, { method: 'DELETE' }).then(handleResponse),
 };
@@ -126,11 +139,13 @@ export const maquinariaAPI = {
   getByObra: (obraId) => fetch(`${API_URL}/maquinaria/obra/${obraId}`).then(handleResponse),
   create: (data) => fetch(`${API_URL}/maquinaria`, {
     method: 'POST',
-    body: data  // FormData se envía sin Content-Type
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   }).then(handleResponse),
   update: (id, data) => fetch(`${API_URL}/maquinaria/${id}`, {
     method: 'PUT',
-    body: data  // FormData se envía sin Content-Type
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   }).then(handleResponse),
   delete: (id) => fetch(`${API_URL}/maquinaria/${id}`, { method: 'DELETE' }).then(handleResponse),
 };
@@ -243,6 +258,22 @@ export const uploadAPI = {
     const formData = new FormData();
     formData.append('file', file);
     return fetch(`${API_URL}/upload/ine`, {
+      method: 'POST',
+      body: formData
+    }).then(handleResponse);
+  },
+  uploadXML: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return fetch(`${API_URL}/upload/xml`, {
+      method: 'POST',
+      body: formData
+    }).then(handleResponse);
+  },
+  uploadFactura: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return fetch(`${API_URL}/upload/factura`, {
       method: 'POST',
       body: formData
     }).then(handleResponse);

@@ -22,6 +22,8 @@ class NominaService {
             pn.Concepto,
             pn.Observaciones,
             pn.FolioNomina,
+            pn.XMLRuta,
+            pn.FacturaRuta,
             pn.FechaRegistro,
             t.NombreCompleto,
             t.Puesto
@@ -53,11 +55,13 @@ class NominaService {
         .input('EstatusPago', sql.NVarChar(20), pagoData.EstatusPago || 'Pendiente')
         .input('Concepto', sql.NVarChar(100), pagoData.Concepto || null)
         .input('Observaciones', sql.NVarChar(250), pagoData.Observaciones || null)
+        .input('XMLRuta', sql.NVarChar(sql.MAX), pagoData.XMLRuta || null)
+        .input('FacturaRuta', sql.NVarChar(sql.MAX), pagoData.FacturaRuta || null)
         .query(`
           INSERT INTO PagoNomina 
-          (ObraID, TrabajadorID, FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones, FechaRegistro)
+          (ObraID, TrabajadorID, FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones, XMLRuta, FacturaRuta, FechaRegistro)
           VALUES 
-          (@ObraID, @TrabajadorID, @FechaPago, @PeriodoInicio, @PeriodoFin, @MontoPagado, @EstatusPago, @Concepto, @Observaciones, GETDATE())
+          (@ObraID, @TrabajadorID, @FechaPago, @PeriodoInicio, @PeriodoFin, @MontoPagado, @EstatusPago, @Concepto, @Observaciones, @XMLRuta, @FacturaRuta, GETDATE())
           
           SELECT SCOPE_IDENTITY() as NominaID
         `);
@@ -169,6 +173,8 @@ class NominaService {
         .input('EstatusPago', sql.NVarChar(50), pagoData.EstatusPago || 'Pendiente')
         .input('Concepto', sql.NVarChar(100), pagoData.Concepto || null)
         .input('Observaciones', sql.NVarChar(250), pagoData.Observaciones || null)
+        .input('XMLRuta', sql.NVarChar(sql.MAX), pagoData.XMLRuta || null)
+        .input('FacturaRuta', sql.NVarChar(sql.MAX), pagoData.FacturaRuta || null)
         .query(`
           UPDATE PagoNomina
           SET FechaPago = @FechaPago,
@@ -177,7 +183,9 @@ class NominaService {
               MontoPagado = @MontoPagado,
               EstatusPago = @EstatusPago,
               Concepto = @Concepto,
-              Observaciones = @Observaciones
+              Observaciones = @Observaciones,
+              XMLRuta = @XMLRuta,
+              FacturaRuta = @FacturaRuta
           WHERE NominaID = @NominaID
         `);
       

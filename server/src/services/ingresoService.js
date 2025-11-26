@@ -21,6 +21,8 @@ class IngresoService {
   async getIngresosByObra(obraId) {
     try {
       const pool = await poolPromise;
+      console.log('🔍 getIngresosByObra - Fetching ingresos for ObraID:', obraId);
+      
       const result = await pool
         .request()
         .input('ObraID', sql.Int, obraId)
@@ -31,6 +33,13 @@ class IngresoService {
            WHERE i.ObraID = @ObraID
            ORDER BY i.Fecha DESC`
         );
+      
+      console.log('📋 Query result count:', result.recordset.length);
+      if (result.recordset.length > 0) {
+        console.log('📋 First record keys:', Object.keys(result.recordset[0]));
+        console.log('📋 Sample record:', JSON.stringify(result.recordset[0], null, 2));
+      }
+      
       return result.recordset;
     } catch (error) {
       console.error('IngresoService.getIngresosByObra error:', error.message);
@@ -40,39 +49,33 @@ class IngresoService {
 
   async createIngreso(ingreso) {
     try {
-      console.log('Creating ingreso with data:', ingreso);
-      
       if (!ingreso.ObraID || !ingreso.TipoIngresoID || !ingreso.Fecha || !ingreso.Monto) {
         throw new Error('Missing required fields: ObraID, TipoIngresoID, Fecha, Monto');
       }
 
       const pool = await poolPromise;
-      console.log('Pool obtained, executing INSERT query...');
       
-      const result = await pool
-        .request()
+      const request = pool.request()
         .input('ObraID', sql.Int, ingreso.ObraID)
         .input('Fecha', sql.Date, ingreso.Fecha)
         .input('TipoIngresoID', sql.Int, ingreso.TipoIngresoID)
         .input('Descripcion', sql.NVarChar(500), ingreso.Descripcion)
         .input('Monto', sql.Decimal(18, 2), ingreso.Monto)
-        .input('FacturaRef', sql.NVarChar(100), ingreso.FacturaRef || null)
-        .query(
-          `INSERT INTO Ingreso (ObraID, Fecha, TipoIngresoID, Descripcion, Monto, FacturaRef)
-           VALUES (@ObraID, @Fecha, @TipoIngresoID, @Descripcion, @Monto, @FacturaRef);
-           SELECT @@IDENTITY as IngresoID;`
-        );
+        .input('FacturaRuta', sql.NVarChar(sql.MAX), ingreso.FacturaRuta || null);
       
-      console.log('INSERT executed. Recordset:', result.recordset);
+      const result = await request.query(
+        `INSERT INTO Ingreso (ObraID, Fecha, TipoIngresoID, Descripcion, Monto, FacturaRuta)
+         VALUES (@ObraID, @Fecha, @TipoIngresoID, @Descripcion, @Monto, @FacturaRuta);
+         SELECT @@IDENTITY as IngresoID;`
+      );
       
       if (!result.recordset || result.recordset.length === 0) {
         throw new Error('INSERT query executed but no record returned');
       }
       
-      console.log('Ingreso created successfully:', result.recordset[0]);
       return result.recordset[0];
     } catch (error) {
-      console.error('IngresoService.createIngreso error:', error.message);
+      console.error('❌ IngresoService.createIngreso error:', error.message);
       throw new Error(`Error creating ingreso: ${error.message}`);
     }
   }
@@ -87,11 +90,11 @@ class IngresoService {
         .input('TipoIngresoID', sql.Int, ingreso.TipoIngresoID)
         .input('Descripcion', sql.NVarChar(500), ingreso.Descripcion)
         .input('Monto', sql.Decimal(18, 2), ingreso.Monto)
-        .input('FacturaRef', sql.NVarChar(100), ingreso.FacturaRef || null)
+        .input('FacturaRuta', sql.NVarChar(sql.MAX), ingreso.FacturaRuta || null)
         .query(
           `UPDATE Ingreso
            SET Fecha = @Fecha, TipoIngresoID = @TipoIngresoID, Descripcion = @Descripcion,
-               Monto = @Monto, FacturaRef = @FacturaRef
+               Monto = @Monto, FacturaRuta = @FacturaRuta
            WHERE IngresoID = @IngresoID`
         );
       return { success: true };

@@ -50,10 +50,23 @@ app.use('/api/retenciones', retencionesRoutes);
 app.use('/api/reportes', reportesRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// Error handling
+// Error handling - DEBE estar al final de todas las rutas
 app.use((err, req, res, next) => {
-  console.error('Server Error:', err.stack);
-  res.status(500).json({ error: err.message });
+  console.error('Server Error:', err.stack || err.message);
+  
+  // Errores de Multer
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ error: 'Archivo muy grande' });
+  }
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return res.status(400).json({ error: 'Demasiados archivos' });
+  }
+  if (err.message && err.message.includes('Solo se permiten')) {
+    return res.status(400).json({ error: err.message });
+  }
+  
+  // Error genérico
+  res.status(500).json({ error: err.message || 'Error del servidor' });
 });
 
 const PORT = process.env.PORT || 5000;

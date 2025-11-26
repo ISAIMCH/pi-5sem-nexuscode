@@ -44,16 +44,21 @@ exports.getMaquinariaByObra = async (req, res) => {
 
 exports.createMaquinaria = async (req, res) => {
   try {
-    const { ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal } = req.body;
+    const { ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal, FacturaRuta } = req.body;
+    
+    console.log('📝 [CREATE MAQUINARIA] Datos recibidos:');
+    console.log('  ObraID:', ObraID);
+    console.log('  ProveedorID:', ProveedorID);
+    console.log('  Descripcion:', Descripcion);
+    console.log('  FechaInicio:', FechaInicio);
+    console.log('  FechaFin:', FechaFin);
+    console.log('  CostoTotal:', CostoTotal);
+    console.log('  FacturaRuta:', FacturaRuta);
+    console.log('  FacturaRuta type:', typeof FacturaRuta);
+    console.log('  FacturaRuta length:', FacturaRuta ? FacturaRuta.length : 'null');
+    console.log('📝 Full req.body:', JSON.stringify(req.body, null, 2));
+    
     const pool = await poolPromise;
-    
-    // Generar ruta del archivo si existe
-    let facturaRuta = null;
-    if (req.file) {
-      // Ruta relativa desde el servidor
-      facturaRuta = `/uploads/facturas/${req.file.filename}`;
-    }
-    
     const query = `
       INSERT INTO RentaMaquinaria (ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal, FacturaRuta)
       VALUES (@obraId, @proveedorId, @descripcion, @fechaInicio, @fechaFin, @costoTotal, @facturaRuta);
@@ -66,49 +71,42 @@ exports.createMaquinaria = async (req, res) => {
       .input('fechaInicio', sql.DateTime, FechaInicio)
       .input('fechaFin', sql.DateTime, FechaFin)
       .input('costoTotal', sql.Decimal(10, 2), CostoTotal)
-      .input('facturaRuta', sql.NVarChar, facturaRuta)
+      .input('facturaRuta', sql.NVarChar(sql.MAX), FacturaRuta || null)
       .query(query);
     
-    res.status(201).json({ RentaID: result.recordset[0].RentaID, FacturaRuta: facturaRuta, ...req.body });
+    console.log('✅ [CREATE MAQUINARIA] Registro insertado con RentaID:', result.recordset[0].RentaID);
+    
+    res.status(201).json({ RentaID: result.recordset[0].RentaID, ...req.body });
   } catch (error) {
-    console.error('Error en createMaquinaria:', error);
+    console.error('❌ Error en createMaquinaria:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.updateMaquinaria = async (req, res) => {
   try {
-    const { ObraID, ProveedorID, Descripcion, FechaInicio, FechaFin, CostoTotal } = req.body;
+    const { Descripcion, FechaInicio, FechaFin, CostoTotal, FacturaRuta } = req.body;
     const { id } = req.params;
     const pool = await poolPromise;
-    
-    // Si hay nuevo archivo, actualizar la ruta
-    let updateQuery = `
+    const query = `
       UPDATE RentaMaquinaria
-      SET ObraID = @obraId, ProveedorID = @proveedorId, Descripcion = @descripcion,
-          FechaInicio = @fechaInicio, FechaFin = @fechaFin, CostoTotal = @costoTotal
+      SET Descripcion = @descripcion,
+          FechaInicio = @fechaInicio, 
+          FechaFin = @fechaFin, 
+          CostoTotal = @costoTotal, 
+          FacturaRuta = @facturaRuta
+      WHERE RentaID = @id
     `;
-    
-    const request = pool.request()
+    await pool.request()
       .input('id', sql.Int, id)
-      .input('obraId', sql.Int, ObraID)
-      .input('proveedorId', sql.Int, ProveedorID)
       .input('descripcion', sql.NVarChar, Descripcion)
       .input('fechaInicio', sql.DateTime, FechaInicio)
-      .input('fechaFin', sql.DateTime, FechaFin)
-      .input('costoTotal', sql.Decimal(10, 2), CostoTotal);
+      .input('fechaFin', sql.DateTime, FechaFin || null)
+      .input('costoTotal', sql.Decimal(10, 2), CostoTotal)
+      .input('facturaRuta', sql.NVarChar(sql.MAX), FacturaRuta || null)
+      .query(query);
     
-    if (req.file) {
-      updateQuery += `, FacturaRuta = @facturaRuta`;
-      request.input('facturaRuta', sql.NVarChar, `/uploads/facturas/${req.file.filename}`);
-    }
-    
-    updateQuery += ` WHERE RentaID = @id`;
-    
-    await request.query(updateQuery);
-    
-    const facturaRuta = req.file ? `/uploads/facturas/${req.file.filename}` : null;
-    res.json({ RentaID: id, FacturaRuta: facturaRuta, ...req.body });
+    res.json({ RentaID: id, ...req.body });
   } catch (error) {
     console.error('Error en updateMaquinaria:', error);
     res.status(500).json({ error: error.message });

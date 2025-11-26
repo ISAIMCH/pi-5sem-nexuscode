@@ -28,7 +28,7 @@ class NominaController {
   // Crear un nuevo pago de nómina
   static async create(req, res) {
     try {
-      const { ObraID, TrabajadorID, FechaPago, MontoPagado, PeriodoInicio, PeriodoFin, EstatusPago, Concepto, Observaciones } = req.body;
+      const { ObraID, TrabajadorID, FechaPago, MontoPagado, PeriodoInicio, PeriodoFin, EstatusPago, Concepto, Observaciones, XMLRuta, FacturaRuta } = req.body;
       
       if (!ObraID || !TrabajadorID || !FechaPago || !MontoPagado) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
@@ -43,7 +43,9 @@ class NominaController {
         PeriodoFin,
         EstatusPago: EstatusPago || 'Pendiente',
         Concepto,
-        Observaciones
+        Observaciones,
+        XMLRuta,
+        FacturaRuta
       });
 
       res.status(201).json(result);
@@ -86,7 +88,7 @@ class NominaController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones } = req.body;
+      const { FechaPago, PeriodoInicio, PeriodoFin, MontoPagado, EstatusPago, Concepto, Observaciones, XMLRuta, FacturaRuta } = req.body;
 
       const result = await NominaService.updatePago(parseInt(id), {
         FechaPago,
@@ -95,7 +97,9 @@ class NominaController {
         MontoPagado,
         EstatusPago,
         Concepto,
-        Observaciones
+        Observaciones,
+        XMLRuta,
+        FacturaRuta
       });
 
       res.status(200).json(result);

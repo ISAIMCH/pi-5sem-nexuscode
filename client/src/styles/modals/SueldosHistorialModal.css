@@ -203,6 +203,47 @@
   text-align: center;
 }
 
+/* Columna Documentos (XML, Factura) */
+.historial-table .documento {
+  text-align: center;
+  min-width: 120px;
+}
+
+.sin-archivo {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f0f0;
+  color: #999;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.btn-descargar-documento {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.btn-descargar-documento:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-descargar-documento:active {
+  transform: translateY(0);
+}
+
 /* Botón editar pago */
 .btn-editar-pago {
   background: none;

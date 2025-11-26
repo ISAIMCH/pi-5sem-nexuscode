@@ -4,7 +4,7 @@ exports.getAllMateriales = async (req, res) => {
   try {
     const pool = await poolPromise;
     const query = `
-      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra, cm.FacturaRuta,
+      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.TotalCompra, cm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM CompraMaterial cm
       LEFT JOIN Proveedor p ON cm.ProveedorID = p.ProveedorID
@@ -23,7 +23,7 @@ exports.getMaterialesByObra = async (req, res) => {
     const pool = await poolPromise;
     const { obraId } = req.params;
     const query = `
-      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.FolioFactura, cm.TotalCompra, cm.FacturaRuta,
+      SELECT cm.CompraID, cm.ObraID, cm.ProveedorID, cm.Fecha, cm.TotalCompra, cm.FacturaRuta,
              p.Nombre as ProveedorNombre
       FROM CompraMaterial cm
       LEFT JOIN Proveedor p ON cm.ProveedorID = p.ProveedorID
@@ -42,69 +42,61 @@ exports.getMaterialesByObra = async (req, res) => {
 
 exports.createMaterial = async (req, res) => {
   try {
-    const { ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra } = req.body;
+    const { ObraID, ProveedorID, Fecha, TotalCompra, FacturaRuta } = req.body;
+    
+    console.log('📝 [CREATE MATERIAL] Datos recibidos:');
+    console.log('  ObraID:', ObraID);
+    console.log('  ProveedorID:', ProveedorID);
+    console.log('  Fecha:', Fecha);
+    console.log('  TotalCompra:', TotalCompra);
+    console.log('  FacturaRuta:', FacturaRuta);
+    console.log('  FacturaRuta type:', typeof FacturaRuta);
+    console.log('  FacturaRuta length:', FacturaRuta ? FacturaRuta.length : 'null');
+    console.log('📝 Full req.body:', JSON.stringify(req.body, null, 2));
+    
     const pool = await poolPromise;
-    
-    // Generar ruta del archivo si existe
-    let facturaRuta = null;
-    if (req.file) {
-      // Ruta relativa desde el servidor
-      facturaRuta = `/uploads/facturas/${req.file.filename}`;
-    }
-    
     const query = `
-      INSERT INTO CompraMaterial (ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra, FacturaRuta)
-      VALUES (@obraId, @proveedorId, @fecha, @folioFactura, @totalCompra, @facturaRuta);
+      INSERT INTO CompraMaterial (ObraID, ProveedorID, Fecha, TotalCompra, FacturaRuta)
+      VALUES (@obraId, @proveedorId, @fecha, @totalCompra, @facturaRuta);
       SELECT @@IDENTITY as CompraID;
     `;
     const result = await pool.request()
       .input('obraId', sql.Int, ObraID)
       .input('proveedorId', sql.Int, ProveedorID)
       .input('fecha', sql.DateTime, Fecha)
-      .input('folioFactura', sql.NVarChar, FolioFactura)
       .input('totalCompra', sql.Decimal(10, 2), TotalCompra)
-      .input('facturaRuta', sql.NVarChar, facturaRuta)
+      .input('facturaRuta', sql.NVarChar(sql.MAX), FacturaRuta || null)
       .query(query);
     
-    res.status(201).json({ CompraID: result.recordset[0].CompraID, FacturaRuta: facturaRuta, ...req.body });
+    console.log('✅ [CREATE MATERIAL] Registro insertado con CompraID:', result.recordset[0].CompraID);
+    
+    res.status(201).json({ CompraID: result.recordset[0].CompraID, ...req.body });
   } catch (error) {
-    console.error('Error en createMaterial:', error);
+    console.error('❌ Error en createMaterial:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.updateMaterial = async (req, res) => {
   try {
-    const { ObraID, ProveedorID, Fecha, FolioFactura, TotalCompra } = req.body;
+    const { Fecha, TotalCompra, FacturaRuta } = req.body;
     const { id } = req.params;
     const pool = await poolPromise;
-    
-    // Si hay nuevo archivo, actualizar la ruta
-    let updateQuery = `
+    const query = `
       UPDATE CompraMaterial
-      SET ObraID = @obraId, ProveedorID = @proveedorId, Fecha = @fecha, 
-          FolioFactura = @folioFactura, TotalCompra = @totalCompra
+      SET Fecha = @fecha, 
+          TotalCompra = @totalCompra,
+          FacturaRuta = @facturaRuta
+      WHERE CompraID = @id
     `;
-    
-    const request = pool.request()
+    await pool.request()
       .input('id', sql.Int, id)
-      .input('obraId', sql.Int, ObraID)
-      .input('proveedorId', sql.Int, ProveedorID)
       .input('fecha', sql.DateTime, Fecha)
-      .input('folioFactura', sql.NVarChar, FolioFactura)
-      .input('totalCompra', sql.Decimal(10, 2), TotalCompra);
+      .input('totalCompra', sql.Decimal(18, 2), TotalCompra)
+      .input('facturaRuta', sql.NVarChar(sql.MAX), FacturaRuta || null)
+      .query(query);
     
-    if (req.file) {
-      updateQuery += `, FacturaRuta = @facturaRuta`;
-      request.input('facturaRuta', sql.NVarChar, `/uploads/facturas/${req.file.filename}`);
-    }
-    
-    updateQuery += ` WHERE CompraID = @id`;
-    
-    await request.query(updateQuery);
-    
-    const facturaRuta = req.file ? `/uploads/facturas/${req.file.filename}` : null;
-    res.json({ CompraID: id, FacturaRuta: facturaRuta, ...req.body });
+    res.json({ CompraID: id, ...req.body });
   } catch (error) {
     console.error('Error en updateMaterial:', error);
     res.status(500).json({ error: error.message });

@@ -164,6 +164,70 @@
   cursor: not-allowed;
 }
 
+/* Sección de Documentos */
+.modal-pago .documentos-section {
+  background: #f9f9ff;
+  border: 2px dashed #667eea;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+}
+
+.modal-pago .documentos-section h4 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* File Upload Container */
+.modal-pago .file-upload-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-pago .file-input {
+  display: none;
+}
+
+.modal-pago .file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #667eea;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.modal-pago .file-upload-label:hover {
+  border-color: #667eea;
+  background: #f9f9ff;
+}
+
+.modal-pago .file-input:disabled + .file-upload-label {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.modal-pago .documentos-section small {
+  font-size: 12px;
+  color: #999;
+  margin-top: 6px;
+  display: block;
+}
+
 /* Footer */
 .modal-pago .modal-footer {
   display: flex;

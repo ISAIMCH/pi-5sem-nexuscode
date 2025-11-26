@@ -88,25 +88,6 @@ function App() {
             <span className="icon">👷</span>
             <span>Trabajadores</span>
           </button>
-          <button
-            className={`menu-item ${currentPage === 'avances' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('avances')}
-          >
-            <span className="icon">📋</span>
-            <span>Avances</span>
-          </button>
-          <hr className="menu-divider" />
-          <button 
-            className="menu-item add-project"
-            onClick={() => setCurrentPage('agregarProyecto')}
-          >
-            <span className="icon">➕</span>
-            <span>Agregar Proyecto</span>
-          </button>
-          <button className="menu-item settings">
-            <span className="icon">⚙️</span>
-            <span>Configuración</span>
-          </button>
         </nav>
 
         <div className="sidebar-footer">

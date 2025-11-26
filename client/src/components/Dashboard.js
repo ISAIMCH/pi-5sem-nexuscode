@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import api from '../services/api';
 import '../styles/Dashboard.css';
 
@@ -15,9 +15,9 @@ const Dashboard = () => {
     balance: 0
   });
   const [chartData, setChartData] = useState([]);
+  const [ingresosCategoryData, setIngresosCategoryData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [ultimosMovimientos, setUltimosMovimientos] = useState([]);
-  const [generalProgress, setGeneralProgress] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const COLORS = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
@@ -29,27 +29,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (selectedObra) {
       loadProjectStats();
-      loadProgressForObra(selectedObra.ObraID);
     }
   }, [selectedObra]);
-
-  // Load progress for selected obra
-  const loadProgressForObra = async (obraId) => {
-    try {
-      // Get reportes for the selected obra
-      const reportes = await api.reportesAPI.getByObra(obraId);
-      if (Array.isArray(reportes) && reportes.length > 0) {
-        // Use the latest report progress (first one in array is the latest)
-        const latestProgress = parseFloat(reportes[0].PorcentajeFisico) || 0;
-        setGeneralProgress(latestProgress);
-      } else {
-        setGeneralProgress(0);
-      }
-    } catch (error) {
-      console.error('Error loading progress for obra:', error);
-      setGeneralProgress(0);
-    }
-  };
 
   const loadDashboardData = async () => {
     try {
@@ -96,34 +77,40 @@ const Dashboard = () => {
     try {
       setLoading(true);
       
-      const ingresos = await api.ingresosAPI.getByObra(selectedObra.ObraID);
-      
-      // Load all gastos categories just like GastosList
-      const materialesResp = await api.materialesAPI?.getByObra(selectedObra.ObraID);
-      const maquinariaResp = await api.maquinariaAPI?.getByObra(selectedObra.ObraID);
-      const nominaResp = await api.nominaAPI?.getByObra(selectedObra.ObraID);
-      const generalesResp = await api.gastosGeneralesAPI?.getByObra(selectedObra.ObraID);
-      const retencionesResp = await api.retencionesAPI?.getByObra(selectedObra.ObraID);
+      // Load only the 3 main categories like GastosList
+      const [ingresos, materialesResp, maquinariaResp, nominaResp] = await Promise.all([
+        api.ingresosAPI.getByObra(selectedObra.ObraID),
+        api.materialesAPI?.getByObra(selectedObra.ObraID),
+        api.maquinariaAPI?.getByObra(selectedObra.ObraID),
+        api.nominaAPI?.getByObra(selectedObra.ObraID)
+      ]);
       
       // Ensure all responses are arrays
       const mat = Array.isArray(materialesResp) ? materialesResp : [];
       const maq = Array.isArray(maquinariaResp) ? maquinariaResp : [];
       const nom = Array.isArray(nominaResp) ? nominaResp : [];
-      const gen = Array.isArray(generalesResp) ? generalesResp : [];
-      const ret = Array.isArray(retencionesResp) ? retencionesResp : [];
+      const ing = Array.isArray(ingresos) ? ingresos : [];
 
-      // Calculate category totals matching GastosList
+      // Calculate category totals - only 3 categories like GastosList
       const categoryTotals = {
         'Materiales': (mat || []).reduce((sum, m) => sum + (m.TotalCompra || 0), 0),
         'Maquinaria': (maq || []).reduce((sum, m) => sum + (m.CostoTotal || 0), 0),
-        'Nómina': (nom || []).reduce((sum, n) => sum + (n.MontoPagado || 0), 0),
-        'Generales': (gen || []).reduce((sum, g) => sum + (g.Monto || 0), 0),
-        'Retenciones': (ret || []).reduce((sum, r) => sum + (r.Monto || 0), 0)
+        'Sueldos': (nom || []).reduce((sum, n) => sum + (n.MontoPagado || 0), 0)
       };
 
       const totalGastos = Object.values(categoryTotals).reduce((sum, val) => sum + val, 0);
-      const totalIngresos = (ingresos || []).reduce((sum, i) => sum + (i.Monto || 0), 0);
+      const totalIngresos = (ing || []).reduce((sum, i) => sum + (i.Monto || 0), 0);
       const balance = totalIngresos - totalGastos;
+
+      console.log('📊 Dashboard data loaded:', {
+        materiales: mat.length,
+        maquinaria: maq.length,
+        sueldos: nom.length,
+        ingresos: ing.length,
+        totalIngresos,
+        totalGastos,
+        balance
+      });
 
       setStats({
         totalObras: obras.length,
@@ -134,46 +121,35 @@ const Dashboard = () => {
         balance
       });
 
-      // Prepare chart data (accumulated ingresos/gastos over time)
-      const timelineData = [];
-      let ingAccum = 0, gastAccum = 0;
-      
-      const sortedIngresos = (ingresos || []).sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
-      sortedIngresos.forEach((ingreso, index) => {
-        ingAccum += ingreso.Monto || 0;
-        timelineData.push({
-          date: new Date(ingreso.Fecha).toLocaleDateString('es-MX'),
-          ingresos: ingAccum,
-          gastos: gastAccum
-        });
-      });
-
-      // Combine all gastos for timeline
-      const allGastos = [
-        ...(mat || []).map(m => ({ fecha: m.Fecha, monto: m.TotalCompra })),
-        ...(maq || []).map(m => ({ fecha: m.FechaInicio, monto: m.CostoTotal })),
-        ...(nom || []).map(n => ({ fecha: n.FechaPago, monto: n.MontoPagado })),
-        ...(gen || []).map(g => ({ fecha: g.Fecha, monto: g.Monto })),
-        ...(ret || []).map(r => ({ fecha: r.Fecha, monto: r.Monto }))
+      // Simple data for Ingresos vs Gastos comparison (just 2 bars)
+      const comparisonData = [
+        {
+          name: 'Resumen Financiero',
+          Ingresos: totalIngresos,
+          Gastos: totalGastos
+        }
       ];
 
-      const sortedGastos = allGastos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-      sortedGastos.forEach((gasto) => {
-        gastAccum += gasto.monto || 0;
-        const fecha = new Date(gasto.fecha).toLocaleDateString('es-MX');
-        const existing = timelineData.find(d => d.date === fecha);
-        if (existing) {
-          existing.gastos = gastAccum;
-        } else {
-          timelineData.push({
-            date: fecha,
-            ingresos: ingAccum,
-            gastos: gastAccum
-          });
+      setChartData(comparisonData);
+
+      // Prepare ingresos category data for pie chart (distribution by tipo ingreso)
+      const tiposIngresoMap = {};
+      (ing || []).forEach(ingreso => {
+        const tipoNombre = ingreso.TipoNombre || 'Sin tipo';
+        if (!tiposIngresoMap[tipoNombre]) {
+          tiposIngresoMap[tipoNombre] = 0;
         }
+        tiposIngresoMap[tipoNombre] += ingreso.Monto || 0;
       });
 
-      setChartData(timelineData.sort((a, b) => new Date(a.date) - new Date(b.date)));
+      const ingresosCategoryChartData = Object.entries(tiposIngresoMap)
+        .filter(([_, value]) => value > 0)
+        .map(([name, value]) => ({
+          name,
+          value
+        }));
+      
+      setIngresosCategoryData(ingresosCategoryChartData);
 
       // Prepare category data for pie chart
       const categoryChartData = Object.entries(categoryTotals)
@@ -185,10 +161,11 @@ const Dashboard = () => {
       
       setCategoryData(categoryChartData);
 
-      // Prepare últimos movimientos combining ingresos and gastos
+      // Prepare últimos movimientos combining ingresos and gastos (3 categories only)
       const movimientos = [];
       
-      (ingresos || []).forEach(ingreso => {
+      // Add ingresos
+      (ing || []).forEach(ingreso => {
         movimientos.push({
           Fecha: ingreso.Fecha,
           Tipo: 'Ingreso',
@@ -199,13 +176,13 @@ const Dashboard = () => {
         });
       });
 
-      // Add all gastos from all categories
+      // Add gastos - only 3 categories (Materiales, Maquinaria, Sueldos)
       (mat || []).forEach(gasto => {
         movimientos.push({
           Fecha: gasto.Fecha,
           Tipo: 'Gasto',
           Categoría: 'Materiales',
-          Descripción: gasto.FolioFactura || 'Material',
+          Descripción: gasto.Descripcion || 'Material',
           Monto: gasto.TotalCompra,
           Color: '#e74c3c'
         });
@@ -226,37 +203,16 @@ const Dashboard = () => {
         movimientos.push({
           Fecha: gasto.FechaPago,
           Tipo: 'Gasto',
-          Categoría: 'Nómina',
+          Categoría: 'Sueldos',
           Descripción: gasto.Comprobante || 'Pago de nómina',
           Monto: gasto.MontoPagado,
           Color: '#e74c3c'
         });
       });
 
-      (gen || []).forEach(gasto => {
-        movimientos.push({
-          Fecha: gasto.Fecha,
-          Tipo: 'Gasto',
-          Categoría: 'Generales',
-          Descripción: gasto.Descripcion || 'Gasto general',
-          Monto: gasto.Monto,
-          Color: '#e74c3c'
-        });
-      });
-
-      (ret || []).forEach(gasto => {
-        movimientos.push({
-          Fecha: gasto.Fecha,
-          Tipo: 'Gasto',
-          Categoría: 'Retenciones',
-          Descripción: gasto.Descripcion || 'Retención',
-          Monto: gasto.Monto,
-          Color: '#e74c3c'
-        });
-      });
-
       // Sort by date descending (most recent first) and get last 10
       movimientos.sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+      console.log('📋 Últimos movimientos (Dashboard):', movimientos.slice(0, 10));
       setUltimosMovimientos(movimientos.slice(0, 10));
 
     } catch (error) {
@@ -337,50 +293,84 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* 📊 General Progress Bar Section */}
-      <div className="progress-section">
-        <div className="progress-header">
-          <span className="progress-label">Avance General de Proyectos</span>
-          <span className="progress-percentage">{generalProgress.toFixed(1)}%</span>
-        </div>
-        <div className="progress-bar-container">
-          <div
-            className="progress-bar-fill"
-            style={{
-              width: `${generalProgress}%`,
-              transition: 'width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-          />
-        </div>
-        <div className="progress-labels">
-          <span>0%</span>
-          <span>50%</span>
-          <span>100%</span>
-        </div>
-      </div>
-
       {/* Charts Section */}
       {selectedObra && (
         <div className="charts-container">
           {/* Bar Chart - Ingresos vs Gastos */}
+          {/* Pie Charts Row - Top */}
+          <div className="charts-row-top">
+            {/* Pie Chart - Ingresos by Category */}
+            {ingresosCategoryData.length > 0 && (
+              <div className="chart-box">
+                <h2>🥧 Distribución de Ingresos por Categoría</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={ingresosCategoryData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {ingresosCategoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `$${value.toLocaleString('es-MX')}`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+
+            {/* Pie Chart - Gastos by Category */}
+            {categoryData.length > 0 && (
+              <div className="chart-box">
+                <h2>🥧 Distribución de Gastos por Categoría</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `$${value.toLocaleString('es-MX')}`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+
+          {/* Bar Chart Row - Bottom (Full Width) */}
           {chartData.length > 0 && (
-            <div className="chart-box">
+            <div className="chart-box chart-box-full">
               <h2>📊 Ingresos vs Gastos</h2>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip formatter={(value) => `$${value.toLocaleString('es-MX')}`} />
                   <Legend />
                   <Bar 
-                    dataKey="ingresos" 
+                    dataKey="Ingresos" 
                     fill="#2ecc71" 
                     name="Ingresos"
                     radius={[8, 8, 0, 0]}
                   />
                   <Bar 
-                    dataKey="gastos" 
+                    dataKey="Gastos" 
                     fill="#e74c3c" 
                     name="Gastos"
                     radius={[8, 8, 0, 0]}
@@ -389,37 +379,11 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
           )}
-
-          {/* Pie Chart - Gastos by Category */}
-          {categoryData.length > 0 && (
-            <div className="chart-box">
-              <h2>🥧 Distribución de Gastos por Categoría</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `$${value.toLocaleString('es-MX')}`} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
         </div>
       )}
 
       {/* Últimos Movimientos Table */}
-      {ultimosMovimientos.length > 0 && (
+      {selectedObra && ultimosMovimientos.length > 0 && (
         <div className="dashboard-section">
           <h2>📑 Últimos Movimientos</h2>
           <div className="movimientos-table-wrapper">
@@ -452,6 +416,13 @@ const Dashboard = () => {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+      
+      {selectedObra && ultimosMovimientos.length === 0 && (
+        <div className="dashboard-section">
+          <h2>📑 Últimos Movimientos</h2>
+          <p className="no-data">No hay movimientos registrados para este proyecto.</p>
         </div>
       )}
     </div>

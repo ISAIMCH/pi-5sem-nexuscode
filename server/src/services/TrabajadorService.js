@@ -58,7 +58,9 @@ class TrabajadorService {
 
   async createTrabajador(trabajador) {
     try {
-      console.log('Creating trabajador with data:', trabajador);
+      console.log('=== CREATE TRABAJADOR START ===');
+      console.log('Datos recibidos:', trabajador);
+      console.log('INERuta recibida:', trabajador.INERuta);
       
       if (!trabajador.NombreCompleto || !trabajador.Puesto) {
         throw new Error('Missing required fields: NombreCompleto, Puesto');
@@ -102,8 +104,12 @@ class TrabajadorService {
         throw new Error('INSERT query executed but no record returned');
       }
       
-      console.log('Trabajador created successfully:', result.recordset[0]);
-      return result.recordset[0];
+      const newTrabajador = result.recordset[0];
+      console.log('Trabajador created successfully with ID:', newTrabajador.TrabajadorID);
+      console.log('INERuta guardado en BD:', newTrabajador.INERuta);
+      console.log('=== CREATE TRABAJADOR SUCCESS ===');
+      
+      return newTrabajador;
     } catch (error) {
       console.error('TrabajadorService.createTrabajador error:', error.message);
       throw new Error(`Error creating trabajador: ${error.message}`);
@@ -112,6 +118,11 @@ class TrabajadorService {
 
   async updateTrabajador(id, trabajador) {
     try {
+      console.log('=== UPDATE TRABAJADOR START ===');
+      console.log('ID:', id);
+      console.log('Datos recibidos:', trabajador);
+      console.log('INERuta recibida:', trabajador.INERuta);
+      
       const pool = await poolPromise;
       const request = pool.request();
       
@@ -142,6 +153,7 @@ class TrabajadorService {
         { name: 'FechaIngreso', type: sql.Date },
         { name: 'ObraActualID', type: sql.Int },
         { name: 'SueldoDiario', type: sql.Decimal(18, 2) },
+        { name: 'INERuta', type: sql.NVarChar(sql.MAX) },
         { name: 'EstatusID', type: sql.Int }
       ];
 
@@ -149,6 +161,7 @@ class TrabajadorService {
       fieldMappings.forEach(field => {
         if (Object.prototype.hasOwnProperty.call(trabajador, field.name)) {
           const value = trabajador[field.name];
+          console.log(`Procesando campo ${field.name}:`, value);
           // Incluir el campo si tiene un valor definido (incluso si es 0, false, o null)
           request.input(field.name, field.type, value);
           campos.push(`${field.name} = @${field.name}`);
@@ -161,14 +174,18 @@ class TrabajadorService {
 
       const query = `UPDATE Trabajador SET ${campos.join(', ')} WHERE TrabajadorID = @TrabajadorID`;
       
-      console.log('=== UPDATE TRABAJADOR ===');
-      console.log('ID:', id);
-      console.log('Query:', query);
-      console.log('Data received:', trabajador);
+      console.log('Query final:', query);
+      console.log('Campos a actualizar:', campos);
       
       const result = await request.query(query);
       
-      console.log('Update result:', result);
+      console.log('Update result recordsAffected:', result.rowsAffected);
+      
+      if (result.rowsAffected[0] === 0) {
+        throw new Error(`No se actualizó ningún registro. TrabajadorID ${id} podría no existir.`);
+      }
+      
+      console.log('=== UPDATE TRABAJADOR SUCCESS ===');
       return { success: true };
     } catch (error) {
       console.error('TrabajadorService.updateTrabajador error:', error.message);

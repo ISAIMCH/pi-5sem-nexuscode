@@ -180,10 +180,18 @@
 
 /* Charts Container */
 .charts-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 24px;
   margin-bottom: 32px;
+}
+
+/* Top row with two pie charts side by side */
+.charts-row-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
 .chart-box {
@@ -196,6 +204,11 @@
 
 .chart-box:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Full width chart box for the bar chart */
+.chart-box-full {
+  grid-column: 1 / -1;
 }
 
 .chart-box h2 {

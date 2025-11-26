@@ -23,6 +23,7 @@ exports.createIngreso = async (req, res) => {
     const result = await ingresoService.createIngreso(req.body);
     res.status(201).json(result);
   } catch (error) {
+    console.error('❌ ingresoController.createIngreso - Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };

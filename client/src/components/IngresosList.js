@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import api from '../services/api';
 import '../styles/IngresosList.css';
 
@@ -12,6 +12,13 @@ function IngresosList() {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+
+  const COLORS = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+  const [uploading, setUploading] = useState(false);
+  const [mensaje, setMensaje] = useState({ type: '', text: '' });
+  const [showPDFViewer, setShowPDFViewer] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [pdfFileName, setPdfFileName] = useState('');
   
   // Filtros
   const [filtros, setFiltros] = useState({
@@ -25,7 +32,8 @@ function IngresosList() {
     Fecha: new Date().toISOString().split('T')[0],
     Descripcion: '',
     Monto: '',
-    FacturaRef: ''
+    FacturaRuta: '',
+    FacturaFileName: ''
   });
 
   const tiposIngreso = ['Estimación', 'Aporte Interno', 'Anticipo'];
@@ -90,19 +98,24 @@ function IngresosList() {
       const total = datos.reduce((sum, ingreso) => sum + (ingreso.Monto || 0), 0);
       setTotalIngresos(total);
 
-      // Prepare chart data
-      let accumulated = 0;
-      const chartData = datos
-        .sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha))
-        .map((ingreso) => {
-          accumulated += ingreso.Monto || 0;
-          return {
-            fecha: new Date(ingreso.Fecha).toLocaleDateString('es-MX', { month: 'short', day: 'numeric' }),
-            monto: ingreso.Monto,
-            acumulado: accumulated
-          };
-        });
-      setChartData(chartData);
+      // Prepare chart data - Distribution by category (tipo de ingreso)
+      const categoryTotals = {};
+      datos.forEach((ingreso) => {
+        const tipoNombre = tiposIngresoMap[ingreso.TipoIngresoID] || 'Sin categoría';
+        if (!categoryTotals[tipoNombre]) {
+          categoryTotals[tipoNombre] = 0;
+        }
+        categoryTotals[tipoNombre] += ingreso.Monto || 0;
+      });
+
+      const categoryChartData = Object.entries(categoryTotals)
+        .filter(([_, value]) => value > 0)
+        .map(([name, value]) => ({
+          name,
+          value
+        }));
+      
+      setChartData(categoryChartData);
     } catch (error) {
       console.error('Error loading ingresos:', error);
     } finally {
@@ -143,10 +156,8 @@ function IngresosList() {
         Fecha: formData.Fecha,
         Descripcion: formData.Descripcion,
         Monto: parseFloat(formData.Monto),
-        FacturaRef: formData.FacturaRef || null
+        FacturaRuta: formData.FacturaRuta || null
       };
-
-      console.log('Enviando data:', dataToSubmit);
 
       const response = await api.ingresosAPI.create(dataToSubmit);
       console.log('Respuesta:', response);
@@ -156,7 +167,8 @@ function IngresosList() {
         Fecha: new Date().toISOString().split('T')[0],
         Descripcion: '',
         Monto: '',
-        FacturaRef: ''
+        FacturaRuta: '',
+        FacturaFileName: ''
       });
       setShowModal(false);
       await loadIngresos();
@@ -176,6 +188,105 @@ function IngresosList() {
         console.error('Error deleting ingreso:', error);
       }
     }
+  };
+
+  const handleFacturaUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      console.warn('⚠️ No file selected');
+      return;
+    }
+
+    if (!file.name.endsWith('.pdf') && file.type !== 'application/pdf') {
+      setMensaje({ type: 'error', text: 'Por favor sube un archivo PDF válido' });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setMensaje({ type: 'error', text: 'El archivo no debe exceder 10MB' });
+      return;
+    }
+
+    try {
+      setUploading(true);
+      console.log('📤 Iniciando upload del archivo (Ingresos):', file.name);
+      
+      const response = await api.uploadAPI.uploadFactura(file);
+      console.log('📤 Full Upload response:', response);
+      console.log('📤 response.filePath:', response.filePath);
+      console.log('📤 Type of filePath:', typeof response.filePath);
+      
+      console.log('✅ Asignando FacturaRuta a formData:', response.filePath);
+      
+      setFormData(prev => { 
+        const updated = {
+          ...prev, 
+          FacturaRuta: response.filePath, 
+          FacturaFileName: file.name 
+        };
+        console.log('✅ FormData actualizado (Ingresos):', updated);
+        return updated;
+      });
+      
+      setMensaje({ type: 'success', text: '✅ Factura PDF subida correctamente' });
+      setTimeout(() => setMensaje({ type: '', text: '' }), 3000);
+    } catch (error) {
+      console.error('❌ Error uploading factura (Ingresos):', error);
+      setMensaje({ type: 'error', text: 'Error al subir factura: ' + (error.message || 'Error desconocido') });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const getFullFileUrl = (filePath) => {
+    if (!filePath) return '';
+    if (filePath.startsWith('http')) return filePath;
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    const baseUrl = API_URL.replace('/api', '');
+    return `${baseUrl}${filePath}`;
+  };
+
+  const openPDFViewer = (pdfRuta, fileName) => {
+    const fullUrl = getFullFileUrl(pdfRuta);
+    console.log('🔍 Opening PDF with URL:', fullUrl);
+    setPdfUrl(fullUrl);
+    setPdfFileName(fileName || 'Factura.pdf');
+    setShowPDFViewer(true);
+  };
+
+  const closePDFViewer = () => {
+    setShowPDFViewer(false);
+    setPdfUrl('');
+    setPdfFileName('');
+  };
+
+  const renderPDFViewer = () => {
+    if (!showPDFViewer) return null;
+
+    return (
+      <div className="pdf-viewer-overlay" onClick={closePDFViewer}>
+        <div className="pdf-viewer-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="pdf-viewer-header">
+            <h2>📄 {pdfFileName}</h2>
+            <button className="pdf-close-btn" onClick={closePDFViewer}>✕</button>
+          </div>
+          <div className="pdf-viewer-body">
+            <iframe 
+              src={pdfUrl} 
+              title="PDF Viewer"
+              className="pdf-iframe"
+            ></iframe>
+          </div>
+          <div className="pdf-viewer-footer">
+            <a href={pdfUrl} download={pdfFileName} className="btn-download-pdf">
+              ⬇️ Descargar PDF
+            </a>
+            <button className="btn-close-pdf" onClick={closePDFViewer}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -215,21 +326,25 @@ function IngresosList() {
           {/* Gráfica de Ingresos */}
           {!loading && chartData.length > 0 && (
             <div className="chart-box">
-              <h2>📊 Evolución de Ingresos Acumulados</h2>
+              <h2>🥧 Distribución de Ingresos por Categoría</h2>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="fecha" />
-                  <YAxis />
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
                   <Tooltip formatter={(value) => `$${value.toLocaleString('es-MX')}`} />
-                  <Legend />
-                  <Bar 
-                    dataKey="acumulado" 
-                    fill="#2ecc71" 
-                    name="Acumulado ($)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
+                </PieChart>
               </ResponsiveContainer>
             </div>
           )}
@@ -287,7 +402,7 @@ function IngresosList() {
                       <th>Fecha</th>
                       <th>Tipo</th>
                       <th>Descripción</th>
-                      <th>Factura</th>
+                      <th>Archivo</th>
                       <th>Monto</th>
                       <th>Acciones</th>
                     </tr>
@@ -302,15 +417,26 @@ function IngresosList() {
                           </span>
                         </td>
                         <td className="descripcion">{ingreso.Descripcion}</td>
-                        <td className="factura">
-                          {ingreso.FacturaRef ? (
-                            <span className="factura-ref">{ingreso.FacturaRef}</span>
+                        <td className="archivo">
+                          {ingreso.FacturaRuta ? (
+                            <button 
+                              className="archivo-item"
+                              onClick={() => openPDFViewer(ingreso.FacturaRuta, ingreso.FacturaRuta.split('/').pop())}
+                              title="Ver PDF"
+                            >
+                              <span className="archivo-nombre">
+                                {ingreso.FacturaRuta.split('/').pop()}
+                              </span>
+                            </button>
                           ) : (
-                            <span className="sin-factura">—</span>
+                            <span className="sin-archivo">—</span>
                           )}
                         </td>
                         <td className="monto">${ingreso.Monto.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         <td className="acciones">
+                          {ingreso.FacturaRuta && (
+                            <a href={getFullFileUrl(ingreso.FacturaRuta)} download target="_blank" rel="noopener noreferrer" className="btn-download" title="Descargar Factura">📄</a>
+                          )}
                           <button 
                             className="btn-delete"
                             onClick={() => handleDelete(ingreso.IngresoID)}
@@ -391,17 +517,33 @@ function IngresosList() {
                         required
                       />
                     </div>
-                    <div className="form-group">
-                      <label>Referencia de Factura:</label>
+                  </div>
+
+                  <div className="documentos-section">
+                    <label>📄 Factura PDF</label>
+                    {formData.FacturaFileName && (
+                      <p className="file-name">✓ {formData.FacturaFileName}</p>
+                    )}
+                    <div className="file-upload-area">
                       <input
-                        type="text"
-                        name="FacturaRef"
-                        value={formData.FacturaRef}
-                        onChange={handleInputChange}
-                        placeholder="Ej: FAC-001"
+                        id="factura-upload-ingresos"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleFacturaUpload}
+                        disabled={uploading}
+                        className="file-input"
                       />
+                      <label htmlFor="factura-upload-ingresos" className="file-label">
+                        {uploading ? '⏳ Subiendo...' : '📁 Selecciona PDF de Factura'}
+                      </label>
                     </div>
                   </div>
+
+                  {mensaje.text && (
+                    <div className={`mensaje ${mensaje.type}`}>
+                      {mensaje.text}
+                    </div>
+                  )}
 
                   <div className="form-buttons">
                     <button type="button" className="btn-cancel" onClick={() => setShowModal(false)}>
@@ -417,6 +559,8 @@ function IngresosList() {
           )}
         </>
       )}
+
+      {renderPDFViewer()}
     </div>
   );
 }

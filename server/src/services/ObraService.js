@@ -52,9 +52,10 @@ class ObraService {
         .input('Descripcion', sql.NVarChar, obra.Descripcion || null)
         .input('NumeroContrato', sql.NVarChar, obra.NumeroContrato || null)
         .input('Responsable', sql.NVarChar, obra.Responsable || null)
+        .input('NotasAdicionales', sql.NVarChar, obra.NotasAdicionales || null)
         .query(
-          `INSERT INTO Obra (ClienteID, Nombre, Ubicacion, FechaInicio, FechaFin, EstatusID, CentroCostos, MontoContrato, Descripcion, NumeroContrato, Responsable)
-           VALUES (@ClienteID, @Nombre, @Ubicacion, @FechaInicio, @FechaFin, @EstatusID, @CentroCostos, @MontoContrato, @Descripcion, @NumeroContrato, @Responsable);
+          `INSERT INTO Obra (ClienteID, Nombre, Ubicacion, FechaInicio, FechaFin, EstatusID, CentroCostos, MontoContrato, Descripcion, NumeroContrato, Responsable, NotasAdicionales)
+           VALUES (@ClienteID, @Nombre, @Ubicacion, @FechaInicio, @FechaFin, @EstatusID, @CentroCostos, @MontoContrato, @Descripcion, @NumeroContrato, @Responsable, @NotasAdicionales);
            SELECT @@IDENTITY as ObraID;`
         );
       return result.recordset[0];
@@ -80,13 +81,14 @@ class ObraService {
         .input('Descripcion', sql.NVarChar, obra.Descripcion || null)
         .input('NumeroContrato', sql.NVarChar, obra.NumeroContrato || null)
         .input('Responsable', sql.NVarChar, obra.Responsable || null)
+        .input('NotasAdicionales', sql.NVarChar, obra.NotasAdicionales || null)
         .query(
           `UPDATE Obra
            SET ClienteID = @ClienteID, Nombre = @Nombre, Ubicacion = @Ubicacion,
                FechaInicio = @FechaInicio, FechaFin = @FechaFin, EstatusID = @EstatusID,
                CentroCostos = @CentroCostos, MontoContrato = @MontoContrato,
                Descripcion = @Descripcion, NumeroContrato = @NumeroContrato,
-               Responsable = @Responsable
+               Responsable = @Responsable, NotasAdicionales = @NotasAdicionales
            WHERE ObraID = @ObraID`
         );
       return { success: true };

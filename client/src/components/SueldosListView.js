@@ -4,7 +4,7 @@ import SueldosPagoModal from './modals/SueldosPagoModal';
 import SueldosHistorialModal from './modals/SueldosHistorialModal';
 import '../styles/SueldosListView.css';
 
-function SueldosListView({ selectedObra }) {
+function SueldosListView({ selectedObra, onPagoGuardado }) {
   const [trabajadores, setTrabajadores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState({ type: '', text: '' });
@@ -17,18 +17,8 @@ function SueldosListView({ selectedObra }) {
   useEffect(() => {
     if (selectedObra) {
       loadTrabajadores();
-      
-      // Recargar trabajadores cada 5 segundos SOLO si no hay modales abiertos
-      // Esto evita que los modales parpadeen al cerrarse
-      const interval = setInterval(() => {
-        if (!showPagoModal && !showHistorialModal) {
-          loadTrabajadores();
-        }
-      }, 5000);
-      
-      return () => clearInterval(interval);
     }
-  }, [selectedObra, showPagoModal, showHistorialModal]);
+  }, [selectedObra]);
 
   const loadTrabajadores = async () => {
     try {
@@ -64,8 +54,14 @@ function SueldosListView({ selectedObra }) {
   const handlePagoGuardado = async () => {
     setMensaje({ type: 'success', text: '✅ Pago guardado correctamente' });
     handleCerrarModal();
-    // Recargar trabajadores solo después de guardar un pago (no en cada cierre)
+    // Recargar trabajadores después de guardar un pago
     await loadTrabajadores();
+    // Notificar al componente padre para actualizar totales
+    if (onPagoGuardado) {
+      onPagoGuardado();
+    }
+    // Limpiar mensaje después de 3 segundos
+    setTimeout(() => setMensaje({ type: '', text: '' }), 3000);
   };
 
   if (loading) {

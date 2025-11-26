@@ -198,8 +198,8 @@ function TrabajadoresList() {
 
       console.log('=== SUBMIT TRABAJADOR ===');
       console.log('Editing:', editingId);
-      console.log('Form Data SueldoDiario:', formData.SueldoDiario);
-      console.log('Submit Data SueldoDiario:', dataToSubmit.SueldoDiario);
+      console.log('INERuta en formData:', formData.INERuta);
+      console.log('INERuta a enviar:', dataToSubmit.INERuta);
       console.log('Full data to submit:', dataToSubmit);
 
       if (editingId) {
@@ -207,6 +207,7 @@ function TrabajadoresList() {
         await api.trabajadoresAPI.update(editingId, dataToSubmit);
         alert('Trabajador actualizado exitosamente');
       } else {
+        console.log('Creando nuevo trabajador');
         const newTrabajador = await api.trabajadoresAPI.create(dataToSubmit);
         
         // If a project is selected, assign the worker to it
@@ -510,11 +511,20 @@ function TrabajadoresList() {
                       value={formData.EstatusID}
                       onChange={handleInputChange}
                     >
-                      {estatuses.filter(est => est.Nombre === 'Activa' || est.Nombre === 'Baja').map(estatus => (
-                        <option key={estatus.EstatusID} value={estatus.EstatusID}>
-                          {estatus.Nombre}
-                        </option>
-                      ))}
+                      {editingId
+                        ? // En edición: mostrar ambas opciones (Activa y Baja)
+                          estatuses.filter(est => est.Nombre === 'Activa' || est.Nombre === 'Baja').map(estatus => (
+                            <option key={estatus.EstatusID} value={estatus.EstatusID}>
+                              {estatus.Nombre}
+                            </option>
+                          ))
+                        : // En creación: mostrar solo Activa
+                          estatuses.filter(est => est.Nombre === 'Activa').map(estatus => (
+                            <option key={estatus.EstatusID} value={estatus.EstatusID}>
+                              {estatus.Nombre}
+                            </option>
+                          ))
+                      }
                     </select>
                   </div>
                 </div>
