@@ -301,17 +301,16 @@ const Dashboard = () => {
           <div className="charts-row-top">
             {/* Pie Chart - Ingresos by Category */}
             {ingresosCategoryData.length > 0 && (
-              <div className="chart-box">
+              <div className="chart-box pie-chart-box">
                 <h2>🥧 Distribución de Ingresos por Categoría</h2>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={ingresosCategoryData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
-                      outerRadius={100}
+                      outerRadius="80%"
                       fill="#8884d8"
                       dataKey="value"
                     >
@@ -327,17 +326,16 @@ const Dashboard = () => {
 
             {/* Pie Chart - Gastos by Category */}
             {categoryData.length > 0 && (
-              <div className="chart-box">
+              <div className="chart-box pie-chart-box">
                 <h2>🥧 Distribución de Gastos por Categoría</h2>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={categoryData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value }) => `${name}: $${value.toLocaleString('es-MX')}`}
-                      outerRadius={100}
+                      outerRadius="80%"
                       fill="#8884d8"
                       dataKey="value"
                     >

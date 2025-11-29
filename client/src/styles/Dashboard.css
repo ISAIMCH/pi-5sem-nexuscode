@@ -1,5 +1,6 @@
 .dashboard-container {
-  max-width: 1400px;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* ===== PROGRESS SECTION ===== */
@@ -188,18 +189,31 @@
 
 /* Top row with two pie charts side by side */
 .charts-row-top {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex !important;
+  flex-wrap: nowrap !important;
   gap: 24px;
   margin-bottom: 24px;
+  width: 100%;
+  height: 350px;
 }
 
 .chart-box {
   background: white;
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 50% !important;
+  height: 350px;
+  min-width: 0 !important;
+  overflow: hidden;
+}
+
+.pie-chart-box {
+  flex: 1 1 50% !important;
+  height: 100% !important;
 }
 
 .chart-box:hover {
@@ -208,16 +222,27 @@
 
 /* Full width chart box for the bar chart */
 .chart-box-full {
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .chart-box h2 {
   font-size: 16px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 20px;
+  margin: 0 0 16px 0;
   padding-bottom: 12px;
   border-bottom: 2px solid #C41E3A;
+  flex-shrink: 0;
+}
+
+.chart-box > div {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
 }
 
 /* Recent Activity */
